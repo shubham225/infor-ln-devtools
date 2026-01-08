@@ -3,6 +3,7 @@
   "displayName": "Infor LN DevTools",
   "description": "Developer tools for Infor LN ERP in VS Code and Cursor. Import, export, and compile LN components using supported LN utilities.",
   "version": "0.0.1",
+  "publisher": "shubham-shinde",
   "engines": {
     "vscode": "^1.107.0"
   },
@@ -12,10 +13,123 @@
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "ln-devtools-explorer",
+          "title": "Infor LN DevTools",
+          "icon": "resources/extension-icon.svg"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "script-explorer.refresh",
+          "when": "view == script-explorer",
+          "group": "navigation"
+        },
+        {
+          "command": "table-explorer.refresh",
+          "when": "view == table-explorer",
+          "group": "navigation"
+        },
+        {
+          "command": "session-explorer.refresh",
+          "when": "view == session-explorer",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "script-explorer.import",
+          "when": "view == script-explorer && viewItem == leafNode",
+          "group": "inline"
+        },
+        {
+          "command": "table-explorer.import",
+          "when": "view == table-explorer && viewItem == leafNode",
+          "group": "inline"
+        },
+        {
+          "command": "session-explorer.import",
+          "when": "view == session-explorer && viewItem == leafNode",
+          "group": "inline"
+        }
+      ]
+    },
+    "views": {
+      "ln-devtools-explorer": [
+        {
+          "id": "script-explorer",
+          "name": "Scripts"
+        },
+        {
+          "id": "table-explorer",
+          "name": "Tables"
+        },
+        {
+          "id": "session-explorer",
+          "name": "Sessions"
+        }
+      ]
+    },
     "commands": [
       {
-        "command": "infor-ln-devtools.helloWorld",
-        "title": "Hello World"
+        "command": "script-explorer.refresh",
+        "category": "Infor LN DevTools",
+        "title": "Refresh Script",
+        "icon": "resources/refresh.svg"
+      },
+      {
+        "command": "script-explorer.import",
+        "title": "Import Script",
+        "icon": {
+          "light": "resources/light/edit.svg",
+          "dark": "resources/dark/edit.svg"
+        }
+      },
+      {
+        "command": "table-explorer.refresh",
+        "category": "Infor LN DevTools",
+        "title": "Refresh Table",
+        "icon": "resources/refresh.svg"
+      },
+      {
+        "command": "table-explorer.import",
+        "title": "Import Table",
+        "icon": {
+          "light": "resources/light/edit.svg",
+          "dark": "resources/dark/edit.svg"
+        }
+      },
+      {
+        "command": "session-explorer.refresh",
+        "category": "Infor LN DevTools",
+        "title": "Refresh Session",
+        "icon": "resources/refresh.svg"
+      },
+      {
+        "command": "session-explorer.import",
+        "title": "Import Session",
+        "icon": {
+          "light": "resources/light/edit.svg",
+          "dark": "resources/dark/edit.svg"
+        }
+      }
+    ],
+    "viewsWelcome": [
+      {
+        "view": "script-explorer",
+        "contents": "No scripts found.\n[Refresh Explorer](command:script-explorer.refresh)"
+      },
+      {
+        "view": "table-explorer",
+        "contents": "No tables found.\n[Refresh Explorer](command:table-explorer.refresh)"
+      },
+      {
+        "view": "session-explorer",
+        "contents": "No sessions found.\n[Refresh Explorer](command:session-explorer.refresh)"
       }
     ]
   },
@@ -34,15 +148,18 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.107.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
-    "typescript-eslint": "^8.48.1",
-    "eslint": "^9.39.1",
+    "@types/vscode": "^1.107.0",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
     "esbuild": "^0.27.1",
+    "eslint": "^9.39.1",
     "npm-run-all": "^4.1.5",
     "typescript": "^5.9.3",
-    "@vscode/test-cli": "^0.0.12",
-    "@vscode/test-electron": "^2.5.2"
+    "typescript-eslint": "^8.48.1"
+  },
+  "dependencies": {
+    "axios": "^1.13.2"
   }
 }
