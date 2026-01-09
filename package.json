@@ -25,35 +25,15 @@
     "menus": {
       "view/title": [
         {
-          "command": "script-explorer.refresh",
-          "when": "view == script-explorer",
-          "group": "navigation"
-        },
-        {
-          "command": "table-explorer.refresh",
-          "when": "view == table-explorer",
-          "group": "navigation"
-        },
-        {
-          "command": "session-explorer.refresh",
-          "when": "view == session-explorer",
+          "command": "component-explorer.refresh",
+          "when": "view == component-explorer",
           "group": "navigation"
         }
       ],
       "view/item/context": [
         {
-          "command": "script-explorer.import",
-          "when": "view == script-explorer && viewItem == leafNode",
-          "group": "inline"
-        },
-        {
-          "command": "table-explorer.import",
-          "when": "view == table-explorer && viewItem == leafNode",
-          "group": "inline"
-        },
-        {
-          "command": "session-explorer.import",
-          "when": "view == session-explorer && viewItem == leafNode",
+          "command": "component-explorer.import",
+          "when": "view == component-explorer && viewItem == leafNode",
           "group": "inline"
         }
       ]
@@ -61,57 +41,21 @@
     "views": {
       "ln-devtools-explorer": [
         {
-          "id": "script-explorer",
-          "name": "Scripts"
-        },
-        {
-          "id": "table-explorer",
-          "name": "Tables"
-        },
-        {
-          "id": "session-explorer",
-          "name": "Sessions"
+          "id": "component-explorer",
+          "name": "Components"
         }
       ]
     },
     "commands": [
       {
-        "command": "script-explorer.refresh",
+        "command": "component-explorer.refresh",
         "category": "Infor LN DevTools",
-        "title": "Refresh Script",
+        "title": "Refresh Component",
         "icon": "resources/refresh.svg"
       },
       {
-        "command": "script-explorer.import",
-        "title": "Import Script",
-        "icon": {
-          "light": "resources/light/edit.svg",
-          "dark": "resources/dark/edit.svg"
-        }
-      },
-      {
-        "command": "table-explorer.refresh",
-        "category": "Infor LN DevTools",
-        "title": "Refresh Table",
-        "icon": "resources/refresh.svg"
-      },
-      {
-        "command": "table-explorer.import",
-        "title": "Import Table",
-        "icon": {
-          "light": "resources/light/edit.svg",
-          "dark": "resources/dark/edit.svg"
-        }
-      },
-      {
-        "command": "session-explorer.refresh",
-        "category": "Infor LN DevTools",
-        "title": "Refresh Session",
-        "icon": "resources/refresh.svg"
-      },
-      {
-        "command": "session-explorer.import",
-        "title": "Import Session",
+        "command": "component-explorer.import",
+        "title": "Import Component",
         "icon": {
           "light": "resources/light/edit.svg",
           "dark": "resources/dark/edit.svg"
@@ -120,16 +64,8 @@
     ],
     "viewsWelcome": [
       {
-        "view": "script-explorer",
-        "contents": "No scripts found.\n[Refresh Explorer](command:script-explorer.refresh)"
-      },
-      {
-        "view": "table-explorer",
-        "contents": "No tables found.\n[Refresh Explorer](command:table-explorer.refresh)"
-      },
-      {
-        "view": "session-explorer",
-        "contents": "No sessions found.\n[Refresh Explorer](command:session-explorer.refresh)"
+        "view": "component-explorer",
+        "contents": "No components found.\n[Refresh Explorer](command:component-explorer.refresh)"
       }
     ]
   },
