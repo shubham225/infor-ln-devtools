@@ -22,19 +22,36 @@ export class TreeNode extends vscode.TreeItem {
   ) {
     super(label, collapsibleState);
     this.component = component;
-    const iconId =
-      {
-        rootNode:
-          componentType === "Table"
-            ? "table"
-            : componentType === "Session"
-            ? "window"
-            : "code",
-        folderNode: "folder",
-      }[contextType] ?? "file-code";
+    const iconId = {
+      rootNode:
+        componentType === "Table"
+          ? "table"
+          : componentType === "Session"
+          ? "window"
+          : "code",
+      folderNode: "folder",
+    }[contextType];
 
+    if (iconId) {
+      this.iconPath = new vscode.ThemeIcon(iconId);
+    } else {
+      // Fallback to custom SVG
+      this.iconPath = {
+        light: vscode.Uri.joinPath(
+          vscode.extensions.getExtension("shubham-shinde.infor-ln-devtools")!
+            .extensionUri,
+          "resources",
+          "infor-ln-logo.svg"
+        ),
+        dark: vscode.Uri.joinPath(
+          vscode.extensions.getExtension("shubham-shinde.infor-ln-devtools")!
+            .extensionUri,
+          "resources",
+          "infor-ln-logo.svg"
+        ),
+      };
+    }
     this.contextValue = children.length > 0 ? "folderNode" : "leafNode";
-    this.iconPath = new vscode.ThemeIcon(iconId);
   }
 }
 
@@ -139,9 +156,10 @@ export class ComponentDataProvider
 }
 
 export async function refreshComponentView(
-  dataProvider: ComponentDataProvider
+  dataProvider: ComponentDataProvider,
+  serverUrl: string
 ) {
-  const result = await axios.get("http://localhost:3000/components");
+  const result = await axios.get(`${serverUrl}/components`);
   const data = result.data;
 
   const grouped: Record<string, Record<string, Record<string, any[]>>> = {};

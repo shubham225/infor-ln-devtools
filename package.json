@@ -32,6 +32,16 @@
           "group": "navigation"
         },
         {
+          "command": "component-explorer.configure",
+          "when": "view == component-explorer",
+          "group": "navigation"
+        },
+        {
+          "command": "component-explorer.updateUrl",
+          "when": "view == component-explorer",
+          "group": "navigation"
+        },
+        {
           "command": "selected-components.import",
           "when": "view == selected-components",
           "group": "navigation"
@@ -70,6 +80,18 @@
         "icon": "$(refresh)"
       },
       {
+        "command": "component-explorer.configure",
+        "category": "Infor LN DevTools",
+        "title": "Configure Settings",
+        "icon": "$(settings)"
+      },
+      {
+        "command": "component-explorer.updateUrl",
+        "category": "Infor LN DevTools",
+        "title": "Update Server URL",
+        "icon": "$(globe)"
+      },
+      {
         "command": "component-explorer.select",
         "title": "Select Component",
         "icon": "$(add)"
@@ -90,7 +112,7 @@
     "viewsWelcome": [
       {
         "view": "component-explorer",
-        "contents": "No components found.\n[Refresh Explorer](command:component-explorer.refresh)"
+        "contents": "No components found.\nUse the 'Configure' command to set up the server connection and load components."
       },
       {
         "view": "selected-components",
@@ -113,9 +135,10 @@
     "test": "vscode-test"
   },
   "devDependencies": {
+    "@types/adm-zip": "^0.5.7",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
-    "@types/vscode": "^1.107.0",
+    "@types/vscode": "^1.95.0",
     "@vscode/test-cli": "^0.0.12",
     "@vscode/test-electron": "^2.5.2",
     "esbuild": "^0.27.1",

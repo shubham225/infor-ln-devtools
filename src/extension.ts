@@ -3,54 +3,162 @@ import * as path from "path";
 import * as fs from "fs";
 import axios from "axios";
 import AdmZip from "adm-zip";
-import { ComponentDataProvider, refreshComponentView, TreeNode, SelectedComponentsDataProvider } from "./component-data-provider";
+import {
+  ComponentDataProvider,
+  refreshComponentView,
+  TreeNode,
+  SelectedComponentsDataProvider,
+} from "./component-data-provider";
 
-export function activate(context: vscode.ExtensionContext) {
-  const componentExplorerProvider = new ComponentDataProvider();
-  const selectedComponentsProvider = new SelectedComponentsDataProvider(componentExplorerProvider);
+export async function activate(context: vscode.ExtensionContext) {
+  let vrc = context.globalState.get<string>("vrc") || "";
+  let pmcName = context.globalState.get<string>("pmcName") || "";
+  let serverUrl = context.globalState.get<string>("serverUrl") ?? "http://localhost:3000";
 
-  vscode.window.registerTreeDataProvider("component-explorer", componentExplorerProvider);
-  vscode.window.registerTreeDataProvider("selected-components", selectedComponentsProvider);
-  
-  vscode.commands.registerCommand("component-explorer.refresh", async () => await refreshComponentView(componentExplorerProvider));
-  
-  vscode.commands.registerCommand("component-explorer.select", async (node?: TreeNode) => {
-    if (node && node.contextType === "leafNode") {
-      componentExplorerProvider.toggleSelection(node);
-      const isSelected = componentExplorerProvider.isSelected(node);
-      vscode.window.showInformationMessage(
-        `${isSelected ? "Selected" : "Deselected"} ${node.label}`
-      );
-      // selectedComponentsProvider will automatically refresh via listener
-    } else {
-      // If called on a folder/root or without node, import all selected components
-      await importComponents(componentExplorerProvider);
+  async function askServerUrl() {
+    const input = await vscode.window.showInputBox({
+      title: "Enter Server URL",
+      prompt: "Example: http://192.168.1.50:3000 or https://my-server.com/api",
+      value: serverUrl,
+      ignoreFocusOut: true,
+    });
+
+    if (input) {
+      serverUrl = input.trim();
+      await context.globalState.update("serverUrl", serverUrl);
+      vscode.window.showInformationMessage(`Server URL set to ${serverUrl}`);
     }
+  }
+
+  if (!serverUrl) {
+    await askServerUrl();
+  }
+
+  async function loadSettings() {
+    vrc =
+      (await vscode.window.showInputBox({
+        title: "Enter Package Combination",
+        prompt: "Example: E50C_1_E501",
+        ignoreFocusOut: true,
+        value: vrc,
+      })) || "";
+
+    pmcName =
+      (await vscode.window.showInputBox({
+        title: "Enter Import Issue Name",
+        prompt: "Example: EDM-1111",
+        ignoreFocusOut: true,
+        value: pmcName,
+      })) || "";
+
+    // Persist values for next session
+    await context.globalState.update("vrc", vrc);
+    await context.globalState.update("pmcName", pmcName);
+
+    vscode.window.showInformationMessage(
+      `Settings saved: PMC=${pmcName} Combo=${vrc}`
+    );
+  }
+
+  // ensure settings exist before loading views
+  if (!vrc || !pmcName) {
+    await loadSettings();
+  }
+
+  const componentExplorerProvider = new ComponentDataProvider();
+  const selectedComponentsProvider = new SelectedComponentsDataProvider(
+    componentExplorerProvider
+  );
+
+  vscode.window.registerTreeDataProvider(
+    "component-explorer",
+    componentExplorerProvider
+  );
+  vscode.window.registerTreeDataProvider(
+    "selected-components",
+    selectedComponentsProvider
+  );
+
+  const componentExplorerView = vscode.window.createTreeView(
+    "component-explorer",
+    {
+      treeDataProvider: componentExplorerProvider,
+    }
+  );
+
+  // Set initial title
+  componentExplorerView.title = `Components [${vrc} — ${pmcName}]`;
+  await refreshComponentView(componentExplorerProvider, serverUrl);
+
+  vscode.commands.registerCommand(
+    "component-explorer.refresh",
+    async () => await refreshComponentView(componentExplorerProvider, serverUrl)
+  );
+
+  vscode.commands.registerCommand("component-explorer.configure", async () => {
+    await loadSettings();
+    componentExplorerView.title = `Components [${vrc} — ${pmcName}]`;
+    await refreshComponentView(componentExplorerProvider, serverUrl);
   });
+
+  vscode.commands.registerCommand("component-explorer.updateUrl", async () => {
+    await askServerUrl();
+    await refreshComponentView(componentExplorerProvider, serverUrl);
+  });
+
+  vscode.commands.registerCommand(
+    "component-explorer.select",
+    async (node?: TreeNode) => {
+      if (node && node.contextType === "leafNode") {
+        componentExplorerProvider.toggleSelection(node);
+        const isSelected = componentExplorerProvider.isSelected(node);
+        vscode.window.showInformationMessage(
+          `${isSelected ? "Selected" : "Deselected"} ${node.label}`
+        );
+        // selectedComponentsProvider will automatically refresh via listener
+      } else {
+        // If called on a folder/root or without node, import all selected components
+        await importComponents(componentExplorerProvider, serverUrl, vrc, pmcName);
+      }
+    }
+  );
 
   // Import command for selected components view
   vscode.commands.registerCommand("selected-components.import", async () => {
-    await importComponents(componentExplorerProvider);
+    await importComponents(componentExplorerProvider, serverUrl, vrc, pmcName);
   });
 
   // Remove command for selected components view
-  vscode.commands.registerCommand("selected-components.remove", async (node?: TreeNode) => {
-    if (node && node.component) {
-      const removed = componentExplorerProvider.removeSelectedNode(node);
-      if (removed) {
-        vscode.window.showInformationMessage(`Removed ${node.label} from selection`);
-        // selectedComponentsProvider will automatically refresh via listener
+  vscode.commands.registerCommand(
+    "selected-components.remove",
+    async (node?: TreeNode) => {
+      if (node && node.component) {
+        const removed = componentExplorerProvider.removeSelectedNode(node);
+        if (removed) {
+          vscode.window.showInformationMessage(
+            `Removed ${node.label} from selection`
+          );
+          // selectedComponentsProvider will automatically refresh via listener
+        }
       }
     }
-  });
+  );
 
   // Add a command to trigger import of all selected components
-  vscode.commands.registerCommand("component-explorer.importSelected", async () => {
-    await importComponents(componentExplorerProvider);
-  });
+  vscode.commands.registerCommand(
+    "component-explorer.importSelected",
+    async () => {
+      await importComponents(componentExplorerProvider, serverUrl, vrc, pmcName);
+    }
+  );
 }
 
-async function importComponents(selectedProvider: ComponentDataProvider) {
+async function importComponents(
+  selectedProvider: ComponentDataProvider,
+  serverUrl: string,
+  vrc: string,
+  importFolder: string
+) {
   const components = selectedProvider.getSelectedComponents();
 
   if (components.length === 0) {
@@ -64,7 +172,10 @@ async function importComponents(selectedProvider: ComponentDataProvider) {
     return;
   }
 
-  const developmentFolder = path.join(workspaceFolder.uri.fsPath, "Development");
+  const developmentFolder = path.join(
+    workspaceFolder.uri.fsPath,
+    "Development"
+  );
   if (!fs.existsSync(developmentFolder)) {
     fs.mkdirSync(developmentFolder, { recursive: true });
   }
@@ -84,8 +195,8 @@ async function importComponents(selectedProvider: ComponentDataProvider) {
 
       // Send POST request to /import endpoint
       const response = await axios.post(
-        "http://localhost:3000/import",
-        { components },
+        `${serverUrl}/import`,
+        { vrc, importFolder, components },
         {
           responseType: "arraybuffer",
           headers: {
@@ -116,10 +227,9 @@ async function importComponents(selectedProvider: ComponentDataProvider) {
       );
     } catch (error: any) {
       console.error("Error importing components:", error);
-      const errorMessage =
-        error.response?.data
-          ? Buffer.from(error.response.data).toString("utf-8")
-          : error.message;
+      const errorMessage = error.response?.data
+        ? Buffer.from(error.response.data).toString("utf-8")
+        : error.message;
       vscode.window.showErrorMessage(
         `Failed to import components: ${errorMessage}`
       );

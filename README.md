@@ -1,71 +1,227 @@
-# infor-ln-devtools README
+# LN DevTools VS Code Extension
 
-This is the README for your extension "infor-ln-devtools". After writing up a brief description, we recommend including the following sections.
-
-## Features
-
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+**LN DevTools** is a VS Code extension designed to improve developer workflow when working with LN ERP artifacts such as Tables, Sessions, Scripts, etc.  
+It enables browsing, selecting, importing, and unloading LN components directly inside VS Code.
 
 ---
 
-## Following extension guidelines
+## 🚀 Features
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+- Browse LN Components by:
+  - **Table**
+  - **Session**
+  - **Script**
+- Displays component metadata such as:
+  - Package
+  - Module
+  - Code
+- Import selected components into LN Development folder
+- Automatically extracts imported zip content
+- Allows configuring:
+  - Package Combination (VRC)
+  - PMC / Target Import Folder
+  - Server URL (persisted across VS Code sessions)
+- Auto-refresh on extension activation
+- Manual Refresh + Change Config button
+- Uses real LN-style folder layout:
+  ```
+  <ImportFolder>/
+    TD/
+    FD/
+    Table/
+    Session/
+    Script/
+  ```
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+---
 
-## Working with Markdown
+## 🖥️ Extension UI Overview
 
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
+The sidebar view shows:
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
+```
+Infor LN DevTools — <VRC> — <PMC>
+```
 
-## For more information
+And contains:
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+```
+[ Refresh ] [ Change Config ]
+```
 
-**Enjoy!**
+Selecting components and clicking **Import** will send the data to the backend `/import` endpoint.
+
+---
+
+## ⚙️ Configuration Fields
+
+| Setting | Purpose |
+|---|---|
+| Server URL | LN mock or actual server endpoint |
+| VRC | Package combination (e.g., E50C_1_E501) |
+| PMC | Import folder / LN project (e.g., edm-12345) |
+
+All fields are persisted using VS Code global state.
+
+---
+
+# 🧩 API — Backend Endpoints
+
+Below describes the expected backend contract used by the extension.
+
+---
+
+## 📍 `GET /components`
+
+Returns an array of all components that LN DevTools can import.
+
+### Response format:
+
+```
+[
+  {
+    "type": "Table",
+    "package": "tc",
+    "module": "ecp",
+    "code": "001"
+  },
+  {
+    "type": "Session",
+    "package": "tc",
+    "module": "ecp",
+    "code": "003"
+  }
+]
+```
+
+Possible values for `type`:
+
+| type |
+|---|
+| Table |
+| Session |
+| Script |
+
+---
+
+## 📦 `POST /import`
+
+Used when importing selected components from VS Code into the LN Development environment.
+
+### Request format:
+
+```
+{
+  "vrc": "E50C_1_E501",
+  "importFolder": "edm-222",
+  "components": [
+    { "type": "Table",   "package": "tc", "module": "ecp", "code": "001" },
+    { "type": "Table",   "package": "tc", "module": "ecp", "code": "002" },
+    { "type": "Session", "package": "tc", "module": "ecp", "code": "003" },
+    { "type": "Script",  "package": "tc", "module": "ecp", "code": "004" }
+  ]
+}
+```
+
+| Field | Required | Description |
+|---|---|---|
+| vrc | optional | Package combination |
+| importFolder | required | Parent folder name (e.g. edm-12345) |
+| components | required | Component list |
+
+---
+
+### 📤 Response
+
+Returns a `.zip` file structured as:
+
+```
+<importFolder>/
+ ├─ TD/
+ ├─ FD/
+ ├─ Table/
+ │   ├─ tc_ecp_001.txt
+ │   └─ tc_ecp_002.txt
+ ├─ Session/
+ │   └─ tc_ecp_003.txt
+ ├─ Script/
+ │   └─ tc_ecp_004.txt
+```
+
+Each component file contains:
+
+```
+Component: Table
+Package: tc
+Module: ecp
+Code: 001
+VRC: E50C_1_E501
+```
+
+Response headers:
+```
+Content-Type: application/zip
+Content-Disposition: attachment; filename="<importFolder>.zip"
+```
+
+---
+
+# 🧪 Mock Server for Testing
+
+You can run the included sample Express server:
+
+```
+node mock-server.js
+```
+
+It provides:
+
+| Endpoint | Purpose |
+|---|---|
+| GET /components | Fetches mock component list |
+| POST /import | Generates LN-style import zip |
+
+Runs at:
+
+```
+http://localhost:3000
+```
+
+---
+
+# 📦 Building the VSIX
+
+To build and package:
+
+```
+npm run package
+```
+
+or using `vsce`:
+
+```
+vsce package
+```
+
+Then install via:
+```
+Extensions → ... → Install from VSIX
+```
+
+---
+
+# 🗺️ Roadmap Ideas
+
+Future features:
+
+- Actual LN export support
+- Integrate unloading
+- Provide diffing tools
+- Support for PMC branching
+- Real SOAP integrations
+- LN login authentication
+
+---
+
+# 📄 License
+This project is licensed under the MIT License.
