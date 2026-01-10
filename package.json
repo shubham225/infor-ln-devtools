@@ -5,12 +5,14 @@
   "version": "0.0.1",
   "publisher": "shubham-shinde",
   "engines": {
-    "vscode": "^1.107.0"
+    "vscode": "^1.95.0"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "viewsContainers": {
@@ -18,7 +20,7 @@
         {
           "id": "ln-devtools-explorer",
           "title": "Infor LN DevTools",
-          "icon": "resources/extension-icon.svg"
+          "icon": "resources/extension-logo.svg"
         }
       ]
     },
@@ -28,12 +30,22 @@
           "command": "component-explorer.refresh",
           "when": "view == component-explorer",
           "group": "navigation"
+        },
+        {
+          "command": "selected-components.import",
+          "when": "view == selected-components",
+          "group": "navigation"
         }
       ],
       "view/item/context": [
         {
-          "command": "component-explorer.import",
+          "command": "component-explorer.select",
           "when": "view == component-explorer && viewItem == leafNode",
+          "group": "inline"
+        },
+        {
+          "command": "selected-components.remove",
+          "when": "view == selected-components && viewItem == leafNode",
           "group": "inline"
         }
       ]
@@ -43,6 +55,10 @@
         {
           "id": "component-explorer",
           "name": "Components"
+        },
+        {
+          "id": "selected-components",
+          "name": "Selected Components"
         }
       ]
     },
@@ -51,21 +67,34 @@
         "command": "component-explorer.refresh",
         "category": "Infor LN DevTools",
         "title": "Refresh Component",
-        "icon": "resources/refresh.svg"
+        "icon": "$(refresh)"
       },
       {
-        "command": "component-explorer.import",
-        "title": "Import Component",
-        "icon": {
-          "light": "resources/light/edit.svg",
-          "dark": "resources/dark/edit.svg"
-        }
+        "command": "component-explorer.select",
+        "title": "Select Component",
+        "icon": "$(add)"
+      },
+      {
+        "command": "selected-components.import",
+        "category": "Infor LN DevTools",
+        "title": "Import Selected",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "selected-components.remove",
+        "category": "Infor LN DevTools",
+        "title": "Remove from Selection",
+        "icon": "$(x)"
       }
     ],
     "viewsWelcome": [
       {
         "view": "component-explorer",
         "contents": "No components found.\n[Refresh Explorer](command:component-explorer.refresh)"
+      },
+      {
+        "view": "selected-components",
+        "contents": "No components selected.\nSelect components from the Components view to import them."
       }
     ]
   },
@@ -96,6 +125,7 @@
     "typescript-eslint": "^8.48.1"
   },
   "dependencies": {
+    "adm-zip": "^0.5.16",
     "axios": "^1.13.2"
   }
 }
