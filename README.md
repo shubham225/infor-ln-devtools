@@ -37,19 +37,24 @@ It enables browsing, selecting, importing, and unloading LN components directly 
 
 ## 🖥️ Extension UI Overview
 
-The sidebar view shows:
+### 📦 **Component Explorer**
+Shows all LN components grouped by type:
 
-```
-Infor LN DevTools — <VRC> — <PMC>
-```
+![Component Explorer](./screenshots/component-explorer.png)
 
-And contains:
+---
 
-```
-[ Refresh ] [ Change Config ]
-```
+### 📥 **Import Component Flow**
+Selection + ZIP generation + import trigger:
 
-Selecting components and clicking **Import** will send the data to the backend `/import` endpoint.
+![Import Component](./screenshots/import-component.png)
+
+---
+
+### 🧰 **DevTools Panel**
+Includes VRC / PMC / Server URL configuration + export/import controls:
+
+![DevTools Panel](./screenshots/devtools-panel.png)
 
 ---
 
