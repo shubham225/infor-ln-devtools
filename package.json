@@ -3,6 +3,7 @@
   "displayName": "Infor LN DevTools",
   "description": "Developer tools for Infor LN ERP in VS Code and Cursor. Import, export, and compile LN components using supported LN utilities.",
   "version": "0.0.1",
+  "icon": "resources/icon.png",
   "publisher": "shubham-shinde",
   "engines": {
     "vscode": "^1.95.0"
@@ -20,7 +21,7 @@
         {
           "id": "ln-devtools-explorer",
           "title": "Infor LN DevTools",
-          "icon": "resources/extension-logo.svg"
+          "icon": "resources/icon.svg"
         }
       ]
     },
