@@ -65,7 +65,7 @@ export async function activate(context: vscode.ExtensionContext) {
     await loadSettings();
   }
 
-  const componentExplorerProvider = new ComponentDataProvider();
+  const componentExplorerProvider = new ComponentDataProvider(context);
   const selectedComponentsProvider = new SelectedComponentsDataProvider(
     componentExplorerProvider
   );
@@ -109,12 +109,9 @@ export async function activate(context: vscode.ExtensionContext) {
   vscode.commands.registerCommand(
     "component-explorer.select",
     async (node?: TreeNode) => {
-      if (node && node.contextType === "leafNode") {
+      if (node && node.contextType === "componentNode") {
         componentExplorerProvider.toggleSelection(node);
         const isSelected = componentExplorerProvider.isSelected(node);
-        vscode.window.showInformationMessage(
-          `${isSelected ? "Selected" : "Deselected"} ${node.label}`
-        );
         // selectedComponentsProvider will automatically refresh via listener
       } else {
         // If called on a folder/root or without node, import all selected components
@@ -134,12 +131,6 @@ export async function activate(context: vscode.ExtensionContext) {
     async (node?: TreeNode) => {
       if (node && node.component) {
         const removed = componentExplorerProvider.removeSelectedNode(node);
-        if (removed) {
-          vscode.window.showInformationMessage(
-            `Removed ${node.label} from selection`
-          );
-          // selectedComponentsProvider will automatically refresh via listener
-        }
       }
     }
   );
@@ -174,7 +165,8 @@ async function importComponents(
 
   const developmentFolder = path.join(
     workspaceFolder.uri.fsPath,
-    "Development"
+    "Development",
+    importFolder
   );
   if (!fs.existsSync(developmentFolder)) {
     fs.mkdirSync(developmentFolder, { recursive: true });

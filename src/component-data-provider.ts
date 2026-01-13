@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import axios from "axios";
+import { getServerUrl } from "./utils";
 
 export interface Component {
   type: string;
@@ -13,11 +14,12 @@ export class TreeNode extends vscode.TreeItem {
 
   constructor(
     public readonly label: string,
-    public readonly componentType: string = "",
     public readonly description: string = "",
+    public readonly componentType: string = "",
     public readonly contextType: string,
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
-    public readonly children: TreeNode[] = [],
+    public children: TreeNode[] = [],
+    public readonly parent?: TreeNode,
     component?: Component
   ) {
     super(label, collapsibleState);
@@ -29,7 +31,8 @@ export class TreeNode extends vscode.TreeItem {
           : componentType === "Session"
           ? "window"
           : "code",
-      folderNode: "folder",
+      packageNode: "folder",
+      moduleNode: "folder",
     }[contextType];
 
     if (iconId) {
@@ -51,13 +54,19 @@ export class TreeNode extends vscode.TreeItem {
         ),
       };
     }
-    this.contextValue = children.length > 0 ? "folderNode" : "leafNode";
+    this.contextValue = contextType;
   }
 }
 
 export class ComponentDataProvider
   implements vscode.TreeDataProvider<TreeNode>
 {
+  private context: vscode.ExtensionContext;
+
+  constructor(context: vscode.ExtensionContext) {
+    this.context = context;
+  }
+
   private _onDidChangeTreeData: vscode.EventEmitter<
     TreeNode | undefined | null | void
   > = new vscode.EventEmitter<TreeNode | undefined | null | void>();
@@ -79,11 +88,84 @@ export class ComponentDataProvider
   }
 
   getChildren(element?: TreeNode): Thenable<TreeNode[]> {
-    return Promise.resolve(element ? element.children : this.data);
+    if (!element) {
+      return Promise.resolve(this.data);
+    }
+
+    if (element.contextType === "rootNode") {
+      return Promise.resolve(element.children);
+    }
+
+    if (element.contextType === "packageNode") {
+      return Promise.resolve(element.children);
+    }
+
+    // Module → lazy load components
+    if (element.contextType === "moduleNode") {
+      // If cached, don't fetch again
+      if (element.children && element.children.length > 0) {
+        return Promise.resolve(element.children);
+      }
+
+      const type = element.parent?.parent?.label || "UNKNOWN";
+      const pkg = element.parent?.label;
+      const mod = element.label;
+
+      const serverUrl = this.context.globalState.get<string>("serverUrl");
+      if (!serverUrl) {
+        vscode.window.showErrorMessage("Server URL is not configured.");
+        return Promise.resolve([]);
+      }
+
+      return axios
+        .post(`${serverUrl}/components`, {
+          type,
+          package: pkg,
+          module: mod,
+        })
+        .then((res) => {
+          const data = res.data as {
+            type: string;
+            package: string;
+            module: string;
+            code: string[];
+          };
+
+          element.children = data.code.map(
+            (codeStr) =>
+              new TreeNode(
+                `${data.package}${data.module}${codeStr}`,
+                "",
+                data.type,
+                "componentNode",
+                vscode.TreeItemCollapsibleState.None,
+                [],
+                element,
+                {
+                  type: data.type,
+                  package: data.package,
+                  module: data.module,
+                  code: codeStr,
+                }
+              )
+          );
+
+          return element.children;
+        })
+        .catch((err) => {
+          vscode.window.showErrorMessage(
+            "Failed to load components: " + err.message
+          );
+          return [];
+        });
+    }
+
+    // Components have no children
+    return Promise.resolve([]);
   }
 
   toggleSelection(node: TreeNode) {
-    if (node.component && node.contextType === "leafNode") {
+    if (node.component && node.contextType === "componentNode") {
       if (this.selectedComponents.has(node)) {
         this.selectedComponents.delete(node);
       } else {
@@ -159,78 +241,78 @@ export async function refreshComponentView(
   dataProvider: ComponentDataProvider,
   serverUrl: string
 ) {
-  const result = await axios.get(`${serverUrl}/components`);
-  const data = result.data;
+  try {
+    const result = await axios.get(`${serverUrl}/modules`);
 
-  const grouped: Record<string, Record<string, Record<string, any[]>>> = {};
+    type ModulesResponse = {
+      [type: string]: Array<{
+        package: string;
+        module: string[];
+      }>;
+    };
 
-  for (const item of data) {
-    const type = item.type;
-    const pkg = item.package;
-    const mod = item.module;
+    const data = result.data as ModulesResponse;
 
-    if (!grouped[type]) {
-      grouped[type] = {};
-    }
-    if (!grouped[type][pkg]) {
-      grouped[type][pkg] = {};
-    }
-    if (!grouped[type][pkg][mod]) {
-      grouped[type][pkg][mod] = [];
-    }
-
-    grouped[type][pkg][mod].push(item);
-  }
-
-  const tree = Object.entries(grouped).map(
-    ([type, packages]) =>
-      new TreeNode(
-        type,
+    const tree = Object.entries(data).map(([type, pkgEntries]) => {
+      const typeNode = new TreeNode(
         type,
         "",
+        type,
         "rootNode",
         vscode.TreeItemCollapsibleState.Collapsed,
-        Object.entries(packages).map(
-          ([pkg, modules]) =>
-            new TreeNode(
-              pkg,
-              type,
-              "",
-              "folderNode",
-              vscode.TreeItemCollapsibleState.Collapsed,
-              Object.entries(modules).map(
-                ([mod, items]) =>
-                  new TreeNode(
-                    mod,
-                    type,
-                    "",
-                    "folderNode",
-                    vscode.TreeItemCollapsibleState.Collapsed,
-                    items.map(
-                      (item) =>
-                        new TreeNode(
-                          `${item.package}${item.module}${item.code}`,
-                          type,
-                          "",
-                          "leafNode",
-                          vscode.TreeItemCollapsibleState.None,
-                          [],
-                          {
-                            type: item.type,
-                            package: item.package,
-                            module: item.module,
-                            code: item.code,
-                          }
-                        )
-                    )
-                  )
-              )
-            )
-        )
-      )
-  );
+        []
+      );
 
-  dataProvider.refresh(tree);
+      typeNode.children = pkgEntries.map((pkgEntry) => {
+        const pkgNode = new TreeNode(
+          pkgEntry.package,
+          "",
+          type,
+          "packageNode",
+          vscode.TreeItemCollapsibleState.Collapsed,
+          [],
+          typeNode
+        );
+
+        // Note change: pkgEntry.module instead of pkgEntry.modules
+        pkgNode.children = pkgEntry.module.map(
+          (mod) =>
+            new TreeNode(
+              mod,
+              "",
+              type,
+              "moduleNode",
+              vscode.TreeItemCollapsibleState.Collapsed,
+              [],
+              pkgNode
+            )
+        );
+
+        return pkgNode;
+      });
+
+      return typeNode;
+    });
+
+    dataProvider.refresh(tree);
+
+  } catch (err: any) {
+    console.error(err);
+
+    let reason = err.message || "Unknown error";
+
+    if (err.response) {
+      reason = `${err.response.status}: ${err.response.statusText}`;
+    } else if (err.code === "ECONNREFUSED") {
+      reason = "Server not reachable";
+    }
+
+    vscode.window.showErrorMessage(
+      `Failed to load modules from server: ${reason}`
+    );
+
+    dataProvider.refresh([]); // clear tree on failure
+  }
 }
 
 export class SelectedComponentsDataProvider
@@ -277,8 +359,8 @@ export class SelectedComponentsDataProvider
       const tree = Object.entries(groupedByType).map(([type, nodes]) => {
         return new TreeNode(
           type,
-          type,
           `(${nodes.length})`,
+          type,
           "rootNode",
           vscode.TreeItemCollapsibleState.Collapsed,
           nodes,

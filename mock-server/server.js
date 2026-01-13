@@ -97,9 +97,24 @@ const components = [
     code: s.code
   }))
 ]
+
+const MODULES = {
+  "Session": [
+    { package: "td", modules: ["ext", "cfg"] },
+    { package: "tc", modules: ["itm"] }
+  ],
+  "Table": [
+    { package: "td", modules: ["ext"] }
+  ]
+};
+
 /**
  * ENDPOINTS
  */
+
+app.get("/modules", (req, res) => {
+  res.json(MODULES);
+});
 
 app.get('/tables', (req, res) => {
   res.json(tables);
@@ -115,6 +130,33 @@ app.get('/scripts', (req, res) => {
 
 app.get('/components', (req, res) => {
   res.json(components);
+});
+
+app.post("/components", (req, res) => {
+  const { type, package: pkg, module } = req.body;
+
+  if (!type || !pkg || !module) {
+    return res.status(400).json({
+      error: "Missing required fields: type, package, module"
+    });
+  }
+
+  // generate a random count of codes (5–10)
+  const count = Math.floor(Math.random() * 6) + 5;
+
+  // generate codes like ####m###
+  const codes = Array.from({ length: count }).map((_, i) => {
+    const head = String(i * 10).padStart(4, "0");
+    const tail = String(Math.floor(Math.random() * 9) * 100).padStart(3, "0");
+    return `${head}m${tail}`;
+  });
+
+  res.json({
+    type,
+    package: pkg,
+    module,
+    code: codes
+  });
 });
 
 app.use(bodyParser.json());
