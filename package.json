@@ -47,6 +47,11 @@
           "group": "navigation"
         },
         {
+          "command": "component-explorer.search",
+          "when": "view == component-explorer",
+          "group": "navigation"
+        },
+        {
           "command": "selected-components.import",
           "when": "view == selected-components",
           "group": "navigation"
@@ -69,7 +74,11 @@
       "ln-devtools-explorer": [
         {
           "id": "component-explorer",
-          "name": "Components"
+          "name": "Components",
+      "filter": {
+        "type": "tree",
+        "mode": "highlight"
+      }
         },
         {
           "id": "selected-components",
@@ -95,6 +104,12 @@
         "category": "Infor LN DevTools",
         "title": "Update Server URL",
         "icon": "$(globe)"
+      },
+      {
+        "command": "component-explorer.search",
+        "category": "Infor LN DevTools",
+        "title": "Search Components",
+        "icon": "$(search)"
       },
       {
         "command": "component-explorer.select",

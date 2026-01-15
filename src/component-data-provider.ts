@@ -1,6 +1,8 @@
 import * as vscode from "vscode";
 import axios from "axios";
-import { getServerUrl } from "./utils";
+
+const MODULES_PATH = "/modules";
+const COMPONENTS_PATH = "/components";
 
 export interface Component {
   type: string;
@@ -11,6 +13,7 @@ export interface Component {
 
 export class TreeNode extends vscode.TreeItem {
   public readonly component?: Component;
+  filterText?: string;
 
   constructor(
     public readonly label: string,
@@ -55,6 +58,7 @@ export class TreeNode extends vscode.TreeItem {
       };
     }
     this.contextValue = contextType;
+    this.filterText = `${label} ${description}`.toLowerCase();
   }
 }
 
@@ -83,9 +87,10 @@ export class ComponentDataProvider
     this._onDidChangeTreeData.fire();
   }
 
-  getTreeItem(element: TreeNode): vscode.TreeItem {
-    return element;
-  }
+  getTreeItem(item: TreeNode): vscode.TreeItem  {
+  item.filterText = `${item.label} ${item.description}`.toLowerCase();
+  return item;
+}
 
   getChildren(element?: TreeNode): Thenable<TreeNode[]> {
     if (!element) {
@@ -118,7 +123,7 @@ export class ComponentDataProvider
       }
 
       return axios
-        .post(`${serverUrl}/components`, {
+        .post(`${serverUrl}${COMPONENTS_PATH}`, {
           type,
           package: pkg,
           module: mod,
@@ -129,7 +134,7 @@ export class ComponentDataProvider
             package: string;
             module: string;
             code: string[];
-          };
+          };    
 
           element.children = data.code.map(
             (codeStr) =>
@@ -228,6 +233,227 @@ export class ComponentDataProvider
     this.notifySelectionChange();
   }
 
+  /**
+   * Fetch components for a module (used by getChildren and search). Supports
+   * optional abort signal so long-running searches can be cancelled.
+   */
+  private async fetchModuleChildren(
+    element: TreeNode,
+    options?: { signal?: AbortSignal }
+  ): Promise<TreeNode[]> {
+    if (element.children && element.children.length > 0) {
+      return element.children;
+    }
+
+    const type = element.parent?.parent?.label || "UNKNOWN";
+    const pkg = element.parent?.label;
+    const mod = element.label;
+
+    const serverUrl = this.context.globalState.get<string>("serverUrl");
+    if (!serverUrl) {
+      vscode.window.showErrorMessage("Server URL is not configured.");
+      return [];
+    }
+
+    try {
+      const res = await axios.post(
+        `${serverUrl}${COMPONENTS_PATH}`,
+        { type, package: pkg, module: mod },
+        { signal: options?.signal }
+      );
+
+      const data = res.data as {
+        type: string;
+        package: string;
+        module: string;
+        code: string[];
+      };
+
+      element.children = data.code.map(
+        (codeStr) =>
+          new TreeNode(
+            `${data.package}${data.module}${codeStr}`,
+            "",
+            data.type,
+            "componentNode",
+            vscode.TreeItemCollapsibleState.None,
+            [],
+            element,
+            {
+              type: data.type,
+              package: data.package,
+              module: data.module,
+              code: codeStr,
+            }
+          )
+      );
+
+      return element.children;
+    } catch (err: any) {
+      // If request was aborted, just return empty so search can continue/stop.
+      if (err?.name === "CanceledError" || err?.name === "AbortError") {
+        return [];
+      }
+
+      vscode.window.showErrorMessage("Failed to load components: " + err.message);
+      return [];
+    }
+  }
+
+  /**
+   * Search components across the tree with concurrency, progress and cancellation.
+   */
+  async searchAndRefresh(term: string, serverUrl: string) {
+    const termLower = term.toLowerCase();
+    const resultsByType: Record<string, TreeNode[]> = {};
+
+    // Collect all module nodes to process
+    let modNodes: Array<{
+      typeNode: TreeNode;
+      pkgNode: TreeNode;
+      modNode: TreeNode;
+    }> = [];
+
+    for (const typeNode of this.data) {
+      for (const pkgNode of typeNode.children) {
+        for (const modNode of pkgNode.children) {
+          modNodes.push({ typeNode, pkgNode, modNode });
+        }
+      }
+    }
+
+    // If the user typed a long identifier (>=5 chars), assume the first 5
+    // characters indicate the package/module prefix and limit scanning to
+    // matching package/module combos. If that yields no matches, fall back
+    // to scanning everything.
+    if (termLower.length >= 5) {
+      const prefix = termLower.slice(0, 5);
+      const filtered = modNodes.filter(({ pkgNode, modNode }) => {
+        const pkg = (pkgNode.label || "").toLowerCase();
+        const mod = (modNode.label || "").toLowerCase();
+        const combined = `${pkg}${mod}`;
+        return (
+          pkg.includes(prefix) ||
+          mod.includes(prefix) ||
+          combined.startsWith(prefix) ||
+          combined.includes(prefix)
+        );
+      });
+
+      if (filtered.length > 0) {
+        modNodes = filtered;
+      } else {
+        // No modules match the prefix — do NOT fall back to scanning everything.
+        // Return empty results and inform the user.
+        this.refresh([]);
+        vscode.window.showInformationMessage(
+          `No modules match prefix '${prefix}'. Try a different prefix (at least 5 characters).`
+        );
+        return;
+      }
+    } else {
+      // If user somehow bypassed validation and term is <5 chars, avoid scanning
+      // everything. Return empty results instead.
+      this.refresh([]);
+      return;
+    }
+
+    if (modNodes.length === 0) {
+      this.refresh([]);
+      return;
+    }
+
+    await vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: `Searching components for "${term}"`,
+        cancellable: true,
+      },
+      async (progress, token) => {
+        const total = modNodes.length;
+        let processed = 0;
+        const controllers: AbortController[] = [];
+
+        token.onCancellationRequested(() => {
+          controllers.forEach((c) => c.abort());
+        });
+
+        let idx = 0;
+        const concurrency = 8; // reasonable default for parallel module fetches
+
+        const worker = async () => {
+          while (true) {
+            if (token.isCancellationRequested) { break; }
+            const i = idx++;
+            if (i >= total) { break; }
+
+            const { typeNode, pkgNode, modNode } = modNodes[i];
+            const controller = new AbortController();
+            controllers.push(controller);
+
+            try {
+              const children = await this.fetchModuleChildren(modNode, {
+                signal: controller.signal,
+              });
+
+              for (const comp of children) {
+                const hay = `${comp.label} ${comp.component?.code} ${pkgNode.label} ${modNode.label}`.toLowerCase();
+                if (hay.includes(termLower)) {
+                  const resultNode = new TreeNode(
+                    comp.label,
+                    "",
+                    comp.componentType,
+                    "componentNode",
+                    vscode.TreeItemCollapsibleState.None,
+                    [],
+                    undefined,
+                    comp.component
+                  );
+
+                  if (!resultsByType[typeNode.label]) {
+                    resultsByType[typeNode.label] = [];
+                  }
+                  resultsByType[typeNode.label].push(resultNode);
+                }
+              }
+            } catch (err) {
+              console.error("Error during module fetch in search:", err);
+            } finally {
+              processed++;
+              progress.report({
+                message: `Scanned ${processed}/${total} modules`,
+                increment: Math.floor((processed / total) * 100),
+              });
+            }
+          }
+        };
+
+        // Start workers and wait for completion or cancellation
+        const workers: Promise<void>[] = [];
+        for (let w = 0; w < concurrency; w++) { workers.push(worker()); }
+        await Promise.all(workers);
+      }
+    );
+
+    const tree = Object.entries(resultsByType).map(([type, nodes]) =>
+      new TreeNode(
+        type,
+        `(${nodes.length})`,
+        type,
+        "rootNode",
+        vscode.TreeItemCollapsibleState.Collapsed,
+        nodes,
+        undefined
+      )
+    );
+
+    this.refresh(tree);
+  }
+
+  async clearSearch(serverUrl: string) {
+    await refreshComponentView(this, serverUrl);
+  }
+
   onSelectionChange(listener: () => void) {
     this.selectionChangeListeners.push(listener);
   }
@@ -242,7 +468,7 @@ export async function refreshComponentView(
   serverUrl: string
 ) {
   try {
-    const result = await axios.get(`${serverUrl}/modules`);
+    const result = await axios.get(`${serverUrl}${MODULES_PATH}`);
 
     type ModulesResponse = {
       [type: string]: Array<{
