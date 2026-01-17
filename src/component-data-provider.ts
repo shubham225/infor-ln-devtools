@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 import axios from "axios";
 
-const MODULES_PATH = "/modules";
-const COMPONENTS_PATH = "/components";
+const MODULES_PATH = "/api/module";
+const COMPONENTS_PATH = "/api/component";
 
 export interface Component {
   type: string;
@@ -122,25 +122,32 @@ export class ComponentDataProvider
         return Promise.resolve([]);
       }
 
+      const baseVrc = this.context.globalState.get<string>("vrc") || "";
+
+      type Component = {
+        code: string; description: string
+      }
+
       return axios
         .post(`${serverUrl}${COMPONENTS_PATH}`, {
           type,
           package: pkg,
           module: mod,
+          baseVrc,
         })
         .then((res) => {
           const data = res.data as {
             type: string;
             package: string;
             module: string;
-            code: string[];
+            component: Component[];
           };    
 
-          element.children = data.code.map(
-            (codeStr) =>
+          element.children = data.component.map(
+            (comp) =>
               new TreeNode(
-                `${data.package}${data.module}${codeStr}`,
-                "",
+                `${data.package}${data.module}${comp.code}`,
+                `(${comp.description})`,
                 data.type,
                 "componentNode",
                 vscode.TreeItemCollapsibleState.None,
@@ -150,7 +157,7 @@ export class ComponentDataProvider
                   type: data.type,
                   package: data.package,
                   module: data.module,
-                  code: codeStr,
+                  code: comp.code,
                 }
               )
           );
@@ -256,9 +263,11 @@ export class ComponentDataProvider
     }
 
     try {
+      const baseVrc = this.context.globalState.get<string>("vrc") || "";
+
       const res = await axios.post(
         `${serverUrl}${COMPONENTS_PATH}`,
-        { type, package: pkg, module: mod },
+        { type, package: pkg, module: mod, baseVrc },
         { signal: options?.signal }
       );
 
@@ -266,14 +275,14 @@ export class ComponentDataProvider
         type: string;
         package: string;
         module: string;
-        code: string[];
+        component: Array<{ code: string; description: string }>;
       };
 
-      element.children = data.code.map(
-        (codeStr) =>
+      element.children = data.component.map(
+        (comp) =>
           new TreeNode(
-            `${data.package}${data.module}${codeStr}`,
-            "",
+            `${data.package}${data.module}${comp.code}`,
+            comp.description,
             data.type,
             "componentNode",
             vscode.TreeItemCollapsibleState.None,
@@ -283,7 +292,7 @@ export class ComponentDataProvider
               type: data.type,
               package: data.package,
               module: data.module,
-              code: codeStr,
+              code: comp.code,
             }
           )
       );
@@ -450,8 +459,8 @@ export class ComponentDataProvider
     this.refresh(tree);
   }
 
-  async clearSearch(serverUrl: string) {
-    await refreshComponentView(this, serverUrl);
+  async clearSearch(serverUrl: string, baseVrc: string = "") {
+    await refreshComponentView(this, serverUrl, baseVrc);
   }
 
   onSelectionChange(listener: () => void) {
@@ -465,10 +474,13 @@ export class ComponentDataProvider
 
 export async function refreshComponentView(
   dataProvider: ComponentDataProvider,
-  serverUrl: string
+  serverUrl: string,
+  baseVrc: string = ""
 ) {
   try {
-    const result = await axios.get(`${serverUrl}${MODULES_PATH}`);
+    const result = await axios.post(`${serverUrl}${MODULES_PATH}`, {
+      baseVrc
+    });
 
     type ModulesResponse = {
       [type: string]: Array<{

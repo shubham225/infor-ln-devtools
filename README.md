@@ -1,6 +1,6 @@
 # LN DevTools Extension 
 [![VS Marketplace](https://img.shields.io/badge/VS%20Code-Extension-blue)]()
-![Version](https://img.shields.io/badge/Version-0.0.1-9f7aea)
+![Version](https://img.shields.io/badge/Version-v0.0.1-9f7aea)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)
 ![Infor LN](https://img.shields.io/badge/ERP-Infor%20LN-critical)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green)
@@ -19,8 +19,8 @@
   - **Session**
   - **Script**
 - Lazy backend loading:
-  - `/modules` loads type → package → module
-  - `/components` loads module → codes
+  - `/api/modules` loads type → package → module
+  - `/api/components` loads module → codes
 
 ### 🎯 Selection Panel
 - Dedicated "Selected Components" panel
@@ -42,9 +42,9 @@ When imported:
 
 ### ⚙ Persistent Settings
 Stored in VS Code global state:
-- `serverUrl`
-- `vrc`
-- `projectFolder`
+- `Backend API URL`
+- `Base VRC`
+- `Project Folder`
 
 ## 🖥️ Extension UI Overview
 
@@ -54,7 +54,7 @@ Shows all LN components grouped by type:
 ![Component Explorer](./docs/screenshots/component-explorer.png)
 
 ### 📥 **Import Component Flow**
-Selection + ZIP generation + import trigger:
+Selection + Import trigger:
 
 ![Import Component](./docs/screenshots/import-component.png)
 
@@ -63,13 +63,20 @@ Includes VRC / PMC / Server URL configuration + export/import controls:
 
 ![DevTools Panel](./docs/screenshots/devtools-panel.png)
 
-# 🧩 Backend API Contract (Updated)
+# 🧩 Backend API Contract
 
 The extension expects the following backend endpoints:
 
-## 1) `GET /modules`
+## 1) `POST /api/modules`
 
 Used to populate the tree hierarchy.
+
+### Request:
+```json
+{
+  "baseVrc": "E50C_1_E501"
+}
+```
 
 ### Response format:
 ```json
@@ -86,13 +93,14 @@ Used to populate the tree hierarchy.
 }
 ```
 
-## 2) `POST /components`
+## 2) `POST /api/components`
 
 Triggered when user expands a module node (lazy-load).
 
 ### Request:
 ```json
 {
+  "baseVrc": "E50C_1_E501",
   "type": "<Table|Session|Script>",
   "package": "tc",
   "module": "ecp"
@@ -102,6 +110,7 @@ Triggered when user expands a module node (lazy-load).
 ### Response:
 ```json
 {
+  "baseVrc": "E50C_1_E501",
   "type": "Table",
   "package": "tc",
   "module": "ecp",
@@ -109,14 +118,14 @@ Triggered when user expands a module node (lazy-load).
 }
 ```
 
-## 3) `POST /import`
+## 3) `POST /api/import`
 
 Triggered on Import operation.
 
 ### Request:
 ```json
 {
-  "vrc": "E50C_1_E501",
+  "baseVrc": "E50C_1_E501",
   "importFolder": "EDM-222",
   "components": [
     { "type": "Table", "package": "tc", "module": "ecp", "code": "001" },
@@ -136,7 +145,7 @@ Content-Disposition: attachment; filename="<importFolder>.zip"
 
 ZIP is extracted to:
 ```
-<workspace>/Development/<importFolder>/
+<Workspace>/Development/<ProjectFolder>/
 ```
 
 # 📁 Extracted Folder Structure
@@ -145,7 +154,7 @@ Expected after import:
 
 ```
 Development/
- └── EDM-222/
+ └── <project-name>/
       ├── TD/
       ├── FD/
       ├── Table/
@@ -157,40 +166,19 @@ Development/
 
 | Command | Action |
 |---|---|
-| Refresh | Reload modules from backend |
-| Configure Settings | Update VRC + PMC |
+| Refresh | Reload package tree from backend |
+| Configure Settings | Update Base VRC + Project Folder |
 | Update Server URL | Change API endpoint |
 | Select Component | Add/remove from selection |
-| Import Selected | Trigger `/import` |
+| Import Selected | Triggers `/import` and add files in Development folder |
 
 
-# 🧪 Mock Backend (Optional)
-
-A simple backend may expose:
-- `GET /modules`
-- `POST /components`
-- `POST /import`
-
-# 📦 Building the Extension
-
-To package:
-```
-npm run package
-```
-or
-```
-vsce package
-```
-
-# 🗺 Roadmap Ideas
+# 📅 Roadmap Ideas
 
 Future enhancements:
-- Export support
-- Unloading components
-- Diffing tools
-- VRC/PMC auto-sync
-- SOAP-based real LN integration
-- Authentication middleware
+- Export support 
+- Compilation support
+- Check-in / Check-out support
 
-# 📄 License
-This project is licensed under the MIT License.
+# 📜 License
+This project is licensed under the **MIT License** – see the [LICENSE](LICENSE.md) file for details.

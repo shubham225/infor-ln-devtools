@@ -11,8 +11,9 @@ import {
   SelectedComponentsDataProvider,
 } from "./component-data-provider";
 
-const IMPORT_PATH = "/import";
 const REMOTE_HOST = "http://localhost:3000";
+const IMPORT_PATH = "/api/import";
+const FETCH_VRCS_PATH = "/api/vrc";
 
 export async function activate(context: vscode.ExtensionContext) {
   let vrc = context.globalState.get<string>("vrc") || "";
@@ -26,6 +27,12 @@ export async function activate(context: vscode.ExtensionContext) {
         "Example: http://192.168.1.50:3000 or https://api.my-server.com:6443",
       value: serverUrl,
       ignoreFocusOut: true,
+      validateInput: (value) => {
+        if (!value || value.trim() === "") {
+          return "Backend API URL is required";
+        }
+        return null;
+      },
     });
 
     if (input) {
@@ -40,25 +47,57 @@ export async function activate(context: vscode.ExtensionContext) {
   }
 
   async function loadSettings() {
-    vrc =
-      (await vscode.window.showInputBox({
-        title: "Enter Base VRC",
-        prompt: "Example: E50C_1_E501",
+    // Fetch VRCs from server
+    let vrcList: string[] = [];
+    try {
+      const response = await axios.post(`${serverUrl}${FETCH_VRCS_PATH}`, {});
+      if (response.data && Array.isArray(response.data)) {
+        vrcList = response.data;
+      }
+    } catch (err) {
+      console.warn("Failed to fetch VRCs from server, allowing free input");
+    }
+
+    // If VRCs list is available, show quick pick; otherwise show input box
+    if (vrcList.length > 0) {
+      const selected = await vscode.window.showQuickPick(vrcList, {
+        title: "Select Base VRC",
+        placeHolder: "Choose from available VRCs",
         ignoreFocusOut: true,
-        value: vrc,
-      })) || "";
+      });
+      vrc = selected || vrc;
+    } else {
+      vrc =
+        (await vscode.window.showInputBox({
+          title: "Enter Base VRC",
+          prompt: "Example: E50C_1_E501",
+          ignoreFocusOut: true,
+          value: vrc,
+          validateInput: (value) => {
+            if (!value || value.trim() === "") {
+              return "Base VRC is required";
+            }
+            return null;
+          },
+        })) || vrc;
+    }
 
     projectCode =
       (await vscode.window.showInputBox({
         title: "Enter Project Folder Name",
-        prompt: "Example: EDM-XXXX",
+        prompt: "Example: 123456",
         ignoreFocusOut: true,
         value: projectCode,
-      })) || "";
+        validateInput: (value) => {
+          if (!value || value.trim() === "") {
+            return "Project Folder Name is required";
+          }
+          return null;
+        },
+      })) || projectCode;
 
-    // Persist values for next session
-    await context.globalState.update("vrc", vrc);
-    await context.globalState.update("projectCode", projectCode);
+    if (vrc) {await context.globalState.update("vrc", vrc)};
+    if (projectCode) {await context.globalState.update("projectCode", projectCode)};
 
     vscode.window.showInformationMessage(
       `Settings saved: Project=${projectCode} Base VRC=${vrc}`
@@ -93,29 +132,30 @@ export async function activate(context: vscode.ExtensionContext) {
 
   // Set initial title
   componentExplorerView.title = `Components [${vrc} | ${projectCode}]`;
-  await refreshComponentView(componentExplorerProvider, serverUrl);
+  await refreshComponentView(componentExplorerProvider, serverUrl, vrc);
 
   vscode.commands.registerCommand(
     "component-explorer.refresh",
-    async () => await refreshComponentView(componentExplorerProvider, serverUrl)
+    async () => await refreshComponentView(componentExplorerProvider, serverUrl, vrc)
   );
 
   vscode.commands.registerCommand("component-explorer.configure", async () => {
     await loadSettings();
     componentExplorerView.title = `Components [${vrc} | ${projectCode}]`;
-    await refreshComponentView(componentExplorerProvider, serverUrl);
+    await refreshComponentView(componentExplorerProvider, serverUrl, vrc);
   });
 
   vscode.commands.registerCommand("component-explorer.updateUrl", async () => {
     await askServerUrl();
-    await refreshComponentView(componentExplorerProvider, serverUrl);
+    await refreshComponentView(componentExplorerProvider, serverUrl, vrc);
   });
 
   // Search components (lazy-load modules as needed)
   vscode.commands.registerCommand("component-explorer.search", async () => {
     const term = await vscode.window.showInputBox({
       title: "Search Components",
-      prompt: "Enter search term (partial names are fine). Leave empty to clear search.",
+      prompt:
+        "Enter search term (partial names are fine). Leave empty to clear search.",
       ignoreFocusOut: true,
     });
 
@@ -132,7 +172,9 @@ export async function activate(context: vscode.ExtensionContext) {
     }
 
     if (cleaned.length < 5) {
-      vscode.window.showInformationMessage("Please enter at least 5 characters to perform a search.");
+      vscode.window.showInformationMessage(
+        "Please enter at least 5 characters to perform a search."
+      );
       return;
     }
 
@@ -237,22 +279,27 @@ async function importComponents(
       // Send POST request to ERP downloadComponents endpoint
       const response = await axios.post(
         `${serverUrl}${IMPORT_PATH}`,
-        { vrc, importFolder, components },
+        { baseVRC: vrc, importFolder, components, username: os.userInfo().username },
         {
-          responseType: "arraybuffer",
           headers: {
             "Content-Type": "application/json",
           },
         }
       );
 
+      const respData = response.data;
+      if (!respData || !respData.data) {
+        throw new Error("Invalid response from server");
+      }
+
       progress.report({
         increment: 50,
         message: "Received zip data, extracting...",
       });
 
-      // Extract zip file from buffer
-      const zip = new AdmZip(Buffer.from(response.data));
+      // Extract zip file from base64 payload
+      const zipBuffer = Buffer.from(respData.data, "base64");
+      const zip = new AdmZip(zipBuffer);
 
       // 1. extract to temp
       const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "ln-import-"));
@@ -268,9 +315,11 @@ async function importComponents(
         newFiles.push(rel);
       });
 
-      const fileConflicts = newFiles.filter((rel) => {
+      const nonManifestConflicts = newFiles.filter((rel) => {
         const dest = path.join(targetRoot, rel);
-
+        if (rel.toLowerCase() === "script/manifest.csv") {
+          return false;
+        }
         if (!fs.existsSync(dest)) {
           return false;
         } // no conflict if doesn't exist
@@ -280,7 +329,7 @@ async function importComponents(
       });
 
       // 3. prompt user if collisions found
-      if (fileConflicts.length > 0) {
+      if (nonManifestConflicts.length > 0) {
         const confirm = await vscode.window.showWarningMessage(
           "This will replace existing component(s). Continue?",
           "Yes",
@@ -291,7 +340,33 @@ async function importComponents(
         }
       }
 
-      // 4. move remaining files (overwrite allowed)
+      // 4. process manifest merging logic
+      const newManifest = path.join(tempDir, "Script", "manifest.csv");
+      const oldManifest = path.join(targetRoot, "Script", "manifest.csv");
+
+      if (fs.existsSync(newManifest)) {
+        fs.mkdirSync(path.dirname(oldManifest), { recursive: true });
+
+        if (fs.existsSync(oldManifest)) {
+          const oldData = fs.readFileSync(oldManifest, "utf-8").trim();
+          const newData = fs.readFileSync(newManifest, "utf-8").trim();
+
+          const newLines = newData.split(/\r?\n/);
+          const merged = oldData + "\n" + newLines.slice(1).join("\n");
+
+          fs.writeFileSync(oldManifest, merged, "utf-8");
+        } else {
+          // no old manifest — copy as-is
+          fs.copyFileSync(newManifest, oldManifest);
+        }
+
+        // remove manifest from normal copy
+        newFiles = newFiles.filter(
+          (f) => f.toLowerCase() !== "script/manifest.csv"
+        );
+      }
+
+      // 5. move remaining files (overwrite allowed)
       for (const rel of newFiles) {
         const src = path.join(tempDir, rel);
         const dest = path.join(targetRoot, rel);

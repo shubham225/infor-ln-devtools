@@ -75,10 +75,10 @@
         {
           "id": "component-explorer",
           "name": "Components",
-      "filter": {
-        "type": "tree",
-        "mode": "highlight"
-      }
+          "filter": {
+            "type": "tree",
+            "mode": "highlight"
+          }
         },
         {
           "id": "selected-components",
