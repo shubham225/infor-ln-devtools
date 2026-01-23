@@ -1,8 +1,5 @@
 import * as vscode from "vscode";
-import axios from "axios";
-
-const MODULES_PATH = "/api/module";
-const COMPONENTS_PATH = "/api/component";
+import { makeSoapRequest } from "./soap-client";
 
 export interface Component {
   type: string;
@@ -23,20 +20,21 @@ export class TreeNode extends vscode.TreeItem {
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
     public children: TreeNode[] = [],
     public readonly parent?: TreeNode,
-    component?: Component
+    component?: Component,
   ) {
     super(label, collapsibleState);
     this.component = component;
-    const iconId = {
-      rootNode:
-        componentType === "Table"
-          ? "table"
-          : componentType === "Session"
-          ? "window"
-          : "code",
-      packageNode: "folder",
-      moduleNode: "folder",
-    }[contextType];
+    const iconId =
+      {
+        rootNode:
+          componentType === "Table"
+            ? "table"
+            : componentType === "Session"
+              ? "window"
+              : "code",
+        packageNode: "folder",
+        moduleNode: "folder",
+      }[contextType];
 
     if (iconId) {
       this.iconPath = new vscode.ThemeIcon(iconId);
@@ -47,13 +45,13 @@ export class TreeNode extends vscode.TreeItem {
           vscode.extensions.getExtension("shubham-shinde.infor-ln-devtools")!
             .extensionUri,
           "resources",
-          "infor-ln-logo.svg"
+          "infor-ln-logo.svg",
         ),
         dark: vscode.Uri.joinPath(
           vscode.extensions.getExtension("shubham-shinde.infor-ln-devtools")!
             .extensionUri,
           "resources",
-          "infor-ln-logo.svg"
+          "infor-ln-logo.svg",
         ),
       };
     }
@@ -62,9 +60,7 @@ export class TreeNode extends vscode.TreeItem {
   }
 }
 
-export class ComponentDataProvider
-  implements vscode.TreeDataProvider<TreeNode>
-{
+export class ComponentDataProvider implements vscode.TreeDataProvider<TreeNode> {
   private context: vscode.ExtensionContext;
 
   constructor(context: vscode.ExtensionContext) {
@@ -79,18 +75,22 @@ export class ComponentDataProvider
   > = this._onDidChangeTreeData.event;
 
   private data: TreeNode[] = [];
+  private originalData: TreeNode[] = []; // Keep original tree for searching
   private selectedComponents: Set<TreeNode> = new Set();
   private selectionChangeListeners: (() => void)[] = [];
 
-  refresh(data: TreeNode[]) {
+  refresh(data: TreeNode[], updateOriginal: boolean = true) {
     this.data = data;
+    if (updateOriginal) {
+      this.originalData = data; // Always keep a copy of the original tree
+    }
     this._onDidChangeTreeData.fire();
   }
 
-  getTreeItem(item: TreeNode): vscode.TreeItem  {
-  item.filterText = `${item.label} ${item.description}`.toLowerCase();
-  return item;
-}
+  getTreeItem(item: TreeNode): vscode.TreeItem {
+    item.filterText = `${item.label} ${item.description}`.toLowerCase();
+    return item;
+  }
 
   getChildren(element?: TreeNode): Thenable<TreeNode[]> {
     if (!element) {
@@ -125,29 +125,33 @@ export class ComponentDataProvider
       const baseVrc = this.context.globalState.get<string>("vrc") || "";
 
       type Component = {
-        code: string; description: string
-      }
+        code: string;
+        desc: string;
+      };
 
-      return axios
-        .post(`${serverUrl}${COMPONENTS_PATH}`, {
-          type,
-          package: pkg,
-          module: mod,
-          baseVrc,
-        })
-        .then((res) => {
-          const data = res.data as {
+      return (async () => {
+        try {
+          const data = await makeSoapRequest({
+            serverUrl,
+            method: "fetchComponents",
+            requestBody: {
+              type,
+              package: pkg,
+              module: mod,
+              vrc: baseVrc,
+            },
+          }) as {
             type: string;
             package: string;
             module: string;
-            component: Component[];
-          };    
+            components: Component[];
+          };
 
-          element.children = data.component.map(
+          element.children = data.components.map(
             (comp) =>
               new TreeNode(
                 `${data.package}${data.module}${comp.code}`,
-                `(${comp.description})`,
+                `${comp.desc}`,
                 data.type,
                 "componentNode",
                 vscode.TreeItemCollapsibleState.None,
@@ -158,18 +162,20 @@ export class ComponentDataProvider
                   package: data.package,
                   module: data.module,
                   code: comp.code,
-                }
-              )
+                },
+              ),
           );
 
           return element.children;
-        })
-        .catch((err) => {
+        } catch (err) {
           vscode.window.showErrorMessage(
-            "Failed to load components: " + err.message
+            `Component loading failed — Reason: ${
+              err instanceof Error ? err.message : "Unknown error"
+            }`
           );
           return [];
-        });
+        }
+      })();
     }
 
     // Components have no children
@@ -246,7 +252,7 @@ export class ComponentDataProvider
    */
   private async fetchModuleChildren(
     element: TreeNode,
-    options?: { signal?: AbortSignal }
+    options?: { signal?: AbortSignal },
   ): Promise<TreeNode[]> {
     if (element.children && element.children.length > 0) {
       return element.children;
@@ -265,24 +271,28 @@ export class ComponentDataProvider
     try {
       const baseVrc = this.context.globalState.get<string>("vrc") || "";
 
-      const res = await axios.post(
-        `${serverUrl}${COMPONENTS_PATH}`,
-        { type, package: pkg, module: mod, baseVrc },
-        { signal: options?.signal }
-      );
-
-      const data = res.data as {
+      const data = await makeSoapRequest({
+        serverUrl,
+        method: "fetchComponents",
+        requestBody: {
+          type,
+          package: pkg,
+          module: mod,
+          vrc: baseVrc,
+        },
+        signal: options?.signal,
+      }) as {
         type: string;
         package: string;
         module: string;
-        component: Array<{ code: string; description: string }>;
+        components: Array<{ code: string; desc: string }>;
       };
 
-      element.children = data.component.map(
+      element.children = data.components.map(
         (comp) =>
           new TreeNode(
             `${data.package}${data.module}${comp.code}`,
-            comp.description,
+            comp.desc,
             data.type,
             "componentNode",
             vscode.TreeItemCollapsibleState.None,
@@ -293,8 +303,8 @@ export class ComponentDataProvider
               package: data.package,
               module: data.module,
               code: comp.code,
-            }
-          )
+            },
+          ),
       );
 
       return element.children;
@@ -304,26 +314,43 @@ export class ComponentDataProvider
         return [];
       }
 
-      vscode.window.showErrorMessage("Failed to load components: " + err.message);
+      vscode.window.showErrorMessage(
+        `Component loading failed — Reason: ${err.message}`,
+      );
       return [];
     }
   }
 
   /**
    * Search components across the tree with concurrency, progress and cancellation.
+   * @param term - The search term
+   * @param serverUrl - The server URL
+   * @param componentTypeFilter - Optional filter for component type (All, Table, Session, Script)
    */
-  async searchAndRefresh(term: string, serverUrl: string) {
+  async searchAndRefresh(
+    term: string,
+    serverUrl: string,
+    componentTypeFilter: string = "All"
+  ) {
     const termLower = term.toLowerCase();
     const resultsByType: Record<string, TreeNode[]> = {};
 
-    // Collect all module nodes to process
+    // Collect all module nodes to process - use originalData to always search against full tree
     let modNodes: Array<{
       typeNode: TreeNode;
       pkgNode: TreeNode;
       modNode: TreeNode;
     }> = [];
 
-    for (const typeNode of this.data) {
+    for (const typeNode of this.originalData) {
+      // Filter by component type if specified
+      if (
+        componentTypeFilter !== "All" &&
+        typeNode.label !== componentTypeFilter
+      ) {
+        continue;
+      }
+
       for (const pkgNode of typeNode.children) {
         for (const modNode of pkgNode.children) {
           modNodes.push({ typeNode, pkgNode, modNode });
@@ -334,7 +361,7 @@ export class ComponentDataProvider
     // If the user typed a long identifier (>=5 chars), assume the first 5
     // characters indicate the package/module prefix and limit scanning to
     // matching package/module combos. If that yields no matches, fall back
-    // to scanning everything.
+    // to scanning everything since the search term might be a component code.
     if (termLower.length >= 5) {
       const prefix = termLower.slice(0, 5);
       const filtered = modNodes.filter(({ pkgNode, modNode }) => {
@@ -349,26 +376,16 @@ export class ComponentDataProvider
         );
       });
 
-      if (filtered.length > 0) {
-        modNodes = filtered;
-      } else {
-        // No modules match the prefix — do NOT fall back to scanning everything.
-        // Return empty results and inform the user.
-        this.refresh([]);
-        vscode.window.showInformationMessage(
-          `No modules match prefix '${prefix}'. Try a different prefix (at least 5 characters).`
-        );
-        return;
-      }
+      modNodes = filtered;
     } else {
       // If user somehow bypassed validation and term is <5 chars, avoid scanning
       // everything. Return empty results instead.
-      this.refresh([]);
+      this.refresh([], false);
       return;
     }
 
     if (modNodes.length === 0) {
-      this.refresh([]);
+      this.refresh([], false);
       return;
     }
 
@@ -392,9 +409,13 @@ export class ComponentDataProvider
 
         const worker = async () => {
           while (true) {
-            if (token.isCancellationRequested) { break; }
+            if (token.isCancellationRequested) {
+              break;
+            }
             const i = idx++;
-            if (i >= total) { break; }
+            if (i >= total) {
+              break;
+            }
 
             const { typeNode, pkgNode, modNode } = modNodes[i];
             const controller = new AbortController();
@@ -406,7 +427,8 @@ export class ComponentDataProvider
               });
 
               for (const comp of children) {
-                const hay = `${comp.label} ${comp.component?.code} ${pkgNode.label} ${modNode.label}`.toLowerCase();
+                const hay =
+                  `${comp.label} ${comp.component?.code} ${pkgNode.label} ${modNode.label}`.toLowerCase();
                 if (hay.includes(termLower)) {
                   const resultNode = new TreeNode(
                     comp.label,
@@ -416,7 +438,7 @@ export class ComponentDataProvider
                     vscode.TreeItemCollapsibleState.None,
                     [],
                     undefined,
-                    comp.component
+                    comp.component,
                   );
 
                   if (!resultsByType[typeNode.label]) {
@@ -439,24 +461,27 @@ export class ComponentDataProvider
 
         // Start workers and wait for completion or cancellation
         const workers: Promise<void>[] = [];
-        for (let w = 0; w < concurrency; w++) { workers.push(worker()); }
+        for (let w = 0; w < concurrency; w++) {
+          workers.push(worker());
+        }
         await Promise.all(workers);
-      }
+      },
     );
 
-    const tree = Object.entries(resultsByType).map(([type, nodes]) =>
-      new TreeNode(
-        type,
-        `(${nodes.length})`,
-        type,
-        "rootNode",
-        vscode.TreeItemCollapsibleState.Collapsed,
-        nodes,
-        undefined
-      )
+    const tree = Object.entries(resultsByType).map(
+      ([type, nodes]) =>
+        new TreeNode(
+          type,
+          `(${nodes.length})`,
+          type,
+          "rootNode",
+          vscode.TreeItemCollapsibleState.Collapsed,
+          nodes,
+          undefined,
+        ),
     );
 
-    this.refresh(tree);
+    this.refresh(tree, false);
   }
 
   async clearSearch(serverUrl: string, baseVrc: string = "") {
@@ -475,21 +500,21 @@ export class ComponentDataProvider
 export async function refreshComponentView(
   dataProvider: ComponentDataProvider,
   serverUrl: string,
-  baseVrc: string = ""
+  baseVrc: string = "",
 ) {
   try {
-    const result = await axios.post(`${serverUrl}${MODULES_PATH}`, {
-      baseVrc
-    });
-
-    type ModulesResponse = {
+    const data = await makeSoapRequest({
+      serverUrl,
+      method: "fetchModules",
+      requestBody: {
+        vrc: baseVrc,
+      },
+    }) as {
       [type: string]: Array<{
         package: string;
         module: string[];
       }>;
     };
-
-    const data = result.data as ModulesResponse;
 
     const tree = Object.entries(data).map(([type, pkgEntries]) => {
       const typeNode = new TreeNode(
@@ -498,7 +523,7 @@ export async function refreshComponentView(
         type,
         "rootNode",
         vscode.TreeItemCollapsibleState.Collapsed,
-        []
+        [],
       );
 
       typeNode.children = pkgEntries.map((pkgEntry) => {
@@ -509,7 +534,7 @@ export async function refreshComponentView(
           "packageNode",
           vscode.TreeItemCollapsibleState.Collapsed,
           [],
-          typeNode
+          typeNode,
         );
 
         // Note change: pkgEntry.module instead of pkgEntry.modules
@@ -522,8 +547,8 @@ export async function refreshComponentView(
               "moduleNode",
               vscode.TreeItemCollapsibleState.Collapsed,
               [],
-              pkgNode
-            )
+              pkgNode,
+            ),
         );
 
         return pkgNode;
@@ -533,7 +558,6 @@ export async function refreshComponentView(
     });
 
     dataProvider.refresh(tree);
-
   } catch (err: any) {
     console.error(err);
 
@@ -546,16 +570,14 @@ export async function refreshComponentView(
     }
 
     vscode.window.showErrorMessage(
-      `Failed to load modules from server: ${reason}`
+      `Package tree load failed — Reason: ${reason}`,
     );
 
     dataProvider.refresh([]); // clear tree on failure
   }
 }
 
-export class SelectedComponentsDataProvider
-  implements vscode.TreeDataProvider<TreeNode>
-{
+export class SelectedComponentsDataProvider implements vscode.TreeDataProvider<TreeNode> {
   private _onDidChangeTreeData: vscode.EventEmitter<
     TreeNode | undefined | null | void
   > = new vscode.EventEmitter<TreeNode | undefined | null | void>();
@@ -602,7 +624,7 @@ export class SelectedComponentsDataProvider
           "rootNode",
           vscode.TreeItemCollapsibleState.Collapsed,
           nodes,
-          undefined
+          undefined,
         );
       });
 

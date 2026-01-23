@@ -12,6 +12,8 @@
   "dependencies": {
     "adm-zip": "^0.5.16",
     "cors": "^2.8.5",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "node-7z-archive": "^1.1.7",
+    "xml2js": "^0.6.2"
   }
 }

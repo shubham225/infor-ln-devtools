@@ -32,32 +32,57 @@
     "menus": {
       "view/title": [
         {
+          "command": "project-explorer.refresh",
+          "when": "view == project-explorer",
+          "group": "navigation@1"
+        },
+        {
+          "command": "project-explorer.addProject",
+          "when": "view == project-explorer",
+          "group": "navigation@2"
+        },
+        {
           "command": "component-explorer.refresh",
           "when": "view == component-explorer",
-          "group": "navigation"
-        },
-        {
-          "command": "component-explorer.configure",
-          "when": "view == component-explorer",
-          "group": "navigation"
-        },
-        {
-          "command": "component-explorer.updateUrl",
-          "when": "view == component-explorer",
-          "group": "navigation"
+          "group": "navigation@1"
         },
         {
           "command": "component-explorer.search",
           "when": "view == component-explorer",
-          "group": "navigation"
+          "group": "navigation@2"
+        },
+        {
+          "command": "component-explorer.configure",
+          "when": "view == component-explorer",
+          "group": "navigation@3"
         },
         {
           "command": "selected-components.import",
           "when": "view == selected-components",
-          "group": "navigation"
+          "group": "navigation@1"
         }
       ],
       "view/item/context": [
+        {
+          "command": "project-explorer.setActive",
+          "when": "view == project-explorer && viewItem == projectNode",
+          "group": "inline@1"
+        },
+        {
+          "command": "project-explorer.importByPMC",
+          "when": "view == project-explorer && viewItem == projectNode",
+          "group": "inline@2"
+        },
+        {
+          "command": "project-explorer.editProject",
+          "when": "view == project-explorer && viewItem == projectNode",
+          "group": "management@1"
+        },
+        {
+          "command": "project-explorer.closeProject",
+          "when": "view == project-explorer && viewItem == projectNode",
+          "group": "management@2"
+        },
         {
           "command": "component-explorer.select",
           "when": "view == component-explorer && viewItem == componentNode",
@@ -72,6 +97,10 @@
     },
     "views": {
       "ln-devtools-explorer": [
+        {
+          "id": "project-explorer",
+          "name": "Projects"
+        },
         {
           "id": "component-explorer",
           "name": "Components",
@@ -88,6 +117,42 @@
     },
     "commands": [
       {
+        "command": "project-explorer.refresh",
+        "category": "Infor LN DevTools",
+        "title": "Refresh Projects",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "project-explorer.addProject",
+        "category": "Infor LN DevTools",
+        "title": "New Project",
+        "icon": "$(add)"
+      },
+      {
+        "command": "project-explorer.editProject",
+        "category": "Infor LN DevTools",
+        "title": "Edit Project",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "project-explorer.setActive",
+        "category": "Infor LN DevTools",
+        "title": "Set as Active Project",
+        "icon": "$(check)"
+      },
+      {
+        "command": "project-explorer.importByPMC",
+        "category": "Infor LN DevTools",
+        "title": "Import Components",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "project-explorer.closeProject",
+        "category": "Infor LN DevTools",
+        "title": "Close Project",
+        "icon": "$(close)"
+      },
+      {
         "command": "component-explorer.refresh",
         "category": "Infor LN DevTools",
         "title": "Refresh Component",
@@ -96,14 +161,8 @@
       {
         "command": "component-explorer.configure",
         "category": "Infor LN DevTools",
-        "title": "Configure Settings",
+        "title": "Extension Settings",
         "icon": "$(settings)"
-      },
-      {
-        "command": "component-explorer.updateUrl",
-        "category": "Infor LN DevTools",
-        "title": "Update Server URL",
-        "icon": "$(globe)"
       },
       {
         "command": "component-explorer.search",
@@ -131,12 +190,23 @@
     ],
     "viewsWelcome": [
       {
+        "view": "project-explorer",
+        "contents": "No projects found.\n[New Project](command:project-explorer.addProject)\nCreate a project to start importing components."
+      },
+      {
         "view": "component-explorer",
         "contents": "No components found.\nUse the 'Configure' command to set up the server connection and load components."
       },
       {
         "view": "selected-components",
         "contents": "No components selected.\nSelect components from the Components view to import them."
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "component-explorer.search",
+        "key": "ctrl+f",
+        "when": "focusedView == component-explorer || focusedView == selected-components"
       }
     ]
   },
