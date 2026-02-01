@@ -1,23 +1,6 @@
 import * as vscode from "vscode";
-
-export interface ImportFormSettings {
-  projectName: string;
-  vrc: string;
-  role: "Developer" | "Reviewer";
-  jiraId: string;
-}
-
-export interface ImportByPMCFormSettings {
-  pmc: string;
-  vrc: string;
-  role: "Developer" | "Reviewer";
-  jiraId: string;
-}
-
-// Add this helper to the top of your file
-function getLocalResource(webview: vscode.Webview, extensionUri: vscode.Uri, pathList: string[]) {
-  return webview.asWebviewUri(vscode.Uri.joinPath(extensionUri, ...pathList));
-}
+import type { ImportFormSettings, ImportByPMCFormSettings } from "../../types/api";
+import { getLocalResource } from "../../utils/webview-helpers";
 
 export async function showImportForm(
   context: vscode.ExtensionContext,
@@ -140,7 +123,7 @@ function getImportFormWebviewContent(
             align-items: center;
         }
 
-        input.invalid, select.invalid {
+        input.invalid {
             border-color: var(--error) !important;
             box-shadow: 0 0 0 1px var(--error) !important;
         }
@@ -163,7 +146,7 @@ function getImportFormWebviewContent(
         .input-wrapper { position: relative; display: flex; align-items: center; }
         .input-icon { position: absolute; left: 12px; width: 18px; height: 18px; opacity: 0.5; pointer-events: none; }
         
-        input, select {
+        input {
             width: 100%;
             padding: 12px 12px 12px 40px;
             background: var(--input-bg);
@@ -174,7 +157,7 @@ function getImportFormWebviewContent(
             transition: all 0.2s;
         }
 
-        input:focus, select:focus {
+        input:focus {
             outline: none;
             border-color: var(--vscode-focusBorder);
             box-shadow: 0 0 0 2px rgba(var(--vscode-focusBorder), 0.1);
@@ -267,13 +250,12 @@ function getImportFormWebviewContent(
 
                 <div class="form-item">
                     <label>Role</label>
-                    <div class="input-wrapper">
-                        <i data-lucide="user-check" class="input-icon"></i>
-                        <select id="role">
-                            <option value="">Select Role</option>
-                            <option value="Developer">Developer</option>
-                            <option value="Reviewer">Reviewer</option>
-                        </select>
+                    <div class="dropdown-wrapper">
+                        <div class="input-wrapper">
+                            <i data-lucide="user-check" class="input-icon"></i>
+                            <input type="text" id="roleInput" placeholder="Search or select role..." autocomplete="off">
+                        </div>
+                        <div id="roleList" class="options-list"></div>
                     </div>
                     <div class="error-label" id="err-role">Role is required</div>
                 </div>
@@ -282,7 +264,7 @@ function getImportFormWebviewContent(
                     <label>JIRA ID</label>
                     <div class="input-wrapper">
                         <i data-lucide="tag" class="input-icon"></i>
-                        <input type="text" id="jiraId" placeholder="e.g. EDM-2222">
+                        <input type="text" id="jiraId" placeholder="e.g. ABC12345">
                     </div>
                     <div class="error-label" id="err-jiraId">JIRA ID is required</div>
                 </div>
@@ -302,39 +284,61 @@ function getImportFormWebviewContent(
         
         const vrcInput = document.getElementById('vrcInput');
         const vrcDropdown = document.getElementById('vrcList');
+        const roleInput = document.getElementById('roleInput');
+        const roleDropdown = document.getElementById('roleList');
+        const rolesSource = ['Developer', 'Reviewer'];
 
-        // Searchable Dropdown Logic
+        // Searchable Dropdown Logic for VRC
         vrcInput.addEventListener('input', () => {
             vrcInput.classList.remove('invalid');
             const val = vrcInput.value.toLowerCase();
             const filtered = vrcListSource.filter(item => item.toLowerCase().includes(val));
-            renderDropdown(filtered);
+            renderDropdown(filtered, vrcInput, vrcDropdown);
             vrcDropdown.style.display = filtered.length ? 'block' : 'none';
-        });
-
-        // Clear invalid state on input
-        ['projectName', 'role', 'jiraId'].forEach(id => {
-            document.getElementById(id).addEventListener('input', (e) => e.target.classList.remove('invalid'));
         });
 
         vrcInput.addEventListener('focus', () => {
             if(vrcListSource.length) {
-                renderDropdown(vrcListSource);
+                renderDropdown(vrcListSource, vrcInput, vrcDropdown);
                 vrcDropdown.style.display = 'block';
             }
         });
 
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.dropdown-wrapper')) vrcDropdown.style.display = 'none';
+        // Searchable Dropdown Logic for Role
+        roleInput.addEventListener('input', () => {
+            roleInput.classList.remove('invalid');
+            const val = roleInput.value.toLowerCase();
+            const filtered = rolesSource.filter(item => item.toLowerCase().includes(val));
+            renderDropdown(filtered, roleInput, roleDropdown);
+            roleDropdown.style.display = filtered.length ? 'block' : 'none';
         });
 
-        function renderDropdown(list) {
-            vrcDropdown.innerHTML = list.map(item => \`<div class="option-item">\${item}</div>\`).join('');
-            vrcDropdown.querySelectorAll('.option-item').forEach(el => {
+        roleInput.addEventListener('focus', () => {
+            if(rolesSource.length) {
+                renderDropdown(rolesSource, roleInput, roleDropdown);
+                roleDropdown.style.display = 'block';
+            }
+        });
+
+        // Clear invalid state on input
+        ['projectName', 'jiraId'].forEach(id => {
+            document.getElementById(id).addEventListener('input', (e) => e.target.classList.remove('invalid'));
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown-wrapper')) {
+                vrcDropdown.style.display = 'none';
+                roleDropdown.style.display = 'none';
+            }
+        });
+
+        function renderDropdown(list, input, dropdown) {
+            dropdown.innerHTML = list.map(item => \`<div class="option-item">\${item}</div>\`).join('');
+            dropdown.querySelectorAll('.option-item').forEach(el => {
                 el.onclick = () => {
-                    vrcInput.value = el.textContent;
-                    vrcInput.classList.remove('invalid');
-                    vrcDropdown.style.display = 'none';
+                    input.value = el.textContent;
+                    input.classList.remove('invalid');
+                    dropdown.style.display = 'none';
                 };
             });
         }
@@ -346,8 +350,8 @@ function getImportFormWebviewContent(
             
             const fields = [
                 { id: 'projectName', errId: 'err-projectName' },
-                { id: 'vrcInput', errId: 'err-vrc' },
-                { id: 'role', errId: 'err-role' },
+                { id: 'vrcInput', errId: 'err-vrc', list: vrcListSource },
+                { id: 'roleInput', errId: 'err-role', list: rolesSource },
                 { id: 'jiraId', errId: 'err-jiraId' }
             ];
 
@@ -360,8 +364,8 @@ function getImportFormWebviewContent(
                     el.classList.add('invalid');
                     valid = false;
                 } else {
-                    if (field.id === 'vrcInput' && vrcListSource.length && !vrcListSource.includes(el.value.trim())) {
-                        err.textContent = 'Please select a valid VRC from the list';
+                    if (field.list && field.list.length && !field.list.includes(el.value.trim())) {
+                        err.textContent = 'Please select a valid option from the list';
                         err.classList.add('visible');
                         el.classList.add('invalid');
                         valid = false;
@@ -377,7 +381,7 @@ function getImportFormWebviewContent(
                     command: 'import',
                     projectName: document.getElementById('projectName').value,
                     vrc: vrcInput.value,
-                    role: document.getElementById('role').value,
+                    role: roleInput.value,
                     jiraId: document.getElementById('jiraId').value
                 });
             }
@@ -424,7 +428,7 @@ function getImportByPMCFormWebviewContent(
             align-items: center;
         }
 
-        input.invalid, select.invalid {
+        input.invalid {
             border-color: var(--error) !important;
             box-shadow: 0 0 0 1px var(--error) !important;
         }
@@ -447,7 +451,7 @@ function getImportByPMCFormWebviewContent(
         .input-wrapper { position: relative; display: flex; align-items: center; }
         .input-icon { position: absolute; left: 12px; width: 18px; height: 18px; opacity: 0.5; pointer-events: none; }
         
-        input, select {
+        input {
             width: 100%;
             padding: 12px 12px 12px 40px;
             background: var(--input-bg);
@@ -458,7 +462,7 @@ function getImportByPMCFormWebviewContent(
             transition: all 0.2s;
         }
 
-        input:focus, select:focus {
+        input:focus {
             outline: none;
             border-color: var(--vscode-focusBorder);
             box-shadow: 0 0 0 2px rgba(var(--vscode-focusBorder), 0.1);
@@ -551,13 +555,12 @@ function getImportByPMCFormWebviewContent(
 
                 <div class="form-item">
                     <label>Role</label>
-                    <div class="input-wrapper">
-                        <i data-lucide="user-check" class="input-icon"></i>
-                        <select id="role">
-                            <option value="">Select Role</option>
-                            <option value="Developer">Developer</option>
-                            <option value="Reviewer">Reviewer</option>
-                        </select>
+                    <div class="dropdown-wrapper">
+                        <div class="input-wrapper">
+                            <i data-lucide="user-check" class="input-icon"></i>
+                            <input type="text" id="roleInput" placeholder="Search or select role..." autocomplete="off">
+                        </div>
+                        <div id="roleList" class="options-list"></div>
                     </div>
                     <div class="error-label" id="err-role">Role is required</div>
                 </div>
@@ -566,7 +569,7 @@ function getImportByPMCFormWebviewContent(
                     <label>JIRA ID</label>
                     <div class="input-wrapper">
                         <i data-lucide="tag" class="input-icon"></i>
-                        <input type="text" id="jiraId" placeholder="e.g. EDM-2222">
+                        <input type="text" id="jiraId" placeholder="e.g. ABC12345">
                     </div>
                     <div class="error-label" id="err-jiraId">JIRA ID is required</div>
                 </div>
@@ -587,6 +590,9 @@ function getImportByPMCFormWebviewContent(
         const vrcInput = document.getElementById('vrcInput');
         const vrcDropdown = document.getElementById('vrcList');
         const pmcInput = document.getElementById('pmc');
+        const roleInput = document.getElementById('roleInput');
+        const roleDropdown = document.getElementById('roleList');
+        const rolesSource = ['Developer', 'Reviewer'];
 
         // Listen for messages from extension
         window.addEventListener('message', event => {
@@ -595,7 +601,7 @@ function getImportByPMCFormWebviewContent(
                 vrcListSource = message.vrcs;
                 // Automatically show dropdown if VRCs are loaded and input is empty
                 if (vrcListSource.length > 0 && !vrcInput.value) {
-                    renderDropdown(vrcListSource);
+                    renderDropdown(vrcListSource, vrcInput, vrcDropdown);
                     vrcDropdown.style.display = 'block';
                 }
             }
@@ -612,38 +618,57 @@ function getImportByPMCFormWebviewContent(
             }
         });
 
-        // Searchable Dropdown Logic
+        // Searchable Dropdown Logic for VRC
         vrcInput.addEventListener('input', () => {
             vrcInput.classList.remove('invalid');
             const val = vrcInput.value.toLowerCase();
             const filtered = vrcListSource.filter(item => item.toLowerCase().includes(val));
-            renderDropdown(filtered);
+            renderDropdown(filtered, vrcInput, vrcDropdown);
             vrcDropdown.style.display = filtered.length ? 'block' : 'none';
-        });
-
-        // Clear invalid state on input
-        ['pmc', 'role', 'jiraId'].forEach(id => {
-            document.getElementById(id).addEventListener('input', (e) => e.target.classList.remove('invalid'));
         });
 
         vrcInput.addEventListener('focus', () => {
             if(vrcListSource.length) {
-                renderDropdown(vrcListSource);
+                renderDropdown(vrcListSource, vrcInput, vrcDropdown);
                 vrcDropdown.style.display = 'block';
             }
         });
 
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.dropdown-wrapper')) vrcDropdown.style.display = 'none';
+        // Searchable Dropdown Logic for Role
+        roleInput.addEventListener('input', () => {
+            roleInput.classList.remove('invalid');
+            const val = roleInput.value.toLowerCase();
+            const filtered = rolesSource.filter(item => item.toLowerCase().includes(val));
+            renderDropdown(filtered, roleInput, roleDropdown);
+            roleDropdown.style.display = filtered.length ? 'block' : 'none';
         });
 
-        function renderDropdown(list) {
-            vrcDropdown.innerHTML = list.map(item => \`<div class="option-item">\${item}</div>\`).join('');
-            vrcDropdown.querySelectorAll('.option-item').forEach(el => {
+        roleInput.addEventListener('focus', () => {
+            if(rolesSource.length) {
+                renderDropdown(rolesSource, roleInput, roleDropdown);
+                roleDropdown.style.display = 'block';
+            }
+        });
+
+        // Clear invalid state on input
+        ['pmc', 'jiraId'].forEach(id => {
+            document.getElementById(id).addEventListener('input', (e) => e.target.classList.remove('invalid'));
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown-wrapper')) {
+                vrcDropdown.style.display = 'none';
+                roleDropdown.style.display = 'none';
+            }
+        });
+
+        function renderDropdown(list, input, dropdown) {
+            dropdown.innerHTML = list.map(item => \`<div class="option-item">\${item}</div>\`).join('');
+            dropdown.querySelectorAll('.option-item').forEach(el => {
                 el.onclick = () => {
-                    vrcInput.value = el.textContent;
-                    vrcInput.classList.remove('invalid');
-                    vrcDropdown.style.display = 'none';
+                    input.value = el.textContent;
+                    input.classList.remove('invalid');
+                    dropdown.style.display = 'none';
                 };
             });
         }
@@ -655,8 +680,8 @@ function getImportByPMCFormWebviewContent(
             
             const fields = [
                 { id: 'pmc', errId: 'err-pmc' },
-                { id: 'vrcInput', errId: 'err-vrc' },
-                { id: 'role', errId: 'err-role' },
+                { id: 'vrcInput', errId: 'err-vrc', list: vrcListSource },
+                { id: 'roleInput', errId: 'err-role', list: rolesSource },
                 { id: 'jiraId', errId: 'err-jiraId' }
             ];
 
@@ -669,9 +694,9 @@ function getImportByPMCFormWebviewContent(
                     el.classList.add('invalid');
                     valid = false;
                 } else {
-                    // For VRC, only validate if list is populated and has items
-                    if (field.id === 'vrcInput' && vrcListSource.length > 0 && !vrcListSource.includes(el.value.trim())) {
-                        err.textContent = 'Please select a valid VRC from the list';
+                    // For lists (VRC, role), validate if list is populated
+                    if (field.list && field.list.length > 0 && !field.list.includes(el.value.trim())) {
+                        err.textContent = 'Please select a valid option from the list';
                         err.classList.add('visible');
                         el.classList.add('invalid');
                         valid = false;
@@ -687,7 +712,7 @@ function getImportByPMCFormWebviewContent(
                     command: 'import',
                     pmc: document.getElementById('pmc').value,
                     vrc: vrcInput.value,
-                    role: document.getElementById('role').value,
+                    role: roleInput.value,
                     jiraId: document.getElementById('jiraId').value
                 });
             }

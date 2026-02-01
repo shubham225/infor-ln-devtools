@@ -1,12 +1,6 @@
 import * as vscode from "vscode";
-import { makeSoapRequest } from "./soap-client";
-
-export interface Component {
-  type: string;
-  package: string;
-  module: string;
-  code: string;
-}
+import { fetchComponents, fetchModules } from "../../services/erp-service";
+import type { Component } from "../../types/api";
 
 export class TreeNode extends vscode.TreeItem {
   public readonly component?: Component;
@@ -34,7 +28,13 @@ export class TreeNode extends vscode.TreeItem {
               : "code",
         packageNode: "folder",
         moduleNode: "folder",
-      }[contextType];
+      }[contextType] ||
+      {
+        Table: "table",
+        Session: "window",
+        Script: "code",
+      }[component?.type || ""] ||
+      "";
 
     if (iconId) {
       this.iconPath = new vscode.ThemeIcon(iconId);
@@ -42,13 +42,13 @@ export class TreeNode extends vscode.TreeItem {
       // Fallback to custom SVG
       this.iconPath = {
         light: vscode.Uri.joinPath(
-          vscode.extensions.getExtension("shubham-shinde.infor-ln-devtools")!
+          vscode.extensions.getExtension("shubham-shinde.ee-erp-devtools")!
             .extensionUri,
           "resources",
           "infor-ln-logo.svg",
         ),
         dark: vscode.Uri.joinPath(
-          vscode.extensions.getExtension("shubham-shinde.infor-ln-devtools")!
+          vscode.extensions.getExtension("shubham-shinde.ee-erp-devtools")!
             .extensionUri,
           "resources",
           "infor-ln-logo.svg",
@@ -62,6 +62,10 @@ export class TreeNode extends vscode.TreeItem {
 
 export class ComponentDataProvider implements vscode.TreeDataProvider<TreeNode> {
   private context: vscode.ExtensionContext;
+  private currentServerUrl: string = "";
+  private currentVrc: string = "";
+  private currentUsername: string = "";
+  private currentPassword: string = "";
 
   constructor(context: vscode.ExtensionContext) {
     this.context = context;
@@ -78,6 +82,23 @@ export class ComponentDataProvider implements vscode.TreeDataProvider<TreeNode> 
   private originalData: TreeNode[] = []; // Keep original tree for searching
   private selectedComponents: Set<TreeNode> = new Set();
   private selectionChangeListeners: (() => void)[] = [];
+
+  /**
+   * Set the current server URL and VRC from the active project
+   */
+  setActiveProjectSettings(
+    serverUrl: string,
+    vrc: string,
+    username: string,
+    password: string,
+  ) {
+    this.currentServerUrl = serverUrl;
+    this.currentVrc = vrc;
+    this.currentUsername = username;
+    this.currentPassword = password;
+    this.currentUsername = username;
+    this.currentPassword = password;
+  }
 
   refresh(data: TreeNode[], updateOriginal: boolean = true) {
     this.data = data;
@@ -113,39 +134,27 @@ export class ComponentDataProvider implements vscode.TreeDataProvider<TreeNode> 
       }
 
       const type = element.parent?.parent?.label || "UNKNOWN";
-      const pkg = element.parent?.label;
+      const pkg = element.parent?.label || "";
       const mod = element.label;
 
-      const serverUrl = this.context.globalState.get<string>("serverUrl");
-      if (!serverUrl) {
-        vscode.window.showErrorMessage("Server URL is not configured.");
+      if (!this.currentServerUrl) {
+        vscode.window.showErrorMessage(
+          "No active project. Please select a project first.",
+        );
         return Promise.resolve([]);
       }
 
-      const baseVrc = this.context.globalState.get<string>("vrc") || "";
-
-      type Component = {
-        code: string;
-        desc: string;
-      };
-
       return (async () => {
         try {
-          const data = await makeSoapRequest({
-            serverUrl,
-            method: "fetchComponents",
-            requestBody: {
-              type,
-              package: pkg,
-              module: mod,
-              vrc: baseVrc,
-            },
-          }) as {
-            type: string;
-            package: string;
-            module: string;
-            components: Component[];
-          };
+          const data = await fetchComponents(
+            this.currentServerUrl,
+            type,
+            pkg,
+            mod,
+            this.currentVrc,
+            this.currentUsername,
+            this.currentPassword,
+          );
 
           element.children = data.components.map(
             (comp) =>
@@ -171,7 +180,7 @@ export class ComponentDataProvider implements vscode.TreeDataProvider<TreeNode> 
           vscode.window.showErrorMessage(
             `Component loading failed — Reason: ${
               err instanceof Error ? err.message : "Unknown error"
-            }`
+            }`,
           );
           return [];
         }
@@ -246,6 +255,12 @@ export class ComponentDataProvider implements vscode.TreeDataProvider<TreeNode> 
     this.notifySelectionChange();
   }
 
+  clearData() {
+    this.data = [];
+    this.originalData = [];
+    this._onDidChangeTreeData.fire();
+  }
+
   /**
    * Fetch components for a module (used by getChildren and search). Supports
    * optional abort signal so long-running searches can be cancelled.
@@ -259,34 +274,27 @@ export class ComponentDataProvider implements vscode.TreeDataProvider<TreeNode> 
     }
 
     const type = element.parent?.parent?.label || "UNKNOWN";
-    const pkg = element.parent?.label;
+    const pkg = element.parent?.label || "";
     const mod = element.label;
 
-    const serverUrl = this.context.globalState.get<string>("serverUrl");
-    if (!serverUrl) {
-      vscode.window.showErrorMessage("Server URL is not configured.");
+    if (!this.currentServerUrl) {
+      vscode.window.showErrorMessage(
+        "No active project. Please select a project first.",
+      );
       return [];
     }
 
     try {
-      const baseVrc = this.context.globalState.get<string>("vrc") || "";
-
-      const data = await makeSoapRequest({
-        serverUrl,
-        method: "fetchComponents",
-        requestBody: {
-          type,
-          package: pkg,
-          module: mod,
-          vrc: baseVrc,
-        },
-        signal: options?.signal,
-      }) as {
-        type: string;
-        package: string;
-        module: string;
-        components: Array<{ code: string; desc: string }>;
-      };
+      const data = await fetchComponents(
+        this.currentServerUrl,
+        type,
+        pkg,
+        mod,
+        this.currentVrc,
+        this.currentUsername,
+        this.currentPassword,
+        options?.signal,
+      );
 
       element.children = data.components.map(
         (comp) =>
@@ -330,7 +338,7 @@ export class ComponentDataProvider implements vscode.TreeDataProvider<TreeNode> 
   async searchAndRefresh(
     term: string,
     serverUrl: string,
-    componentTypeFilter: string = "All"
+    componentTypeFilter: string = "All",
   ) {
     const termLower = term.toLowerCase();
     const resultsByType: Record<string, TreeNode[]> = {};
@@ -501,20 +509,11 @@ export async function refreshComponentView(
   dataProvider: ComponentDataProvider,
   serverUrl: string,
   baseVrc: string = "",
+  username: string = "",
+  password: string = "",
 ) {
   try {
-    const data = await makeSoapRequest({
-      serverUrl,
-      method: "fetchModules",
-      requestBody: {
-        vrc: baseVrc,
-      },
-    }) as {
-      [type: string]: Array<{
-        package: string;
-        module: string[];
-      }>;
-    };
+    const data = await fetchModules(serverUrl, baseVrc, username, password);
 
     const tree = Object.entries(data).map(([type, pkgEntries]) => {
       const typeNode = new TreeNode(
@@ -526,7 +525,12 @@ export async function refreshComponentView(
         [],
       );
 
-      typeNode.children = pkgEntries.map((pkgEntry) => {
+      typeNode.children = (
+        pkgEntries as Array<{
+          package: string;
+          module: string[];
+        }>
+      ).map((pkgEntry) => {
         const pkgNode = new TreeNode(
           pkgEntry.package,
           "",
@@ -539,7 +543,7 @@ export async function refreshComponentView(
 
         // Note change: pkgEntry.module instead of pkgEntry.modules
         pkgNode.children = pkgEntry.module.map(
-          (mod) =>
+          (mod: string) =>
             new TreeNode(
               mod,
               "",

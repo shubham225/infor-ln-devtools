@@ -2,7 +2,7 @@
   "name": "infor-ln-devtools",
   "displayName": "Infor LN DevTools",
   "description": "Developer tools for Infor LN ERP in VS Code and Cursor. Import, export, and compile LN components using supported LN utilities.",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/shubham225/infor-ln-devtools.git"
@@ -13,6 +13,7 @@
     "vscode": "^1.95.0"
   },
   "categories": [
+    "Productivity",
     "Other"
   ],
   "activationEvents": [
@@ -42,6 +43,11 @@
           "group": "navigation@2"
         },
         {
+          "command": "project-explorer.importProject",
+          "when": "view == project-explorer",
+          "group": "navigation@3"
+        },
+        {
           "command": "component-explorer.refresh",
           "when": "view == component-explorer",
           "group": "navigation@1"
@@ -52,11 +58,6 @@
           "group": "navigation@2"
         },
         {
-          "command": "component-explorer.configure",
-          "when": "view == component-explorer",
-          "group": "navigation@3"
-        },
-        {
           "command": "selected-components.import",
           "when": "view == selected-components",
           "group": "navigation@1"
@@ -64,12 +65,12 @@
       ],
       "view/item/context": [
         {
-          "command": "project-explorer.setActive",
+          "command": "project-explorer.importByPMC",
           "when": "view == project-explorer && viewItem == projectNode",
           "group": "inline@1"
         },
         {
-          "command": "project-explorer.importByPMC",
+          "command": "project-explorer.closeProject",
           "when": "view == project-explorer && viewItem == projectNode",
           "group": "inline@2"
         },
@@ -84,6 +85,31 @@
           "group": "management@2"
         },
         {
+          "command": "project-explorer.copyFile",
+          "when": "view == project-explorer && (viewItem == file || viewItem == baanScript)",
+          "group": "5_cutcopypaste@1"
+        },
+        {
+          "command": "project-explorer.copyPath",
+          "when": "view == project-explorer && (viewItem == file || viewItem == baanScript)",
+          "group": "5_cutcopypaste@2"
+        },
+        {
+          "command": "project-explorer.copyRelativePath",
+          "when": "view == project-explorer && (viewItem == file || viewItem == baanScript)",
+          "group": "5_cutcopypaste@3"
+        },
+        {
+          "command": "project-explorer.revealInExplorer",
+          "when": "view == project-explorer && (viewItem == file || viewItem == baanScript)",
+          "group": "7_modification@1"
+        },
+        {
+          "command": "project-explorer.openInTerminal",
+          "when": "view == project-explorer && (viewItem == file || viewItem == baanScript)",
+          "group": "7_modification@2"
+        },
+        {
           "command": "component-explorer.select",
           "when": "view == component-explorer && viewItem == componentNode",
           "group": "inline"
@@ -92,6 +118,13 @@
           "command": "selected-components.remove",
           "when": "view == selected-components && viewItem == componentNode",
           "group": "inline"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "project-explorer.compileScript",
+          "group": "navigation",
+          "when": "resourceExtname == .bc"
         }
       ]
     },
@@ -129,6 +162,12 @@
         "icon": "$(add)"
       },
       {
+        "command": "project-explorer.importProject",
+        "category": "Infor LN DevTools",
+        "title": "Import Project",
+        "icon": "$(folder-opened)"
+      },
+      {
         "command": "project-explorer.editProject",
         "category": "Infor LN DevTools",
         "title": "Edit Project",
@@ -143,7 +182,7 @@
       {
         "command": "project-explorer.importByPMC",
         "category": "Infor LN DevTools",
-        "title": "Import Components",
+        "title": "Import from PMC",
         "icon": "$(cloud-download)"
       },
       {
@@ -179,13 +218,44 @@
         "command": "selected-components.import",
         "category": "Infor LN DevTools",
         "title": "Import Selected",
-        "icon": "$(cloud-download)"
+        "icon": "$(arrow-circle-down)"
       },
       {
         "command": "selected-components.remove",
         "category": "Infor LN DevTools",
         "title": "Remove from Selection",
         "icon": "$(x)"
+      },
+      {
+        "command": "project-explorer.copyFile",
+        "category": "Infor LN DevTools",
+        "title": "Copy"
+      },
+      {
+        "command": "project-explorer.copyPath",
+        "category": "Infor LN DevTools",
+        "title": "Copy Path"
+      },
+      {
+        "command": "project-explorer.copyRelativePath",
+        "category": "Infor LN DevTools",
+        "title": "Copy Relative Path"
+      },
+      {
+        "command": "project-explorer.revealInExplorer",
+        "category": "Infor LN DevTools",
+        "title": "Reveal in File Explorer"
+      },
+      {
+        "command": "project-explorer.openInTerminal",
+        "category": "Infor LN DevTools",
+        "title": "Open in Integrated Terminal"
+      },
+      {
+        "command": "project-explorer.compileScript",
+        "category": "EE ERP DevTools",
+        "title": "Compile Script",
+        "icon": "$(play)"
       }
     ],
     "viewsWelcome": [
@@ -239,6 +309,7 @@
   },
   "dependencies": {
     "adm-zip": "^0.5.16",
-    "axios": "^1.13.2"
+    "axios": "^1.13.2",
+    "xml2js": "^0.6.2"
   }
 }

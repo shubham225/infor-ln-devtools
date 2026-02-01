@@ -1,0 +1,21 @@
+{
+  "environments": [
+    {
+      "environment": "Development",
+      "backendUrl": "https://api.dev-server.com/api/v1"
+    },
+    {
+      "environment": "Staging",
+      "backendUrl": "https://api.staging-server.com/api/v1"
+    },
+    {
+      "environment": "Production",
+      "backendUrl": "https://api.prod-server.com/api/v1"
+    },
+    {
+      "environment": "Localhost",
+      "backendUrl": "http://localhost:3000/api/v1"
+    }
+  ],
+  "defaultEnvironment": "Localhost"
+}
