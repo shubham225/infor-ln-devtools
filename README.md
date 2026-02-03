@@ -61,17 +61,17 @@ Stored in VS Code global state:
 ### 📦 Component Explorer
 Hierarchical view of LN components:
 
-![Component Explorer](./docs/screenshots/component-explorer.png)
+![Component Explorer](./resources/readme/component-explorer.png)
 
 ### 📥 Import Component Flow
 Selection + Import trigger:
 
-![Import Component](./docs/screenshots/import-component.png)
+![Import Component](./resources/readme/import-component.png)
 
 ### 🧰 DevTools Panel
 Includes VRC / PMC / Server URL configuration + export/import controls:
 
-![DevTools Panel](./docs/screenshots/devtools-panel.png)
+![DevTools Panel](./resources/readme/devtools-panel.png)
 
 ---
 
@@ -260,15 +260,7 @@ Development/
 | Import Selected | Trigger `/import` and add files to Development folder |
 
 ## 🏗️ Architecture
-
-<video
-  src="./resources/architecture-flow.mp4"
-  autoplay
-  loop
-  muted
-  playsinline
-  width="100%">
-</video>
+![Architecture Flow](./resources/readme/architecture-flow.gif)
 
 - **Frontend (Extension):** Component explorer, selection panel, import/export triggers.
 - **Backend (Mock/Real API):** REST API endpoints, ZIP generation, source handling, SCM actions.
@@ -286,6 +278,4 @@ Development/
 ---
 
 ## 📜 License
-MIT License – see [LICENSE](LICENSE.md)
-
-```
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
