@@ -6,7 +6,7 @@ export interface ApiClientOptions {
   responseType?: AxiosRequestConfig['responseType'];
 }
 
-function buildAuthHeader(auth?: { username: string; password: string } | null) {
+function buildAuthHeader(auth?: { username: string; password: string } | null): Record<string, string> {
   if (!auth || !auth.username || !auth.password) {
     return {};
   }
@@ -28,7 +28,7 @@ async function handleError(err: any): Promise<never> {
 
 async function get<T = any>(url: string, options: ApiClientOptions = {}): Promise<T> {
   try {
-    const headers = { ...buildAuthHeader(options.auth) };
+    const headers: Record<string,string> = { ...(buildAuthHeader(options.auth) as Record<string,string>) };
     const resp = await axios.get<T>(url, { headers, signal: options.signal });
     return resp.data as T;
   } catch (err: any) {
@@ -38,7 +38,15 @@ async function get<T = any>(url: string, options: ApiClientOptions = {}): Promis
 
 async function post<T = any>(url: string, body: any = {}, options: ApiClientOptions = {}): Promise<T> {
   try {
-    const headers = { 'Content-Type': 'application/json', ...buildAuthHeader(options.auth) };
+    let headers: Record<string, string> = { ...(buildAuthHeader(options.auth) as Record<string,string>) };
+
+    // Detect form-data (node) and let axios set Content-Type with boundary
+    if (body && typeof (body as any).getHeaders === 'function') {
+      headers = { ...headers, ...(body as any).getHeaders() };
+    } else {
+      headers = { 'Content-Type': 'application/json', ...headers };
+    }
+
     const resp = await axios.post<T>(url, body, { headers, signal: options.signal, responseType: options.responseType });
     return resp.data as T;
   } catch (err: any) {
@@ -47,29 +55,37 @@ async function post<T = any>(url: string, body: any = {}, options: ApiClientOpti
 }
 
 /**
- * POST and return base64-encoded payload for binary responses (zip)
- * Preserves existing shape: { data: string } where data is base64 ZIP
+ * POST and return a raw binary Buffer for binary responses (zip)
+ * Accepts JSON or multipart/form-data request bodies.
  */
-async function download(url: string, body: any = {}, options: ApiClientOptions = {}): Promise<{ data: string }> {
+async function download(url: string, body: any = {}, options: ApiClientOptions = {}): Promise<Buffer> {
   try {
-    const headers = { ...buildAuthHeader(options.auth), 'Content-Type': 'application/json' };
-    const resp = await axios.post(url, body, { headers, signal: options.signal, responseType: 'arraybuffer' });
+    let headers: Record<string, string> = { ...(buildAuthHeader(options.auth) as Record<string,string>) };
+    if (body && typeof (body as any).getHeaders === 'function') {
+      headers = { ...headers, ...(body as any).getHeaders() };
+    } else {
+      headers = { 'Content-Type': 'application/json', ...headers };
+    }
 
+    const resp = await axios.post(url, body, { headers, signal: options.signal, responseType: 'arraybuffer' });
     const contentType = resp.headers['content-type'] || '';
+
     if (contentType.includes('application/json')) {
+      // JSON error or wrapped response
       const text = Buffer.from(resp.data).toString('utf8');
       try {
         const parsed = JSON.parse(text);
+        // legacy shape: { data: base64 }
         if (parsed && typeof parsed.data === 'string') {
-          return parsed;
+          return Buffer.from(parsed.data, 'base64');
         }
       } catch (e) {
-        // fallthrough to base64
+        // pass through
       }
+      throw new Error(`Unexpected JSON response`);
     }
 
-    const base64 = Buffer.from(resp.data).toString('base64');
-    return { data: base64 };
+    return Buffer.from(resp.data);
   } catch (err: any) {
     return handleError(err);
   }

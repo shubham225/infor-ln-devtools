@@ -1,157 +1,244 @@
-# LN DevTools Extension 
+# LN DevTools Extension
+
 [![VS Marketplace](https://img.shields.io/badge/VS%20Code-Extension-blue)]()
-![Version](https://img.shields.io/badge/Version-v0.0.1-9f7aea)
+![Version](https://img.shields.io/badge/Version-v0.0.2-9f7aea)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)
 ![Infor LN](https://img.shields.io/badge/ERP-Infor%20LN-critical)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green)
 
-**LN DevTools** is a Visual Studio Code extension designed to enhance developer workflow for **Infor LN ERP** by allowing developers to browse, select, and import LN components directly into a local development workspace folder.
+**LN DevTools** is a Visual Studio Code extension that enhances developer workflow for **Infor LN ERP**, allowing developers to browse, select, and import LN components directly into a local development workspace.
+
+---
 
 ## 🚀 Key Features
 
 ### 📦 Component Exploration
-- Components displayed in hierarchical tree:
+- Hierarchical component view:
   ```
-  Type → Package → Module → Component Code
+  Type → Package → Module → Component
   ```
 - Supported component types:
   - **Table**
   - **Session**
   - **Script**
+  - **Report**
+  - **Library**
 - Lazy backend loading:
-  - `/api/modules` loads type → package → module
-  - `/api/components` loads module → codes
+  - `/vrcs` → List all VRCs
+  - `/vrcs/{vrcId}/packages` → Packages in VRC
+  - `/vrcs/{vrcId}/packages/{packageId}/modules` → Modules in package
+  - `/vrcs/{vrcId}/components` → Component codes
 
 ### 🎯 Selection Panel
-- Dedicated "Selected Components" panel
-- Grouping by type
+- Dedicated **Selected Components** panel
+- Grouped by type
 - Supports:
   - Remove individual
   - Remove all
   - Import Selected
 
 ### 🧰 Import Workflow
-When imported:
-1. Selected components sent to backend
-2. Backend returns ZIP
-3. ZIP extracted to:
+1. Selected components sent to backend:
+   - **Multipart/form-data** (preferred)
+   - **Legacy JSON** (still supported)
+2. Backend returns a **binary ZIP** (`Content-Type: application/zip`)
+3. ZIP is extracted to:
    ```
    <Workspace>/Development/<ProjectFolder>/
    ```
-4. Tree selection cleared
+4. Tree selection is cleared
 
 ### ⚙ Persistent Settings
 Stored in VS Code global state:
-- `Backend API URL`
-- `Base VRC`
-- `Project Folder`
+- Backend API URL
+- Base VRC
+- Project Folder
+
+---
 
 ## 🖥️ Extension UI Overview
 
-### 📦 **Component Explorer**
-Shows all LN components grouped by type:
+### 📦 Component Explorer
+Hierarchical view of LN components:
 
 ![Component Explorer](./docs/screenshots/component-explorer.png)
 
-### 📥 **Import Component Flow**
+### 📥 Import Component Flow
 Selection + Import trigger:
 
 ![Import Component](./docs/screenshots/import-component.png)
 
-### 🧰 **DevTools Panel**
+### 🧰 DevTools Panel
 Includes VRC / PMC / Server URL configuration + export/import controls:
 
 ![DevTools Panel](./docs/screenshots/devtools-panel.png)
 
-# 🧩 Backend API Contract
+---
 
-The extension expects the following backend endpoints:
+## 🌐 Backend API Contract
 
-## 1) `POST /api/modules`
+The extension communicates with the **Infor LN DevTools API**, which follows the hierarchical structure: **VRC → Package → Module → Component**. All binary endpoints return raw ZIP bytes; legacy base64 responses are deprecated.
 
-Used to populate the tree hierarchy.
+### 1) System & Environment
 
-### Request:
+#### Get System Health
+**Endpoint:** `GET /health`
+**Response (200 OK):**
 ```json
 {
-  "baseVrc": "E50C_1_E501"
+  "status": "up",
+  "backendConnection": "active",
+  "version": "10.5"
 }
 ```
 
-### Response format:
+#### Get User Context
+**Endpoint:** `GET /user-context`
+**Response (200 OK):**
 ```json
 {
-  "Table": [
-    { "package": "tc", "module": ["ecp", "cmm"] }
-  ],
-  "Session": [
-    { "package": "tc", "module": ["ecp"] }
-  ],
-  "Script": [
-    { "package": "tc", "module": ["ecp"] }
-  ]
+  "userId": "jdoe",
+  "currentVrc": "B61U_a_stnd",
+  "developerAuthorization": "active"
 }
 ```
 
-## 2) `POST /api/components`
+### 2) VRC & Structure Navigation
 
-Triggered when user expands a module node (lazy-load).
+#### List VRCs
+**Endpoint:** `GET /vrcs`
+**Response (200 OK):**
+```json
+[
+  { "id": "B61_a", "description": "Standard 6.1 a" },
+  { "id": "B61U_a_stnd", "description": "Update 6.1 a Standard" }
+]
+```
 
-### Request:
+#### List Packages in VRC
+**Endpoint:** `GET /vrcs/{vrcId}/packages`
+**Response (200 OK):**
+```json
+[
+  { "id": "tc", "description": "Tools Common" },
+  { "id": "wh", "description": "Warehousing" }
+]
+```
+
+#### List Modules in Package
+**Endpoint:** `GET /vrcs/{vrcId}/packages/{packageId}/modules`
+**Response (200 OK):**
+```json
+[
+  { "id": "sls", "description": "Sales" },
+  { "id": "pur", "description": "Purchase" }
+]
+```
+
+### 3) Component Management
+
+#### List Components
+**Endpoint:** `GET /vrcs/{vrcId}/components`
+**Query Parameters:** `package`, `module`, `type` (optional)
+
+**Response (200 OK):**
+```json
+[
+  { "name": "tdsls4100m000", "type": "session", "description": "Sales Orders" },
+  { "name": "tdsls4100", "type": "table", "description": "Sales Orders Header" }
+]
+```
+
+#### Create Component
+**Endpoint:** `POST /vrcs/{vrcId}/components`
+**Body:**
 ```json
 {
-  "baseVrc": "E50C_1_E501",
-  "type": "<Table|Session|Script>",
-  "package": "tc",
-  "module": "ecp"
+  "name": "whinh2100m000",
+  "type": "session",
+  "package": "wh",
+  "module": "inh",
+  "description": "Warehouse Orders Custom"
 }
 ```
 
-### Response:
+#### Get Component Metadata
+**Endpoint:** `GET /vrcs/{vrcId}/components/{type}/{name}`
+**Response (200 OK):**
 ```json
 {
-  "baseVrc": "E50C_1_E501",
-  "type": "Table",
-  "package": "tc",
-  "module": "ecp",
-  "code": ["001", "002", "003"]
+  "name": "tdsls4100m000",
+  "type": "session",
+  "mainTable": "tdsls400",
+  "sessionType": "maintain",
+  "description": "Sales Orders"
 }
 ```
 
-## 3) `POST /api/import`
+#### Delete Component
+**Endpoint:** `DELETE /vrcs/{vrcId}/components/{type}/{name}`
 
-Triggered on Import operation.
+### 4) Source Code & Content (Import/Export)
 
-### Request:
+#### Download Source
+**Endpoint:** `GET /vrcs/{vrcId}/components/{type}/{name}/source`
+
+#### Upload / Update Source
+**Endpoint:** `PUT /vrcs/{vrcId}/components/{type}/{name}/source`
+**Body:** Raw text or JSON/XML depending on component type
+
+### 5) Development Actions (Compile & SCM)
+
+#### Compile Component
+**Endpoint:** `POST /vrcs/{vrcId}/components/{type}/{name}/compile`
+**Response (200 OK):**
 ```json
 {
-  "baseVrc": "E50C_1_E501",
-  "importFolder": "EDM-222",
-  "components": [
-    { "type": "Table", "package": "tc", "module": "ecp", "code": "001" },
-    { "type": "Session", "package": "tc", "module": "ecp", "code": "003" }
-  ]
+  "status": "success",
+  "warnings": [],
+  "errors": []
 }
 ```
 
-### Response:
-Binary ZIP
+#### SCM Operations
+- Check Out: `POST /vrcs/{vrcId}/components/{type}/{name}/scm/checkout`
+- Check In: `POST /vrcs/{vrcId}/components/{type}/{name}/scm/checkin`
+- Undo Check Out: `POST /vrcs/{vrcId}/components/{type}/{name}/scm/undocheckout`
 
-Headers:
-```
-Content-Type: application/zip
-Content-Disposition: attachment; filename="<importFolder>.zip"
-```
+### 6) Import Components
+**Endpoint:** `POST /vrcs/{vrcId}/components/import`
 
-ZIP is extracted to:
-```
-<Workspace>/Development/<ProjectFolder>/
-```
+- Preferred: `multipart/form-data` with optional file upload
+- Legacy JSON still supported
 
-# 📁 Extracted Folder Structure
+**Multipart fields example:**
+- `importFolder`: string
+- `components`: JSON string of array `[ { type, package, module, code } ]`
+- `projectName`: string
+- `pmc`: string (optional)
+- `ticketId`: string
 
-Expected after import:
+**Response:** Raw ZIP bytes containing imported components
 
+### 7) PMC (Product Maintenance & Control)
+
+#### List Solutions
+**Endpoint:** `GET /pmc/solutions`
+**Query Parameters:** `status=in_progress|released|exported`
+
+#### Get Solution Details
+**Endpoint:** `GET /pmc/solutions/{solutionId}`
+
+#### List Components in Solution
+**Endpoint:** `GET /pmc/solutions/{solutionId}/components`
+
+#### Export Solution
+**Endpoint:** `POST /pmc/solutions/{solutionId}/export`
+**Response:** Raw ZIP bytes of exported components
+
+### 8) Extracted Folder Structure
+
+After importing components, expected workspace layout:
 ```
 Development/
  └── <project-name>/
@@ -162,23 +249,43 @@ Development/
       └── Script/
 ```
 
-# ⚙ Commands
+### 9) VS Code Commands
 
 | Command | Action |
-|---|---|
+|---------|-------|
 | Refresh | Reload package tree from backend |
 | Configure Settings | Update Base VRC + Project Folder |
 | Update Server URL | Change API endpoint |
 | Select Component | Add/remove from selection |
-| Import Selected | Triggers `/import` and add files in Development folder |
+| Import Selected | Trigger `/import` and add files to Development folder |
 
+## 🏗️ Architecture
 
-# 📅 Roadmap Ideas
+<video
+  src="./resources/architecture-flow.mp4"
+  autoplay
+  loop
+  muted
+  playsinline
+  width="100%">
+</video>
 
-Future enhancements:
-- Export support 
+- **Frontend (Extension):** Component explorer, selection panel, import/export triggers.
+- **Backend (Mock/Real API):** REST API endpoints, ZIP generation, source handling, SCM actions.
+- **Workspace:** Stores imported LN components in structured folders (TD/FD/Table/Session/Script).
+
+---
+
+## 📅 Roadmap
+
+- Export support
 - Compilation support
 - Check-in / Check-out support
+- Integration with SCM / versioning workflows
 
-# 📜 License
-This project is licensed under the **MIT License** – see the [LICENSE](LICENSE.md) file for details.
+---
+
+## 📜 License
+MIT License – see [LICENSE](LICENSE.md)
+
+```

@@ -148,12 +148,9 @@ export class ComponentDataProvider implements vscode.TreeDataProvider<TreeNode> 
         try {
           const data = await fetchComponents(
             this.currentServerUrl,
-            type,
-            pkg,
-            mod,
             this.currentVrc,
-            this.currentUsername,
-            this.currentPassword,
+            { type, package: pkg, module: mod },
+            { username: this.currentUsername, password: this.currentPassword },
           );
 
           element.children = data.components.map(
@@ -287,12 +284,9 @@ export class ComponentDataProvider implements vscode.TreeDataProvider<TreeNode> 
     try {
       const data = await fetchComponents(
         this.currentServerUrl,
-        type,
-        pkg,
-        mod,
         this.currentVrc,
-        this.currentUsername,
-        this.currentPassword,
+        { type, package: pkg, module: mod },
+        { username: this.currentUsername, password: this.currentPassword },
         options?.signal,
       );
 
@@ -513,7 +507,7 @@ export async function refreshComponentView(
   password: string = "",
 ) {
   try {
-    const data = await fetchModules(serverUrl, baseVrc, username, password);
+    const data = await fetchModules(serverUrl, baseVrc, { username, password });
 
     const tree = Object.entries(data).map(([type, pkgEntries]) => {
       const typeNode = new TreeNode(

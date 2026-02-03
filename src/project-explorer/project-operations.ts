@@ -19,8 +19,7 @@ export async function validateAndSetupProject(
   project: Project,
   updateMode: UPDATE_MODE,
   serverUrl: string,
-  username: string,
-  password: string,
+  creds: { username: string; password: string },
 ): Promise<boolean> {
   try {
     // Validate project with ERP
@@ -31,16 +30,7 @@ export async function validateAndSetupProject(
       return false;
     }
 
-    const validationData = await erpService.validateProject(
-      serverUrl,
-      project.vrc,
-      project.name,
-      project.pmc,
-      project.jiraId,
-      project.role,
-      username,
-      password,
-    );
+    const validationData = await erpService.validateProject(serverUrl, project, creds);
 
     // Handle validation response
     if (

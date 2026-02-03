@@ -3,3 +3,4 @@ dist
 node_modules
 .vscode-test/
 *.vsix
+Infor_LN_DevTools_API_Spec.md

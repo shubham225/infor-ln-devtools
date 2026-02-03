@@ -12,7 +12,7 @@ export class ProjectNode extends vscode.TreeItem {
     super(project.name, vscode.TreeItemCollapsibleState.Collapsed);
     
     this.description = `${project.environment} | PMC: ${project.pmc}`;
-    this.tooltip = `Project: ${project.name}\nEnvironment: ${project.environment}\nPMC: ${project.pmc}\nJIRA: ${project.jiraId}\nVRC: ${project.vrc}\nRole: ${project.role}`;
+    this.tooltip = `Project: ${project.name}\nEnvironment: ${project.environment}\nPMC: ${project.pmc}\nTicket: ${project.ticketId}\nVRC: ${project.vrc}\nRole: ${project.role}`;
     this.contextValue = "projectNode";
     
     // Highlight active project

@@ -58,11 +58,7 @@ async function ensureAuthenticated(
   if (credentials) {
     // Verify credentials with health check
     try {
-      const healthCheckResult = await erpService.healthCheck(
-        serverUrl,
-        credentials.username,
-        credentials.password,
-      );
+      const healthCheckResult = await erpService.healthCheck(serverUrl, credentials);
 
       if (healthCheckResult.status === "UP") {
         vscode.window.showInformationMessage(
@@ -87,11 +83,7 @@ async function ensureAuthenticated(
     async (username: string, password: string) => {
       try {
         // Verify credentials with health check
-        const healthCheckResult = await erpService.healthCheck(
-          serverUrl,
-          username,
-          password,
-        );
+        const healthCheckResult = await erpService.healthCheck(serverUrl, { username, password });
 
         if (healthCheckResult.status === "UP") {
           // Store credentials
@@ -211,13 +203,7 @@ export async function activate(context: vscode.ExtensionContext) {
   ): Promise<string[]> {
     const serverUrl = getBackendUrl(environment);
     const creds = await getCredentials();
-    return vrcCacheManager.fetchVRCList(
-      environment,
-      serverUrl,
-      creds.username,
-      creds.password,
-      pmc,
-    );
+    return vrcCacheManager.fetchVRCList(environment, serverUrl, creds, pmc);
   }
 
   const projectExplorerProvider = new ProjectDataProvider(context);
@@ -292,7 +278,7 @@ export async function activate(context: vscode.ExtensionContext) {
       {
         name: "",
         pmc: "",
-        jiraId: "",
+        ticketId: "",
         vrc: "",
         role: "",
         environment: defaultEnvironment,
@@ -303,16 +289,7 @@ export async function activate(context: vscode.ExtensionContext) {
         // Validation callback
         const serverUrl = getBackendUrl(proj.environment);
         const creds = await getCredentials();
-        return await erpService.validateProject(
-          serverUrl,
-          proj.vrc,
-          proj.name,
-          proj.pmc,
-          proj.jiraId,
-          proj.role,
-          creds.username,
-          creds.password,
-        );
+        return await erpService.validateProject(serverUrl, proj, creds);
       },
     );
 
@@ -323,8 +300,7 @@ export async function activate(context: vscode.ExtensionContext) {
         project,
         updateMode,
         serverUrl,
-        creds.username,
-        creds.password,
+        creds,
       );
       if (success) {
         try {
@@ -401,7 +377,7 @@ export async function activate(context: vscode.ExtensionContext) {
         {
           name: selectedFolder,
           pmc: "",
-          jiraId: "",
+          ticketId: "",
           vrc: "",
           role: "Developer",
           environment: defaultEnvironment,
@@ -409,19 +385,10 @@ export async function activate(context: vscode.ExtensionContext) {
         },
         (pmc: string, environment: string) => fetchVRCList(environment, pmc),
         async (proj: Project) => {
-          // Validation callback
+          // Validation callback (new signature)
           const serverUrl = getBackendUrl(proj.environment);
           const creds = await getCredentials();
-          return await erpService.validateProject(
-            serverUrl,
-            proj.vrc,
-            proj.name,
-            proj.pmc,
-            proj.jiraId,
-            proj.role,
-            creds.username,
-            creds.password,
-          );
+          return await erpService.validateProject(serverUrl, proj, creds);
         },
       );
 
@@ -432,8 +399,7 @@ export async function activate(context: vscode.ExtensionContext) {
           project,
           updateMode,
           serverUrl,
-          creds.username,
-          creds.password,
+          creds,
         );
         if (success) {
           try {
@@ -474,19 +440,10 @@ export async function activate(context: vscode.ExtensionContext) {
         node.project,
         (pmc: string, environment: string) => fetchVRCList(environment, pmc),
         async (proj: Project) => {
-          // Validation callback
+          // Validation callback (new signature)
           const serverUrl = getBackendUrl(proj.environment);
           const creds = await getCredentials();
-          return await erpService.validateProject(
-            serverUrl,
-            proj.vrc,
-            proj.name,
-            proj.pmc,
-            proj.jiraId,
-            proj.role,
-            creds.username,
-            creds.password,
-          );
+          return await erpService.validateProject(serverUrl, proj, creds);
         },
       );
 
@@ -497,8 +454,7 @@ export async function activate(context: vscode.ExtensionContext) {
           updatedProject,
           updateMode,
           serverUrl,
-          creds.username,
-          creds.password,
+          creds,
         );
         if (success) {
           try {
@@ -651,29 +607,24 @@ export async function activate(context: vscode.ExtensionContext) {
             const creds = await getCredentials();
 
             // Send SOAP request to ERP downloadComponentsByPMC endpoint
-            const respData = await erpService.downloadComponentsByPMC(
+            const resp = await erpService.downloadComponentsByPMC(
               serverUrl,
               project.pmc,
               project.vrc,
               project.name,
               project.role,
-              project.jiraId,
-              creds.username,
-              creds.password,
+              project.ticketId,
+              creds,
               abortController.signal,
             );
-            if (!respData || !respData.data) {
+            const buf = resp?.data;
+            if (!buf || !Buffer.isBuffer(buf)) {
               throw new Error("Invalid response from server");
             }
 
-            progress.report({
-              increment: 50,
-              message: "Received zip data, extracting...",
-            });
+            progress.report({ increment: 50, message: "Received zip data, extracting..." });
 
-            // Extract zip file from base64 payload
-            const zipBuffer = Buffer.from(respData.data, "base64");
-            const zip = new AdmZip(zipBuffer);
+            const zip = new AdmZip(buf);
 
             // 1. extract to temp
             const tempDir = fs.mkdtempSync(
@@ -850,22 +801,11 @@ export async function activate(context: vscode.ExtensionContext) {
 
           const creds = await getCredentials();
 
-          // Send SOAP request to ERP closeProject endpoint
-          const respData = await erpService.closeProject(
-            serverUrl,
-            project.pmc,
-            project.vrc,
-            project.name,
-            project.role,
-            project.jiraId,
-            creds.username,
-            creds.password,
-          );
+          // Send request to ERP to close the project
+          const resp = await erpService.closeProject(serverUrl, project, creds);
 
-          if (!respData.success) {
-            throw new Error(
-              respData.errorMessage || "Failed to close project on ERP",
-            );
+          if (!resp || !resp.success) {
+            throw new Error(resp?.errorMessage || "Failed to close project on ERP");
           }
 
           progress.report({
@@ -1325,23 +1265,10 @@ export async function activate(context: vscode.ExtensionContext) {
             const creds = await getCredentials();
 
             // Upload script (sends base64 of ZIP of .bc file)
-            const uploadResult = await erpService.uploadScript(
-              serverUrl,
-              scriptName,
-              fileContent,
-              project.vrc,
-              project.name,
-              project.pmc,
-              project.jiraId,
-              project.role,
-              creds.username,
-              creds.password,
-            );
+            const uploadResult = await erpService.uploadScript(serverUrl, project, scriptName, fileContent, creds);
 
             if (!uploadResult.success) {
-              throw new Error(
-                uploadResult.errorMessage || "Failed to upload script",
-              );
+              throw new Error(uploadResult.errorMessage || "Failed to upload script");
             }
 
             scriptIdentifier = uploadResult.script;
@@ -1367,17 +1294,7 @@ export async function activate(context: vscode.ExtensionContext) {
           const creds = await getCredentials();
 
           // Compile script (receives base64 of ZIP of output files)
-          const compileResult = await erpService.compileScript(
-            serverUrl,
-            scriptIdentifier,
-            project.vrc,
-            project.name,
-            project.pmc,
-            project.jiraId,
-            project.role,
-            creds.username,
-            creds.password,
-          );
+          const compileResult = await erpService.compileScript(serverUrl, project, scriptIdentifier, creds);
 
           progress.report({
             increment: 100,

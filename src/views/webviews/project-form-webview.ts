@@ -51,12 +51,12 @@ export async function showProjectForm(
         const project: Project = {
           name: message.name,
           pmc: message.pmc,
-          jiraId: message.jiraId,
+          ticketId: message.ticketId,
           vrc: message.vrc,
           role: message.role,
           environment: message.environment,
           createdAt: existingProject?.createdAt || Date.now(),
-        };
+        }; 
 
         const isBlank = (value?: string) => !value || value.trim().length === 0;
 
@@ -115,7 +115,7 @@ export async function showProjectForm(
         resolve({
           name: message.name,
           pmc: message.pmc,
-          jiraId: message.jiraId,
+          ticketId: message.ticketId,
           vrc: message.vrc,
           role: message.role,
           environment: message.environment,
@@ -403,9 +403,9 @@ function getProjectFormWebviewContent(
                     <label>Ticket ID</label>
                     <div class="input-wrapper">
                         <i data-lucide="tag" class="input-icon"></i>
-                        <input type="text" id="jiraId" placeholder="e.g. ABC56278" value="${existingProject?.jiraId || ""}">
+                        <input type="text" id="ticketId" placeholder="e.g. ABC56278" value="${existingProject?.ticketId || ""}">
                     </div>
-                    <div class="error-label" id="err-jiraId">JIRA ID is required</div>
+                    <div class="error-label" id="err-ticketId">Ticket ID is required</div>
                 </div>
 
                 <div class="form-item">
@@ -465,7 +465,7 @@ function getProjectFormWebviewContent(
         const roleInput = document.getElementById('roleInput');
         const roleDropdown = document.getElementById('roleList');
         const pmcInput = document.getElementById('pmc');
-        const jiraIdInput = document.getElementById('jiraId');
+        const ticketIdInput = document.getElementById('ticketId');
         const rolesSource = ['Developer', 'Reviewer'];
         const warningModal = document.getElementById('warningModal');
         const warningMessageDiv = document.getElementById('warningMessage');
@@ -573,7 +573,7 @@ function getProjectFormWebviewContent(
         });
 
         // Clear invalid state on input
-        ['projectName', 'pmc', 'jiraId'].forEach(id => {
+        ['projectName', 'pmc', 'ticketId'].forEach(id => {
             const el = document.getElementById(id);
             if (el) {
                 el.addEventListener('input', (e) => e.target.classList.remove('invalid'));
@@ -625,7 +625,7 @@ function getProjectFormWebviewContent(
                 { id: 'projectName', errId: 'err-projectName', required: true, maxLength: 26 },
                 { id: 'environmentInput', errId: 'err-environment', list: environmentsSource, required: true },
                 { id: 'pmc', errId: 'err-pmc', required: !isDeveloper, maxLength: 26 },
-                { id: 'jiraId', errId: 'err-jiraId', required: !isDeveloper, maxLength: 11 },
+                { id: 'ticketId', errId: 'err-ticketId', required: !isDeveloper, maxLength: 11 },
                 { id: 'vrcInput', errId: 'err-vrc', list: vrcListSource, required: true },
                 { id: 'roleInput', errId: 'err-role', list: rolesSource, required: true }
             ];
@@ -638,7 +638,7 @@ function getProjectFormWebviewContent(
                 if(field.required && !value) {
                     err.textContent = field.id === 'projectName' ? 'Project name is required' :
                                      field.id === 'pmc' ? 'PMC number is required' :
-                                     field.id === 'jiraId' ? 'JIRA ID is required' :
+                                     field.id === 'ticketId' ? 'Ticket ID is required' :
                                      field.id === 'vrcInput' ? 'VRC is required' :
                                      field.id === 'roleInput' ? 'Role is required' :
                                      field.id === 'environmentInput' ? 'Environment is required' : 'This field is required';
@@ -674,7 +674,7 @@ function getProjectFormWebviewContent(
                     name: document.getElementById('projectName').value,
                     environment: environmentInput.value,
                     pmc: document.getElementById('pmc').value,
-                    jiraId: document.getElementById('jiraId').value,
+                    ticketId: document.getElementById('ticketId').value,
                     vrc: vrcInput.value,
                     role: roleInput.value
                 };

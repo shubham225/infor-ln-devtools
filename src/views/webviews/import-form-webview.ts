@@ -28,7 +28,7 @@ export async function showImportForm(
           projectName: message.projectName,
           vrc: message.vrc,
           role: message.role,
-          jiraId: message.jiraId,
+          ticketId: message.ticketId,
         });
         panel.dispose();
       } else if (message.command === "cancel") {
@@ -67,7 +67,7 @@ export async function showImportByPMCForm(
           pmc: message.pmc,
           vrc: message.vrc,
           role: message.role,
-          jiraId: message.jiraId,
+          ticketId: message.ticketId,
         });
         panel.dispose();
       } else if (message.command === "cancel") {
@@ -264,9 +264,9 @@ function getImportFormWebviewContent(
                     <label>JIRA ID</label>
                     <div class="input-wrapper">
                         <i data-lucide="tag" class="input-icon"></i>
-                        <input type="text" id="jiraId" placeholder="e.g. ABC12345">
+                        <input type="text" id="ticketId" placeholder="e.g. ABC12345">
                     </div>
-                    <div class="error-label" id="err-jiraId">JIRA ID is required</div>
+                    <div class="error-label" id="err-ticketId">Ticket ID is required</div>
                 </div>
             </div>
 
@@ -321,7 +321,7 @@ function getImportFormWebviewContent(
         });
 
         // Clear invalid state on input
-        ['projectName', 'jiraId'].forEach(id => {
+        ['projectName', 'ticketId'].forEach(id => {
             document.getElementById(id).addEventListener('input', (e) => e.target.classList.remove('invalid'));
         });
 
@@ -352,7 +352,7 @@ function getImportFormWebviewContent(
                 { id: 'projectName', errId: 'err-projectName' },
                 { id: 'vrcInput', errId: 'err-vrc', list: vrcListSource },
                 { id: 'roleInput', errId: 'err-role', list: rolesSource },
-                { id: 'jiraId', errId: 'err-jiraId' }
+                { id: 'ticketId', errId: 'err-ticketId' }
             ];
 
             fields.forEach(field => {
@@ -382,7 +382,7 @@ function getImportFormWebviewContent(
                     projectName: document.getElementById('projectName').value,
                     vrc: vrcInput.value,
                     role: roleInput.value,
-                    jiraId: document.getElementById('jiraId').value
+                    ticketId: document.getElementById('ticketId').value
                 });
             }
         };
@@ -566,12 +566,12 @@ function getImportByPMCFormWebviewContent(
                 </div>
 
                 <div class="form-item">
-                    <label>JIRA ID</label>
+                    <label>Ticket ID</label>
                     <div class="input-wrapper">
                         <i data-lucide="tag" class="input-icon"></i>
-                        <input type="text" id="jiraId" placeholder="e.g. ABC12345">
+                        <input type="text" id="ticketId" placeholder="e.g. ABC12345">
                     </div>
-                    <div class="error-label" id="err-jiraId">JIRA ID is required</div>
+                    <div class="error-label" id="err-ticketId">Ticket ID is required</div>
                 </div>
             </div>
 
@@ -651,7 +651,7 @@ function getImportByPMCFormWebviewContent(
         });
 
         // Clear invalid state on input
-        ['pmc', 'jiraId'].forEach(id => {
+        ['pmc', 'ticketId'].forEach(id => {
             document.getElementById(id).addEventListener('input', (e) => e.target.classList.remove('invalid'));
         });
 
@@ -682,7 +682,7 @@ function getImportByPMCFormWebviewContent(
                 { id: 'pmc', errId: 'err-pmc' },
                 { id: 'vrcInput', errId: 'err-vrc', list: vrcListSource },
                 { id: 'roleInput', errId: 'err-role', list: rolesSource },
-                { id: 'jiraId', errId: 'err-jiraId' }
+                { id: 'ticketId', errId: 'err-ticketId' }
             ];
 
             fields.forEach(field => {
@@ -713,7 +713,7 @@ function getImportByPMCFormWebviewContent(
                     pmc: document.getElementById('pmc').value,
                     vrc: vrcInput.value,
                     role: roleInput.value,
-                    jiraId: document.getElementById('jiraId').value
+                    ticketId: document.getElementById('ticketId').value
                 });
             }
         };

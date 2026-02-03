@@ -19,8 +19,7 @@ export class VRCCacheManager {
   async fetchVRCList(
     environment: string,
     serverUrl: string,
-    username: string,
-    password: string,
+    creds: { username: string; password: string },
     pmc?: string,
   ): Promise<string[]> {
     // If no PMC and cache exists for this environment, return cached data
@@ -34,7 +33,7 @@ export class VRCCacheManager {
     }
 
     try {
-      const vrcs = await erpService.fetchVRCs(serverUrl, username, password, pmc);
+      const vrcs = await erpService.fetchVRCs(serverUrl, creds, pmc);
       // Only cache if no PMC was provided (general VRC list)
       if (!pmc && vrcs.length > 0) {
         this.cache.set(environment, vrcs);

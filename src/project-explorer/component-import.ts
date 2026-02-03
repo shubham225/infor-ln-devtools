@@ -59,7 +59,7 @@ export async function importComponents(
         projectName: activeProject.name,
         vrc: activeProject.vrc,
         role: activeProject.role,
-        jiraId: activeProject.jiraId,
+        ticketId: activeProject.ticketId,
       };
     } else if (choice === "No, create new project") {
       newProject = await createNewProjectForImport(
@@ -77,7 +77,7 @@ export async function importComponents(
         projectName: newProject.name,
         vrc: newProject.vrc,
         role: newProject.role,
-        jiraId: newProject.jiraId,
+        ticketId: newProject.ticketId,
       };
     } else {
       return; // User cancelled
@@ -109,7 +109,7 @@ export async function importComponents(
       projectName: newProject.name,
       vrc: newProject.vrc,
       role: newProject.role,
-      jiraId: newProject.jiraId,
+      ticketId: newProject.ticketId,
     };
   }
 
@@ -164,29 +164,22 @@ export async function importComponents(
       const creds = await getCredentials();
 
       // Send SOAP request to ERP downloadComponents endpoint
-      const respData = await erpService.downloadComponents(
+      const resp = await erpService.downloadComponents(
         serverUrl,
-        formData.vrc,
-        formData.projectName,
-        project.pmc,
+        project,
         components,
-        formData.role,
-        formData.jiraId,
-        creds.username,
-        creds.password,
+        creds,
         abortController.signal,
       );
-      if (!respData || !respData.data) {
+      const buf = resp?.data;
+      if (!buf || !Buffer.isBuffer(buf)) {
         throw new Error("Invalid response from server");
       }
 
-      progress.report({
-        increment: 50,
-        message: "Received zip data, extracting...",
-      });
+      progress.report({ increment: 50, message: "Received zip data, extracting..." });
 
-      // Extract zip file from base64 payload
-      await extractAndMergeComponents(respData.data, developmentFolder);
+      // Extract zip file from binary payload
+      await extractAndMergeComponents(buf, developmentFolder);
 
       progress.report({
         increment: 100,
@@ -242,7 +235,7 @@ async function createNewProjectForImport(
     const serverUrl = getBackendUrl(defaultEnv);
     try {
       const creds = await getCredentials();
-      const vrcs = await erpService.fetchVRCs(serverUrl, creds.username, creds.password);
+      const vrcs = await erpService.fetchVRCs(serverUrl, creds);
       vrcList.push(...vrcs);
     } catch (err) {
       console.warn("Failed to fetch VRCs from server");
@@ -259,7 +252,7 @@ async function createNewProjectForImport(
     {
       name: "",
       pmc: "",
-      jiraId: "",
+      ticketId: "",
       vrc: "",
       role: "",
       environment: defaultEnv,
@@ -282,16 +275,7 @@ async function createNewProjectForImport(
 
   try {
     const creds = await getCredentials();
-    const validationData = await erpService.validateProject(
-      serverUrl,
-      newProject.vrc,
-      newProject.name,
-      newProject.pmc,
-      newProject.jiraId,
-      newProject.role,
-      creds.username,
-      creds.password,
-    );
+    const validationData = await erpService.validateProject(serverUrl, newProject, creds);
 
     if (
       validationData.errorMessage &&
@@ -361,16 +345,15 @@ async function createNewProjectForImport(
 }
 
 /**
- * Extracts components from zip data and merges with existing project files
- * 
- * @param zipData - Base64 encoded zip data
+ * Extracts components from a binary ZIP Buffer and merges with existing project files
+ *
+ * @param zipBuffer - ZIP as a Buffer
  * @param targetFolder - Target folder path for extraction
  */
 async function extractAndMergeComponents(
-  zipData: string,
+  zipBuffer: Buffer,
   targetFolder: string,
 ): Promise<void> {
-  const zipBuffer = Buffer.from(zipData, "base64");
   const zip = new AdmZip(zipBuffer);
 
   // 1. extract to temp

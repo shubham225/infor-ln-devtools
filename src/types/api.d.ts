@@ -27,11 +27,11 @@ export interface ValidateProjectResponse {
 }
 
 export interface DownloadComponentsResponse {
-  data: string;
+  data: Buffer | ArrayBuffer;
 }
 
 export interface DownloadComponentsByPMCResponse {
-  data: string;
+  data: Buffer | ArrayBuffer;
 }
 
 export interface CloseProjectResponse {
@@ -57,14 +57,14 @@ export interface ImportFormSettings {
   projectName: string;
   vrc: string;
   role: "Developer" | "Reviewer";
-  jiraId: string;
+  ticketId: string;
 }
 
 export interface ImportByPMCFormSettings {
   pmc: string;
   vrc: string;
   role: "Developer" | "Reviewer";
-  jiraId: string;
+  ticketId: string;
 }
 
 export interface CompileScriptResponse {
