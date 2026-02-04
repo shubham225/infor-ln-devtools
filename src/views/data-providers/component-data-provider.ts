@@ -21,20 +21,26 @@ export class TreeNode extends vscode.TreeItem {
     const iconId =
       {
         rootNode:
-          componentType === "Table"
-            ? "table"
-            : componentType === "Session"
-              ? "window"
-              : "code",
-        packageNode: "folder",
+          {
+            Table: "table",
+            Session: "window",
+            Script: "code",
+            Domain: "library",
+            Report: "graph",
+            Function: "symbol-function",
+          }[componentType] || "symbol-misc",
+        packageNode: "symbol-folder",
         moduleNode: "folder",
       }[contextType] ||
       {
         Table: "table",
         Session: "window",
         Script: "code",
-      }[component?.type || ""] ||
-      "";
+        Domain: "library",
+        Report: "graph",
+        Function: "symbol-function",
+      }[component?.type || "symbol-misc"] ||
+      "symbol-misc";
 
     if (iconId) {
       this.iconPath = new vscode.ThemeIcon(iconId);

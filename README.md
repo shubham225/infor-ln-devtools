@@ -21,8 +21,9 @@
   - **Table**
   - **Session**
   - **Script**
+  - **Function**
+  - **Domain**
   - **Report**
-  - **Library**
 - Lazy backend loading:
   - `/vrcs` → List all VRCs
   - `/vrcs/{vrcId}/packages` → Packages in VRC
@@ -58,26 +59,26 @@ Stored in VS Code global state:
 
 ## 🖥️ Extension UI Overview
 
+### 🧰 Project Explorer
+Displays Project List:
+
+![Project Explorer](./resources/readme/project-explorer.png)
+
 ### 📦 Component Explorer
 Hierarchical view of LN components:
 
 ![Component Explorer](./resources/readme/component-explorer.png)
 
 ### 📥 Import Component Flow
-Selection + Import trigger:
+Selection List + Import trigger:
 
-![Import Component](./resources/readme/import-component.png)
-
-### 🧰 DevTools Panel
-Includes VRC / PMC / Server URL configuration + export/import controls:
-
-![DevTools Panel](./resources/readme/devtools-panel.png)
+![Import Component](./resources/readme/selected-components.png)
 
 ---
 
 ## 🌐 Backend API Contract
 
-The extension communicates with the **Infor LN DevTools API**, which follows the hierarchical structure: **VRC → Package → Module → Component**. All binary endpoints return raw ZIP bytes; legacy base64 responses are deprecated.
+The extension communicates with the **Infor LN DevTools API**, which follows the hierarchical structure: **VRC → Package → Module → Component**. All binary endpoints return raw ZIP bytes.
 
 ### 1) System & Environment
 
@@ -241,12 +242,13 @@ The extension communicates with the **Infor LN DevTools API**, which follows the
 After importing components, expected workspace layout:
 ```
 Development/
- └── <project-name>/
-      ├── TD/
-      ├── FD/
-      ├── Table/
+ └── <project-name>
+      ├── Domain/
+      ├── Function/
+      ├── Report/
       ├── Session/
-      └── Script/
+      ├── Script/
+      └── Table/
 ```
 
 ### 9) VS Code Commands

@@ -17,7 +17,7 @@ export class ProjectNode extends vscode.TreeItem {
     
     // Highlight active project
     if (isActive) {
-      this.iconPath = new vscode.ThemeIcon("folder-opened", new vscode.ThemeColor("charts.green"));
+      this.iconPath = new vscode.ThemeIcon("folder-active", new vscode.ThemeColor("charts.green"));
       this.description = `${this.description} ✓ Active`;
     } else {
       this.iconPath = new vscode.ThemeIcon("folder");
