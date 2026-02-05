@@ -9,29 +9,30 @@ import {
   refreshComponentView,
   TreeNode,
   SelectedComponentsDataProvider,
-} from "./views/data-providers/component-data-provider";
+} from "./devtools/views/data-providers/component-data-provider";
 import {
   ProjectDataProvider,
   ProjectNode,
   FileNode,
-} from "./views/data-providers/project-data-provider";
-import { showProjectForm } from "./views/webviews/project-form-webview";
-import { showTableViewer } from "./views/webviews/table-viewer-webview";
-import { showSessionViewer } from "./views/webviews/session-viewer-webview";
-import { showCompilationOutput } from "./views/webviews/compilation-output-webview";
-import { showLoginForm } from "./views/webviews/login-webview";
-import { UPDATE_MODE, Project } from "./types";
-import * as erpService from "./services/erp-service";
+} from "./devtools/views/data-providers/project-data-provider";
+import { showProjectForm } from "./devtools/views/webviews/project-form-webview";
+import { showTableViewer } from "./devtools/views/webviews/table-viewer-webview";
+import { showSessionViewer } from "./devtools/views/webviews/session-viewer-webview";
+import { showCompilationOutput } from "./devtools/views/webviews/compilation-output-webview";
+import { showLoginForm } from "./devtools/views/webviews/login-webview";
+import { UPDATE_MODE, Project } from "./devtools/types";
+import * as erpService from "./devtools/services/erp-service";
 import {
   loadSettingsFromFile,
   showAndSaveSettingsForm,
   getBackendUrl as getBackendUrlHelper,
-} from "./extension-settings/settings-manager";
-import { VRCCacheManager } from "./extension-settings/vrc-cache-manager";
-import { validateAndSetupProject } from "./project-explorer/project-operations";
-import { importComponents } from "./project-explorer/component-import";
-import { updateComponentExplorerForActiveProject } from "./component-view/component-operations";
-import { AuthManager } from "./services/auth-manager";
+} from "./devtools/extension-settings/settings-manager";
+import { VRCCacheManager } from "./devtools/extension-settings/vrc-cache-manager";
+import { validateAndSetupProject } from "./devtools/project-explorer/project-operations";
+import { importComponents } from "./devtools/project-explorer/component-import";
+import { updateComponentExplorerForActiveProject } from "./devtools/component-view/component-operations";
+import { AuthManager } from "./devtools/services/auth-manager";
+import { initializeLanguageSupport } from "./language-support/language-support";
 
 // Track compilation state
 const compilationInProgress = new Map<string, boolean>();
@@ -127,6 +128,10 @@ async function ensureAuthenticated(
  * @param context - The VS Code extension context
  */
 export async function activate(context: vscode.ExtensionContext) {
+
+  // Language support initializes in background to not slow down extension
+  initializeLanguageSupport(context);
+
   // Always load settings from JSON file (resources) as the source of truth
   const settingsData = await loadSettingsFromFile(context);
   let environments = settingsData.environments;

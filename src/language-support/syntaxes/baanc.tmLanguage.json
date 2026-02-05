@@ -1,0 +1,506 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Baan C",
+	"patterns": [
+		{
+			"include": "#comments"
+		},
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#event-sections"
+		},
+		{
+			"include": "#report-sections"
+		},
+		{
+			"include": "#report-script-functions"
+		},
+		{
+			"include": "#predefined-variables"
+		},
+		{
+			"include": "#form-field-functions"
+		},
+		{
+			"include": "#enumerate-functions"
+		},
+		{
+			"include": "#varying-arg-functions"
+		},
+		{
+			"include": "#memory-operations-functions"
+		},
+		{
+			"include": "#string-operations-functions"
+		},
+		{
+			"include": "#text-fields-functions"
+		},
+		{
+			"include": "#byte-arrays-functions"
+		},
+		{
+			"include": "#message-handling-functions"
+		},
+		{
+			"include": "#json-object-functions"
+		},
+		{
+			"include": "#json-constants"
+		},
+		{
+			"include": "#xml-object-functions"
+		},
+		{
+			"include": "#variables-ipc-functions"
+		},
+		{
+			"include": "#database-operations-functions"
+		},
+		{
+			"include": "#company-operations-functions"
+		},
+		{
+			"include": "#directory-file-operations-functions"
+		},
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#types"
+		},
+		{
+			"include": "#constants"
+		},
+		{
+			"include": "#numbers"
+		},
+		{
+			"include": "#operators"
+		},
+		{
+			"include": "#preprocessor"
+		},
+		{
+			"include": "#sql"
+		},
+		{
+			"include": "#variables"
+		}
+	],
+	"repository": {
+		"report-sections": {
+			"patterns": [
+				{
+					"captures": { "2": { "name": "keyword.other.report.sections.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:before\\.report|after\\.report|header|footer|detail)\\.[0-9]+:)"
+				},
+				{
+					"captures": { "2": { "name": "keyword.other.report.field.sections.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:before|after)\\.[a-z][a-z0-9._]*\\.[0-9]+:)"
+				},
+				{
+					"captures": { "2": { "name": "keyword.other.report.subsections.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:before\\.layout|after\\.layout):)"
+				}
+			]
+		},
+		"report-script-functions": {
+			"patterns": [
+				{
+					"captures": { "2": { "name": "support.function.report.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:layout\\.again|need|page|reset\\.suppress|skip|skip\\.to|to\\.page))(?=\\s*\\()(?![a-zA-Z0-9._$])"
+				}
+			]
+		},
+		"predefined-variables": {
+			"patterns": [
+				{
+					"captures": { "2": { "name": "variable.language.report.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])(lattr\\.(autobefores|autoreset|break|enddata|header|language\\$|lineno|multicol|multicol\\.count|multicol\\.repeat|pageno|print|prline|recordtimes|textexpand|textlang\\$|textline|textlineno|textlines\\.max|textlines\\.min))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "variable.language.attr.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])(attr\\.(adju|bitset\\.mask|changed|conv|currency\\$|currkey|dbase|dbmaxlen|deflt\\$|descr\\$|diga|digv|divf|domain\\$|domm\\$|dorp|echo|element|enum\\.mask\\$|format\\.addition\\$|helpfile\\$|ille\\$|imax|inpfld|input|lega\\$|mandatory|maxlen|message\\$|minlen|multioccur|nowait\\$|oformat\\$|permission|previous\\$|rang\\$|rang|reallen|refpath|rndm|rotate|sttp|textfield\\$|textlang\\$|textmaxlines|textmode|textopt\\$|textstart|textzoomsession\\$|type|zoomcode|zoomindex|zoomreturn\\$|zoomsession\\$))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "variable.language.fattr.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])(fattr\\.(currfld\\$|descr\\$|ftype|helpfile\\$|horizontal|init|nrtabs|occurnr|seqno|toplines|total\\.line))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "variable.language.session.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:actual\\.occ|auto\\.nextform|background|before\\.update\\.check|break\\.view|chartgrp|choice|curr\\.key|curr\\.pacc\\$|dal\\.error\\.file|dal\\.error\\.line|date\\$|dis\\.restarted|dupl\\.occur|dynamic\\.index\\.switching|error\\.bypass|exit\\.val\\$|filled\\.occ|firstweek\\$|form\\.curr|form\\.next|form\\.prev|graphical\\.mode|ignore\\.first\\.event|job\\.change\\.data|job\\.device|job\\.device\\.requested|job\\.process|job\\.process\\.error|job\\.report|job\\.skip\\.date\\.question|language\\$|logname\\$|main\\.table\\$|marked|max\\.formtabs|maxdouble|modify\\.prim\\.key|modify\\.set|number\\.forms|number\\.of\\.marks|parent|pid|previous\\.choice|procesinfo\\$|prog\\.name\\$|query\\.extension|report\\$|reportgrp|reportno|select\\.only\\.fields\\.on\\.form|session\\.nr\\.view\\.fields|session\\.zoomindex|shell\\.type|ssi\\.export\\.running|ssi\\.import\\.running|start\\.by\\.wfc|stp\\.abort\\.error|stp\\.check\\.input\\.error|stp\\.skip\\.error|subdal|synchronized\\.reason|text\\.updated\\.in\\.edit|update\\.status|user\\.locale\\$|user\\.timer|user\\.type\\$|zoomfield\\$|zoomreturn\\$))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "variable.language.mark.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])(mark\\.table)(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "variable.language.chm.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])(chm\\.(name|owner|title|user))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "variable.language.sattr.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])(sattr\\.descr\\$)(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "constant.language.db.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])(DB\\.RETRY|DB\\.SKIP|DB\\.EXIT|DB\\.INF|DORP\\.PREVIOUS|DORP\\.DEFAULT|MULTICOL_NONE|MULTICOL_ORDER_HORIZONTAL|MULTICOL_ORDER_VERTICAL)(?![a-zA-Z0-9._$])"
+				}
+			]
+		},
+		"form-field-functions": {
+			"patterns": [
+				{
+					"captures": { "2": { "name": "support.function.form.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:add\\.sync\\.fields|add\\.sync\\.fields\\.nokey|add\\.sync\\.fields\\.once|add\\.variable\\.to\\.defaults|add\\.view\\.field|blank\\.all|change\\.dal\\.field|change\\.field\\.label|change\\.group\\.label|change\\.picture|check\\.all\\.input|choice\\.again|defaults\\.saved))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.form.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:disable\\.checkmark|disable\\.commands|disable\\.fields|disable\\.group|disable\\.pagemode|disable\\.quick\\.flow|disable\\.satellite|disable\\.zoom\\.buttons|display\\.all|display\\.curr\\.occ|display\\.fld|display|display\\.occ|display\\.total\\.fields|do\\.all\\.occ|do\\.occ|do\\.occ\\.without\\.update|do\\.selection|enable\\.commands|enable\\.fields|enable\\.group|enable\\.quick\\.flow|enable\\.satellite|enable\\.save\\.on\\.occ\\.change|enable\\.zoom\\.buttons|execute|fields\\.autocomplete|get\\.active\\.satellite|get\\.current\\.field\\.label|get\\.field\\.label|get\\.initial\\.field\\.label|get\\.prev\\.value|get\\.screen\\.defaults|get\\.user\\.default))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.form.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:group\\.invisible|input\\.again|inputfield\\.invisible|inputfield\\.password|inputfield\\.visible|is\\.field\\.invisible|is\\.field\\.multi\\.currency|is\\.mmt\\.controller|is\\.mmt\\.satellite|is\\.webpart\\.session|job\\.add\\.field|make\\.current|mark\\.occ|occ\\.independent\\.view\\.field|on\\.old\\.occ|print\\.const|publish\\.webpart\\.message|refresh\\.all\\.occs|refresh\\.curr\\.occ|refresh\\.total\\.line|register\\.webpart\\.handler|remove\\.field\\.from\\.view|remove\\.form\\.commands|remove\\.mark|remove\\.quick\\.flow|remove\\.session\\.index|satellite\\.invisible|set\\.checked\\.command|set\\.fields\\.default|set\\.list\\.values\\.for\\.field|set\\.starting\\.satellite))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.form.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:standard\\.commands\\.off|synchronize\\.satellite|to\\.field|to\\.form|to\\.group|to\\.satellite|unlink\\.from\\.maintable|update\\.occ))(?![a-zA-Z0-9._$])"
+				}
+			]
+		},
+		"enumerate-functions": {
+			"patterns": [
+				{
+					"captures": { "2": { "name": "support.function.enumerates.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:ask\\.enum|enum\\.descr\\$|etol|ltoe|set\\.ask\\.enum\\.values|set\\.enum\\.array\\.for\\.field|set\\.enum\\.values\\.for\\.field|set\\.enum\\.values|set\\.initial\\.enum\\.array\\.for\\.field|set\\.initial\\.enum\\.values\\.for\\.field))(?![a-zA-Z0-9._$])"
+				}
+			]
+		},
+		"varying-arg-functions": {
+			"patterns": [
+				{
+					"captures": { "2": { "name": "support.function.varyingargs.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:get\\.arg\\.type|get\\.argc|get\\.boolean\\.arg|get\\.double\\.arg|get\\.long\\.arg|get\\.string\\.arg|put\\.boolean\\.arg|put\\.double\\.arg|put\\.long\\.arg|put\\.string\\.arg))(?![a-zA-Z0-9._$])"
+				}
+			]
+		},
+		"memory-operations-functions": {
+			"patterns": [
+				{
+					"captures": { "2": { "name": "support.function.memory.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:alloc\\.mem|array\\.get\\.size\\.in\\.bytes|array\\.info|cmp\\.mem|copy\\.mem|free\\.mem|set\\.mem))(?![a-zA-Z0-9._$])"
+				}
+			]
+		},
+		"string-operations-functions": {
+			"patterns": [
+				{
+					"captures": { "2": { "name": "support.function.string.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:concat\\$|isdigit|isspace|len|len\\.in\\.bytes|lval|not\\.fixed|pos|quoted\\.string|rpos|shiftc\\$|shiftl\\$|shiftr\\$|strip\\$|tolower\\$|toupper\\$|trim\\$|val))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.string.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:load\\.byte|load\\.double|load\\.float|load\\.long|load\\.short|store\\.byte|store\\.double|store\\.float|store\\.long|store\\.short|str\\$|str\\.compare|str\\.containsmbchar|str\\.endswith|str\\.equals|str\\.insert\\$|str\\.remove\\$|str\\.replace\\$|str\\.replace|str\\.sizeof|str\\.startswith|str\\.substring\\$|string\\.set\\$|string\\.to\\.bounded\\.long))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.string.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:set\\.strip\\.mode|set\\.symbol\\.strip\\.mode|tt\\.align\\.according\\.domain))(?![a-zA-Z0-9._$])"
+				}
+			]
+		},
+		"text-fields-functions": {
+			"patterns": [
+				{
+					"captures": { "2": { "name": "support.function.textfields.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:remove\\.textfields|set\\.file\\.for\\.textfield|text\\.buf\\.to\\.field|text\\.to\\.buf|textfield\\.to\\.buf|textfield\\.to\\.database))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.textfields.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:text\\.copy\\.between\\.companies|text\\.copy\\.language\\.shared|text\\.copy\\.language|text\\.copy|text\\.defaults|text\\.delete|text\\.edit|text\\.find\\.other\\.language\\.shared|text\\.present\\.in\\.language\\.shared|text\\.present\\.in\\.language|text\\.read|text\\.rewrite))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.textfields.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:text\\.set\\.keywords|text\\.set\\.language|text\\.window|text\\.write))(?![a-zA-Z0-9._$])"
+				}
+			]
+		},
+		"byte-arrays-functions": {
+			"patterns": [
+				{
+					"captures": { "2": { "name": "support.function.bytearrays.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:ims\\.clearerr|ims\\.eof|ims\\.error|ims\\.close|ims\\.rewind|ims\\.tell|ims\\.read|ims\\.write|ims\\.getc\\$|ims\\.putc\\$|ims\\.skip|ims\\.seek|ims\\.gets|ims\\.puts|ims\\.r\\.long|ims\\.w\\.long|ims\\.r\\.short|ims\\.w\\.short|ims\\.spool\\.line|ims\\.openfba|ims\\.openvba|ims\\.getproperties|ims\\.setvbaproperties))(?![a-zA-Z0-9._$])"
+				}
+			]
+		},
+		"message-handling-functions": {
+			"patterns": [
+				{
+					"captures": { "2": { "name": "support.function.message.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:status\\.del|status\\.mess|clean\\.mess|mess|message|set\\.input\\.error|show\\.dal\\.messages))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.message.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:dal\\.clear\\.messages|dal\\.count\\.messages|dal\\.get\\.last\\.message|dal\\.get\\.first\\.message|dal\\.peek\\.message|dal\\.reset\\.messages|dal\\.set\\.message|dal\\.set\\.messages\\.off|dal\\.set\\.messages\\.on))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.message.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:dal\\.clear\\.error\\.messages|dal\\.count\\.error\\.messages|dal\\.get\\.error\\.message|dal\\.get\\.error\\.msgcode|dal\\.get\\.first\\.error\\.message|dal\\.peek\\.error\\.message|dal\\.peek\\.error\\.msgcode|dal\\.reset\\.error\\.messages|dal\\.set\\.error\\.message|dal\\.set\\.warning\\.message|dal\\.set\\.info\\.message))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.message.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:form\\.text\\$))(?![a-zA-Z0-9._$])"
+				}
+			]
+		},
+		"json-object-functions": {
+			"patterns": [
+				{
+					"captures": { "2": { "name": "support.function.jsonobject.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:Json\\.(?:add|addBoolean|addNull|addNumber|addString|at|boolean|booleanAt|copy|count|del|delete|detach|get|getBoolean|getNumber|getString|has|isJson|isNull|iter|iterKey|iterNext|iterValue|newArray|newBoolean|newNull|newNumber|newObject|newString|number|numberAt|path|put|putBoolean|putNull|putNumber|putString|read|readFile|readString|set|setBoolean|setNull|setNumber|setString|string|stringAt|type|write|writeFile|writeString)))(?![a-zA-Z0-9._$])"
+				}
+			]
+		},
+		"json-constants": {
+			"patterns": [
+				{
+					"captures": { "2": { "name": "constant.language.json.baanc" } },
+					"match": "(?i)(^|[^A-Za-z0-9._$])((?:JSON_TYPE_NULL|JSON_TYPE_BOOLEAN|JSON_TYPE_NUMBER|JSON_TYPE_OBJECT|JSON_TYPE_ARRAY|JSON_TYPE_STRING|JSON_TYPE_UNKNOWN))(?![A-Za-z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "constant.language.json.baanc" } },
+					"match": "(?i)(^|[^A-Za-z0-9._$])((?:JSON_READ_UTF8|JSON_READ_TSS|JSON_WRITE_UTF8|JSON_WRITE_PRETTY|JSON_WRITE_COMPACT))(?![A-Za-z0-9._$])"
+				}
+			]
+		},
+		"xml-object-functions": {
+			"patterns": [
+				{
+					"captures": { "2": { "name": "support.function.xml.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:xmlContainsValidCharactersOnly|xmlReplaceInvalidCharacters|xmlWrite|xmlWritePretty|xmlWriteToString|xmlWritePrettyToString|xmlString\\$|xmlPrettyString\\$|xmlAllocString|xmlAllocPrettyString|xmlGetStringLength|xmlGetPrettyStringLength|xmlRead|xmlReadFromString))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.xml.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:xmlNewNode|xmlIsNode|xmlNewDataElement|xmlRewriteDataElement|xmlGetDataElement|xmlDataElement\\$|xmlAllocDataElement|xmlGetDataElementLength|xmlSetName|xmlSetData))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.xml.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:xmlSetAttribute|xmlDeleteAttribute|xmlGetData|xmlData\\$|xmlAllocData|xmlGetDataLength|xmlGetAttribute|xmlAttribute\\$|xmlAllocAttribute|xmlGetAttributeLength))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.xml.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:xmlGetName|xmlName\\$|xmlAllocName|xmlGetNameLength|xmlGetParent|xmlGetFirstChild|xmlGetLastChild|xmlGetNumChilds|xmlGetLeftSibling|xmlGetRightSibling|xmlGetNumSiblings|xmlGetNumLeftSiblings|xmlGetNumRightSiblings|xmlGetNumAttributes|xmlGetType|xmlGetSAMLnode))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.xml.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:xmlGetAttributeName|xmlAttributeName\\$|xmlAllocAttributeName|xmlGetAttributeNameLength))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.xml.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:xmlDelete|xmlUnlink|xmlInsert|xmlAdd|xmlAppend|xmlInsertInChilds|xmlAppendToChilds|xmlDuplicate|xmlDuplicateToProcess|xmlDuplicateAndInsert|xmlDuplicateAndAdd|xmlDuplicateAndAppend|xmlDuplicateAndInsertInChilds|xmlDuplicateAndAppendToChilds|xmlFindFirst|xmlFindFirstMatch|xmlFindNodes|xmlFindMatch|xmlFindSetOfSiblingNodes))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.xml.ns.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:xmlAllocAttributeNs|xmlAllocAttributePrefix|xmlAllocAttributeQualifiedName|xmlAllocAttributeURI|xmlAllocDataElementNs|xmlAllocPrefix|xmlAllocQualifiedName|xmlAllocURI|xmlDeleteAttributeNs|xmlFindFirstMatchNs|xmlFindFirstNs|xmlFindMatchNs|xmlFindNamespace|xmlFindNodesNs|xmlFirstNamespaceDecl|xmlGetAttributeLengthNs|xmlGetAttributeNs|xmlGetAttributePrefix|xmlGetAttributePrefixLength|xmlGetAttributeQualifiedName|xmlGetAttributeQualifiedNameLength|xmlGetAttributeURI|xmlGetAttributeURILength|xmlGetDataElementLengthNs|xmlGetDataElementNs|xmlGetNamespace|xmlGetPrefix|xmlGetPrefixLength|xmlGetQualifiedName|xmlGetQualifiedNameLength|xmlGetURI|xmlGetURILength|xmlNewDataElementNs|xmlNewNamespace|xmlNewNodeNs|xmlNextNamespaceDecl|xmlReadFromStringNs|xmlReadNs|xmlRewriteDataElementNs|xmlSetAttributeNs|xmlSetNamespace))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.xml.ns.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:xmlAttributeNs\\$|xmlAttributePrefix\\$|xmlAttributeQualifiedName\\$|xmlAttributeURI\\$|xmlBuildNamespaceList\\$|xmlDataElementNs\\$|xmlNamespacePrefix\\$|xmlNamespaceURI\\$|xmlPrefix\\$|xmlQualifiedName\\$|xmlURI\\$))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.xml.ns.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:db\\.blob\\.read\\.xml\\.ns))(?![a-zA-Z0-9._$])"
+				}
+			]
+		},
+		"variables-ipc-functions": {
+			"patterns": [
+				{
+					"captures": { "2": { "name": "support.function.ipc.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:export|import|import\\.4gl\\.var|get\\.var|put\\.var|get\\.indexed\\.var|put\\.indexed\\.var))(?![a-zA-Z0-9._$])"
+				}
+			]
+		},
+		"database-operations-functions": {
+			"patterns": [
+				{
+					"captures": { "2": { "name": "support.function.dal.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:dal\\.(?:change\\.object|check\\.field|copy\\.object|destroy|destroy\\.object|get\\.field\\.mode|get\\.object|get\\.property\\.flag|is\\.copy\\.active|is\\.field\\.changed|new|new\\.object|parent\\.caused\\.update|recall|save\\.object|set\\.array\\.field|set\\.field|set\\.property|set\\.property\\.with\\.check|skip\\.never\\.applicable\\.checks|start\\.business\\.method|submit|undo\\.check\\.out|update)|this\\.dal))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.db.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:db\\.(?:bind|unbind|create\\.table|drop\\.table|clear\\.table|lock\\.table|permission|indexinfo|nr\\.indices|nr\\.rows|row\\.length|get\\.physical\\.compnr|ref\\.handle\\.mode|columns\\.to\\.record|record\\.to\\.columns|store\\.record|restore\\.record|set\\.to\\.default|record\\.changed|check\\.row\\.changed|check\\.row\\.dlocked|check\\.row\\.domains|check\\.restricted|retry\\.point|retry\\.hit|get\\.error\\.bypass|set\\.error\\.bypass\\.on|set\\.error\\.bypass\\.off|error|error\\.message|flush|curr|first|last|next|prev|eq|ge|gt|le|lt|insert|update|delete)))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.db.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:abort\\.io|abort\\.transaction|activate\\.search|commit\\.transaction|count\\.records\\.in\\.view|for\\.each\\.record\\.in\\.view\\.do|on\\.main\\.table|restore\\.rcd\\.main|set\\.limits\\.off|set\\.transaction\\.readonly|skip\\.io|store\\.occ\\.maxmin|sum\\.records\\.in\\.view|to\\.key|with\\.object\\.set\\.do|with\\.old\\.object\\.values\\.do))(?![a-zA-Z0-9._$])"
+				}
+			]
+		},
+		"company-operations-functions": {
+			"patterns": [
+				{
+					"captures": { "2": { "name": "support.function.company.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:compnr\\.check|get\\.appl\\.data\\.company|get\\.company|get\\.compnr|get\\.financial\\.compnr|get\\.logistic\\.compnr|switch\\.to\\.company))(?![a-zA-Z0-9._$])"
+				}
+			]
+		},
+		"directory-file-operations-functions": {
+			"patterns": [
+				{
+					"captures": { "2": { "name": "support.function.fileops.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:dir\\.(?:close|entry|open|open\\.tree|rewind)))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.fileops.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:seq\\.(?:clearerr|close|eof|error|flush|gets|islocked|lock|open|puts|r\\.long|r\\.short|read|rewind|seek|skip|tell|unlink|unlock|w\\.long|w\\.short|write)|seq\\.(?:getc\\$|putc\\$|ungetc\\$)))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.fileops.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:path\\.(?:change\\.extension|combine|dir\\.separator|directory|exists|extension|filename|filename\\.without\\.extension|has\\.extension|is\\.absolute|separator)|zipfile\\.(?:build|create|extract|info)|zipinfo\\.(?:add|count|delete|file|first|new|next)))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.fileops.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:file\\.(?:chown|cp|mv|mv\\.across\\.hosts|rm|stat)|file_chmod))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name": "support.function.fileops.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:creat\\.tmp\\.file\\$|fstat\\.info|getcwd|make\\.path\\.absolute|mkdir|pathname|rmdir|stat\\.info))(?![a-zA-Z0-9._$])"
+				}
+			]
+		},
+		"event-sections": {
+			"patterns": [
+				{
+					"captures": { "2": { "name": "keyword.other.prog.sections.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:declaration|before\\.program|after\\.form\\.read|on\\.error|after\\.program|after\\.update\\.db\\.commit|before\\.display\\.object|before\\.new\\.object|on\\.display\\.total\\.line|functions):)"
+				},
+				{
+					"captures": { "2": { "name": "keyword.other.choice.sections.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])(choice\\.(?:start\\.set|first\\.view|next\\.view|prev\\.view|last\\.view|def\\.find|find\\.data|first\\.set|next\\.set|display\\.set|prev\\.set|rotate\\.curr|last\\.set|add\\.set|update\\.db|dupl\\.occur|recover\\.set|mark\\.delete|mark\\.occur|change\\.order|modify\\.set|print\\.data|create\\.job|change\\.frm|first\\.frm|next\\.frm|prev\\.frm|last\\.frm|resize\\.frm|zoom|interrupt|end\\.program|abort\\.program|cont\\.process|text\\.manager|run\\.job|global\\.delete|global\\.copy|save\\.defaults|get\\.defaults|chm|start\\.query|select\\.all|bms|[a-z][a-z0-9]*[0-9]{3}[a-z][0-9]{3}):)"
+				},
+				{
+					"captures": { "2": { "name": "keyword.other.choice.subsections.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:before\\.choice|on\\.choice|after\\.choice):)"
+				},
+				{
+					"captures": { "2": { "name": "keyword.other.field.sections.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])(field\\.(?:all|other|[0-9]+|[a-z][a-z0-9._]*):)"
+				},
+				{
+					"captures": { "2": { "name": "keyword.other.field.subsections.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:init\\.field|before\\.field|before\\.input|before\\.display|selection\\.filter|before\\.zoom|before\\.checks|domain\\.error|ref\\.input|ref\\.display|check\\.input|on\\.input|when\\.field\\.changes|after\\.zoom|after\\.input|after\\.display|after\\.field):)"
+				},
+				{
+					"captures": { "2": { "name": "keyword.other.form.sections.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])(form\\.(?:all|other|[0-9]+):)"
+				},
+				{
+					"captures": { "2": { "name": "keyword.other.form.subsections.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:init\\.form|before\\.form|after\\.form):)"
+				},
+				{
+					"captures": { "2": { "name": "keyword.other.group.sections.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])(group\\.(?:all|other|[0-9]+):)"
+				},
+				{
+					"captures": { "2": { "name": "keyword.other.group.subsections.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:init\\.group|before\\.group|after\\.group):)"
+				},
+				{
+					"captures": { "2": { "name": "keyword.other.maintable.sections.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])(main\\.table\\.io:)"
+				},
+				{
+					"captures": { "2": { "name": "keyword.other.maintable.subsections.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:read\\.view|before\\.read|after\\.read|before\\.write|before\\.rewrite|after\\.write|after\\.rewrite|after\\.skip\\.write|after\\.skip\\.rewrite|before\\.delete|after\\.delete|after\\.skip\\.delete):)"
+				},
+				{
+					"captures": { "2": { "name": "keyword.other.zoom.sections.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])(zoom\\.from\\.(?:all|other|choice|[a-z][a-z0-9._]*):)"
+				},
+				{
+					"captures": { "2": { "name": "keyword.other.zoom.subsections.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:on\\.entry|on\\.exit):)"
+				}
+			]
+		},
+		"keywords": {
+			"patterns": [
+				{
+					"captures": { "2": { "name": "keyword.control.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:if|then|else|endif|while|endwhile|for|to|step|endfor|repeat|until|return|break|continue|on\\s+case|case|default|endcase))(?![a-zA-Z0-9._$])"
+				},
+				{
+					"captures": { "2": { "name":"keyword.other.misc.baanc" } },
+					"match":"(?i)(^|[^a-zA-Z0-9._$])((?:function|extern|static|based|fixed|mb))(?![a-zA-Z0-9._$])"
+				}
+			]
+		},
+		"types": {
+			"patterns": [
+				{
+					"captures": { "2": { "name": "storage.type.baanc" } },
+					"match": "(?i)(^|[^a-zA-Z0-9._$])((?:domain|long|double|string|boolean|table))(?![a-zA-Z0-9._$])"
+				}
+      		]
+    	},
+		"constants": {
+			"patterns": [
+        		{ "name": "constant.language.boolean.baanc", "match": "(?i)\\b(true|false)\\b" },
+				{ "name": "constant.language.enum.baanc", "match": "(?i)\\b(empty)\\b" }
+        	]
+    	},
+		"numbers": {
+			"patterns": [
+				{ "name": "constant.numeric.baanc", "match": "\\b\\d+\\.\\d+\\b" },
+				{ "name": "constant.numeric.baanc", "match": "\\b\\d+\\b" }
+      		]
+    	},
+		"strings": {
+			"name": "string.quoted.double.baanc",
+			"begin": "\"",
+			"end": "\""
+		},
+		"comments": {
+			"patterns": [
+				{
+					"name": "comment.line.pipe.baanc",
+					"match": "\\|.*"
+				},
+				{
+					"name": "comment.block.documentation.baanc",
+					"begin": "(?i)\\b(dllusage|functionusage)",
+					"end": "(?i)\\bend(dllusage|functionusage)"
+				}
+			]
+		}, 
+		"operators": {
+      		"patterns": [
+			{
+				"captures": { "2": { "name": "keyword.operator.logical.baanc" } },
+				"match": "(?i)(^|[^a-zA-Z0-9._$])((?:and|or|not))(?![a-zA-Z0-9._$])"
+			},
+			{ "name": "keyword.operator.comparison.baanc", "match": "<=|>=|<>|=|<|>" },
+			{ "name": "keyword.operator.arithmetic.baanc", "match": "\\+|\\-|\\*|/|\\\\|\\&" }
+			]
+    	},
+		"preprocessor": {
+			"patterns": [
+				{ "name": "meta.preprocessor.baanc", "match": "^(?i)\\s*#\\s*(pragma|include|ident)\\b.*$" }
+      		]
+    	},
+		"sql": {
+			"patterns": [
+        		{ "name": "keyword.control.sql.baanc", "match": "(?i)\\s(select|from|where|group\\s+by|order\\s+by|having|for\\s+update|as\\s+set\\s+with|rows|hint\\s+use\\s+index)\\s" },
+        		{ "name": "keyword.control.sql.block.baanc", "match": "(?i)\\b(selectdo|selectempty|endselect)\\b" }
+      		]
+		},
+		"variables": {
+			"patterns": [{"name":"variable.other.identifier.baanc", "match": "[a-zA-Z][a-zA-Z0-9._]*(?![a-zA-Z0-9._])"}]
+		}
+    },
+	"scopeName": "source.bc"
+}

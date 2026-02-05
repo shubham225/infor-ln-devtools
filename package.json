@@ -21,6 +21,57 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "languages": [
+      {
+        "id": "baanc",
+        "aliases": [
+          "Baan C",
+          "baanc",
+          "BaanC"
+        ],
+        "extensions": [
+          ".bc"
+        ],
+        "configuration": "./src/language-support/language-configuration.json",
+        "icon": {
+          "light": "./resources/script.png",
+          "dark": "./resources/script.png"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "baanc",
+        "scopeName": "source.bc",
+        "path": "./src/language-support/syntaxes/baanc.tmLanguage.json"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Infor LN DevTools",
+      "properties": {
+        "ee-erp-devtools.autoCompileOnSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically compile BaanC scripts when saved"
+        },
+        "ee-erp-devtools.serverUrl": {
+          "type": "string",
+          "default": "",
+          "description": "ERP Server URL for API communication"
+        },
+        "baanc.tabSize": {
+          "type": "number",
+          "default": 8,
+          "description": "Tab size for BaanC files"
+        },
+        "baanc.insertSpaces": {
+          "type": "boolean",
+          "default": false,
+          "description": "Insert spaces instead of tabs for BaanC files"
+        }
+      }
+    },
     "viewsContainers": {
       "activitybar": [
         {

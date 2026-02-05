@@ -1,9 +1,9 @@
 # LN DevTools Extension
 
 [![VS Marketplace](https://img.shields.io/badge/VS%20Code-Extension-blue)]()
-![Version](https://img.shields.io/badge/Version-v0.0.2-9f7aea)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)
+![Version](https://img.shields.io/badge/Version-v1.0.0-9f7aea)
 ![Infor LN](https://img.shields.io/badge/ERP-Infor%20LN-critical)
+![VS Version](https://img.shields.io/badge/VS%20Code%20Engine->=1.95-blue)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green)
 
 **LN DevTools** is a Visual Studio Code extension that enhances developer workflow for **Infor LN ERP**, allowing developers to browse, select, and import LN components directly into a local development workspace.
@@ -57,6 +57,44 @@ Stored in VS Code global state:
 
 ---
 
+## 🧠 BaanC Language Support
+
+**LN DevTools** includes built-in support for the **BaanC programming language**, bringing a modern coding experience to Infor LN development inside VS Code.
+
+### ✨ Features
+
+#### 🎨 Syntax Highlighting
+- Rich syntax highlighting for **BaanC source files**
+- Covers:
+  - Keywords, data types, and control structures
+  - Built-in Baan / LN functions
+  - Comments, strings, and constants
+  - Operators and expressions
+
+---
+
+#### ⚡ Intelligent Autocomplete
+- Context-aware autocomplete for:
+  - Built-in **BaanC functions**
+  - Language keywords and constructs
+- Automatically triggered while typing or via <kbd>Ctrl</kbd> + <kbd>Space</kbd>
+
+![BaanC Autocomplete](./resources/readme/baanc-autocomplete.png)
+
+---
+
+#### 📘 Function IntelliSense
+- Inline function signature help
+- Displays:
+  - Function name
+  - Parameter list with order
+  - Parameter types (where applicable)
+- Reduces the need to reference external documentation
+
+![BaanC Function IntelliSense](./resources/readme/baanc-intellisense.png)
+
+---
+
 ## 🖥️ Extension UI Overview
 
 ### 🧰 Project Explorer
@@ -73,6 +111,13 @@ Hierarchical view of LN components:
 Selection List + Import trigger:
 
 ![Import Component](./resources/readme/selected-components.png)
+
+---
+
+### 🧩 Supported File Types
+- `.bc`
+
+> Language features are automatically activated when opening supported BaanC files.
 
 ---
 
@@ -241,14 +286,14 @@ The extension communicates with the **Infor LN DevTools API**, which follows the
 
 After importing components, expected workspace layout:
 ```
-Development/
- └── <project-name>
-      ├── Domain/
-      ├── Function/
-      ├── Report/
-      ├── Session/
-      ├── Script/
-      └── Table/
+📁 Development/
+ └─ 📁 <project-name>/
+    ├─ 📁 Domain/
+    ├─ 📁 Table/
+    ├─ 📁 Session/
+    ├─ 📁 Script/ 
+    ├─ 📁 Function/ 
+    └─ 📁 Report/ 
 ```
 
 ### 9) VS Code Commands
@@ -270,7 +315,7 @@ Development/
 
 ---
 
-## 📅 Roadmap
+## 📅 Roadmap [DevTools]
 
 - Export support
 - Compilation support
@@ -278,6 +323,13 @@ Development/
 - Integration with SCM / versioning workflows
 
 ---
+
+### 🚧 Planned Enhancements [Language Support]
+- Go-to definition for BaanC functions
+- Hover documentation for functions and keywords
+- Diagnostics and linting for common BaanC issues
+- Code formatting support
+
 
 ## 📜 License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
