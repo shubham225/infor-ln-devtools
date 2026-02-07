@@ -5,7 +5,9 @@ import { BaanCCompletionProvider } from "./providers/completion-provider";
 import { BaanCDefinitionProvider } from "./providers/definition-provider";
 import { BaanCSignatureHelpProvider } from "./providers/signature-help-provider";
 
-const BAANC_LANGUAGE = { language: "baanc", scheme: "file" };
+// Document selector for BaanC language. Do not restrict by scheme so
+// editors that use alternate URI schemes (like Cursor) still match.
+const BAANC_LANGUAGE: vscode.DocumentSelector = { language: "baanc" };
 
 /**
  * Initialize BaanC language support (non-blocking)
@@ -35,7 +37,7 @@ async function initializeAsync(context: vscode.ExtensionContext): Promise<void> 
   );
 
   // Initialize function documentation database
-  const docDatabase = new FunctionDocDatabase(context);
+  const docDatabase = new FunctionDocDatabase(context.extensionPath);
   
   // Register language providers immediately (they work without the database)
   registerLanguageProviders(context, docDatabase);
@@ -43,6 +45,10 @@ async function initializeAsync(context: vscode.ExtensionContext): Promise<void> 
 
   // Load function database in background
   await docDatabase.initialize();
+  
+  // Log statistics
+  const stats = docDatabase.getStats();
+  console.log(`BaanC Database Stats: ${stats.functions} functions, ${stats.keywords} keywords, ${stats.variables} variables`);
   
   console.log("BaanC language support fully initialized");
 }

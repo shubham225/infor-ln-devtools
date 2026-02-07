@@ -1,9 +1,10 @@
 import * as vscode from "vscode";
-import { FunctionDocDatabase } from "../function-doc-database";
+import { FunctionDocDatabase, FunctionDoc } from "../function-doc-database";
 import { BaanCDocumentParser } from "../parsers/document-parser";
 
 /**
  * Provides code completion for BaanC
+ * Includes functions, keywords, variables, and user-defined items
  */
 export class BaanCCompletionProvider
   implements vscode.CompletionItemProvider
@@ -61,13 +62,14 @@ export class BaanCCompletionProvider
   ): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     const items: vscode.CompletionItem[] = [];
 
-    // Add keywords
+    // Add basic keywords
     for (const keyword of this.keywords) {
       const item = new vscode.CompletionItem(
         keyword,
         vscode.CompletionItemKind.Keyword,
       );
       item.detail = "Keyword";
+      item.sortText = `0_${keyword}`;  // Sort keywords first
       items.push(item);
     }
 
@@ -78,6 +80,7 @@ export class BaanCCompletionProvider
         vscode.CompletionItemKind.TypeParameter,
       );
       item.detail = "Type";
+      item.sortText = `1_${type}`;
       items.push(item);
     }
 
@@ -88,32 +91,35 @@ export class BaanCCompletionProvider
         vscode.CompletionItemKind.Constant,
       );
       item.detail = "Constant";
+      item.sortText = `2_${constant}`;
       items.push(item);
     }
 
-    // Add built-in functions from documentation
+    // Add built-in functions
     const functionNames = this.docDatabase.getAllFunctionNames();
     for (const funcName of functionNames) {
       const doc = this.docDatabase.getFunctionDoc(funcName);
       if (doc) {
-        const item = new vscode.CompletionItem(
-          funcName,
-          vscode.CompletionItemKind.Function,
-        );
-        item.detail = doc.syntax;
-        item.documentation = new vscode.MarkdownString(doc.description);
-
-        // Add snippet for function with parameters
-        if (doc.arguments && doc.arguments.length > 0) {
-          const params = doc.arguments
-            .map((arg, index) => `\${${index + 1}:${arg.name}}`)
-            .join(", ");
-          item.insertText = new vscode.SnippetString(`${funcName}(${params})`);
-        } else {
-          item.insertText = new vscode.SnippetString(`${funcName}($1)`);
-        }
-
+        const item = this.createFunctionCompletionItem(doc);
+        item.sortText = `3_${funcName}`;
         items.push(item);
+      }
+    }
+
+    // Add 4GL keywords and predefined variables
+    const keywordNames = this.docDatabase.getAllKeywordNames();
+    for (const keywordName of keywordNames) {
+      const doc = this.docDatabase.getKeywordDoc(keywordName);
+      if (doc) {
+        if (doc.type === 'variable') {
+          const item = this.createVariableCompletionItem(doc);
+          item.sortText = `2_${keywordName}`;  // Variables sort with constants
+          items.push(item);
+        } else if (doc.type === 'keyword') {
+          const item = this.createKeywordCompletionItem(doc);
+          item.sortText = `0_${keywordName}`;  // Keywords sort first
+          items.push(item);
+        }
       }
     }
 
@@ -126,6 +132,7 @@ export class BaanCCompletionProvider
       );
       item.detail = `User-defined: ${func.returnType} ${func.name}()`;
       item.documentation = `Parameters: ${func.parameters.join(", ")}`;
+      item.sortText = `4_${func.name}`;
       items.push(item);
     }
 
@@ -137,9 +144,65 @@ export class BaanCCompletionProvider
         vscode.CompletionItemKind.Variable,
       );
       item.detail = `${variable.type}`;
+      item.sortText = `5_${variable.name}`;
       items.push(item);
     }
 
     return items;
+  }
+
+  /**
+   * Create completion item for functions
+   */
+  private createFunctionCompletionItem(doc: FunctionDoc): vscode.CompletionItem {
+    const item = new vscode.CompletionItem(
+      doc.name,
+      vscode.CompletionItemKind.Function,
+    );
+    
+    item.detail = doc.syntax || `function ${doc.name}()`;
+    item.documentation = new vscode.MarkdownString(doc.description);
+
+    // Add snippet for function with parameters
+    if (doc.arguments && doc.arguments.length > 0) {
+      const params = doc.arguments
+        .map((arg, index) => `\${${index + 1}:${arg.name}}`)
+        .join(", ");
+      item.insertText = new vscode.SnippetString(`${doc.name}(${params})`);
+    } else {
+      item.insertText = new vscode.SnippetString(`${doc.name}($1)`);
+    }
+
+    return item;
+  }
+
+  /**
+   * Create completion item for variables
+   */
+  private createVariableCompletionItem(doc: FunctionDoc): vscode.CompletionItem {
+    const item = new vscode.CompletionItem(
+      doc.name,
+      vscode.CompletionItemKind.Variable,
+    );
+    
+    item.detail = `${doc.dataType} - ${doc.attributes || 'Predefined'}`;
+    item.documentation = new vscode.MarkdownString(doc.description);
+    
+    return item;
+  }
+
+  /**
+   * Create completion item for keywords
+   */
+  private createKeywordCompletionItem(doc: FunctionDoc): vscode.CompletionItem {
+    const item = new vscode.CompletionItem(
+      doc.name,
+      vscode.CompletionItemKind.Keyword,
+    );
+    
+    item.detail = `4GL Section - ${doc.context || 'Keyword'}`;
+    item.documentation = new vscode.MarkdownString(doc.description);
+    
+    return item;
   }
 }

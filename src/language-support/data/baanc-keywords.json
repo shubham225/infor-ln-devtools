@@ -1,0 +1,396 @@
+{
+  "choice.&lt;standard command&gt;": {
+    "name": "choice.&lt;standard command&gt;",
+    "type": "keyword",
+    "description": "The subsections associated with this main section are executed for the specified command. You can enable standard commands and specify form commands from the session Sessions (ttadv2500m000). A list of standard commands appears at the end of this help topic. For form commands, the session, menu or function name is used.",
+    "category": "4gl_sections",
+    "context": "4GL choice sections"
+  },
+  "before.choice": {
+    "name": "before.choice",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed immediately before the specified command is executed. You can use this subsection, for example, to test data before the command process continues. You can use the choice.again() function to stop the command.",
+    "category": "4gl_sections",
+    "context": "4GL choice sections"
+  },
+  "on.choice": {
+    "name": "on.choice",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed when the specified command is activated. These actions are executed instead of the standard action associated with the command. This subsection is not always available. For details, see the list at the end of this help topic.",
+    "category": "4gl_sections",
+    "context": "4GL choice sections"
+  },
+  "after.choice": {
+    "name": "after.choice",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed immediately after the specified command has been executed. This subsection is not available for the end.program and abort.program commands.",
+    "category": "4gl_sections",
+    "context": "4GL choice sections"
+  },
+  "field.&lt;field name&gt;": {
+    "name": "field.&lt;field name&gt;",
+    "type": "keyword",
+    "description": "The subsections associated with this main section are executed for the specified field. The field name you specify must correspond with the name on the form.",
+    "category": "4gl_sections",
+    "context": "4GL field sections"
+  },
+  "field.all": {
+    "name": "field.all",
+    "type": "keyword",
+    "description": "The subsections associated with this main section are executed for all fields on the form",
+    "category": "4gl_sections",
+    "context": "4GL field sections"
+  },
+  "field.other": {
+    "name": "field.other",
+    "type": "keyword",
+    "description": "A subsection associated with this section is executed for all fields for which the particular subsection has not been programmed in a field.<field name> section.",
+    "category": "4gl_sections",
+    "context": "4GL field sections"
+  },
+  "init.field": {
+    "name": "init.field",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed the first time that the form on which the field occurs becomes current. The subsection is executed immediately before the init.form section of the form. You can use this section to change field attributes.",
+    "category": "4gl_sections",
+    "context": "4GL field sections"
+  },
+  "before.field": {
+    "name": "before.field",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed each time the focus moves to the specified field. The subsection is executed immediately before the before.input or before.display subsections.",
+    "category": "4gl_sections",
+    "context": "4GL field sections"
+  },
+  "before.input": {
+    "name": "before.input",
+    "type": "keyword",
+    "description": "This section is supported for backward compatibility only. The actions programmed in this subsection are executed immediately before input to an input field commences. In Infor ERP Enterprise programs, use enable.fields() and disable.fields() in the when.field.changes of another field to enable and disable fields.",
+    "category": "4gl_sections",
+    "context": "4GL field sections"
+  },
+  "before.display": {
+    "name": "before.display",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed each time that the specified field is displayed. You can use this subsection, for example, to set the value of a display field or to change the output format of currencies and dates (by using attr.oformat$ ).",
+    "category": "4gl_sections",
+    "context": "4GL field sections"
+  },
+  "selection.filter": {
+    "name": "selection.filter",
+    "type": "keyword",
+    "description": "In this section you can set the query extensions for filtering the selection. (See query.extend.where() ). This section is triggerd when a zoom process is started or when autocomplete is started on the specified field. If this section was triggered by the start of a zoom process, the before.zoom section is called hereafter immediately.",
+    "category": "4gl_sections",
+    "context": "4GL field sections"
+  },
+  "before.zoom": {
+    "name": "before.zoom",
+    "type": "keyword",
+    "description": "When a zoom process is started on the specified field, the actions programmed in this subsection are executed immediately before the zoom process is executed. You can use this subsection to change the zoom attributes. For example, in the field definition in the form manager, a default zoom code can be specified. You can then use this subsection to change the zoom code (by setting the predefined variable attr.zoomcode ). In order to cancel the zoom, use the input.again() function.",
+    "category": "4gl_sections",
+    "context": "4GL field sections"
+  },
+  "before.checks": {
+    "name": "before.checks",
+    "type": "keyword",
+    "description": "For non-enum fields the actions programmed in this subsection are executed when the field looses focus. I.e.: the TAB key has been pressed or the user clicked on another field. The subsection is executed immediately before the domain and references are checked. You can use this section, for example, to change the value of the field before the domain and reference checks.",
+    "category": "4gl_sections",
+    "context": "4GL field sections"
+  },
+  "domain.error": {
+    "name": "domain.error",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed if the domain check causes an error after data has been entered in the field. You can use this section to provide your own error message instead of the standard message.",
+    "category": "4gl_sections",
+    "context": "4GL field sections"
+  },
+  "ref.input": {
+    "name": "ref.input",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed if a reference error occurs. If you program this section, the 4GL engine does not display a message.",
+    "category": "4gl_sections",
+    "context": "4GL field sections"
+  },
+  "ref.display": {
+    "name": "ref.display",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed if there is an error in the reference display.",
+    "category": "4gl_sections",
+    "context": "4GL field sections"
+  },
+  "check.input": {
+    "name": "check.input",
+    "type": "keyword",
+    "description": "This section is replaced by Data Access Layer functionality (if a DAL exists for the table).",
+    "category": "4gl_sections",
+    "context": "4GL field sections"
+  },
+  "on.input": {
+    "name": "on.input",
+    "type": "keyword",
+    "description": "This section is supported for backward compatibility. Functionality has been replaced by Form Commands.",
+    "category": "4gl_sections",
+    "context": "4GL field sections"
+  },
+  "when.field.changes": {
+    "name": "when.field.changes",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed when the new value entered in the specified field differs from the old value.",
+    "category": "4gl_sections",
+    "context": "4GL field sections"
+  },
+  "after.zoom": {
+    "name": "after.zoom",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed when the zoom process on a specified field ends. You can use this subsection, for example, to redisplay any field that has changed as a result of the zoom process.",
+    "category": "4gl_sections",
+    "context": "4GL field sections"
+  },
+  "after.input": {
+    "name": "after.input",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed after all checks have been performed on input to the specified field and after the when.field.changes subsection has been executed. In this subsection, you can use the to.field() function if the sequence deviates from the default.",
+    "category": "4gl_sections",
+    "context": "4GL field sections"
+  },
+  "after.display": {
+    "name": "after.display",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed just after display of the specified field. You can use this subsection, for example, to read reference tables.",
+    "category": "4gl_sections",
+    "context": "4GL field sections"
+  },
+  "after.field": {
+    "name": "after.field",
+    "type": "keyword",
+    "description": "This is the last subsection for a field. The actions programmed in this subsection are executed after input to or display of the specified field. This section is always executed, even if the user left the field by pressing ESC, one of the arrow keys, or a mouse button. You can use this subsection to perform special actions before leaving the field.",
+    "category": "4gl_sections",
+    "context": "4GL field sections"
+  },
+  "form.all": {
+    "name": "form.all",
+    "type": "keyword",
+    "description": "The subsections associated with this section are executed for all forms of the session.",
+    "category": "4gl_sections",
+    "context": "4GL form sections"
+  },
+  "form.other": {
+    "name": "form.other",
+    "type": "keyword",
+    "description": "A subsection associated with this section is executed for all forms for which the particular subsection has not been programmed in a form.<form number section.",
+    "category": "4gl_sections",
+    "context": "4GL form sections"
+  },
+  "init.form": {
+    "name": "init.form",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed the first time the specified form becomes current, immediately before the subsection before.form . You use this subsection to program the first action to be performed by the system � a first.set or first.view , for example.",
+    "category": "4gl_sections",
+    "context": "4GL form sections"
+  },
+  "before.form": {
+    "name": "before.form",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed each time the user navigates to the form.",
+    "category": "4gl_sections",
+    "context": "4GL form sections"
+  },
+  "after.form": {
+    "name": "after.form",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed each time the user navigates away from the form.",
+    "category": "4gl_sections",
+    "context": "4GL form sections"
+  },
+  "group.&lt;group number&gt;": {
+    "name": "group.&lt;group number&gt;",
+    "type": "keyword",
+    "description": "This section defines the group for which the actions programmed in the group subsections are executed. The group number is automatically generated when the group is created and can be obtained from the DFE .",
+    "category": "4gl_sections",
+    "context": "4GL group sections"
+  },
+  "init.group": {
+    "name": "init.group",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed only the first time the group becomes active, immediately before the before.group subsection. You use this subsection to program the first action to be performed by the system when the group becomes active. When the group is split across two or more forms (because not all the group fits on one form or because it is a repeating group), this subsection is executed the first time that the first form on which the group occurs becomes current.",
+    "category": "4gl_sections",
+    "context": "4GL group sections"
+  },
+  "before.group": {
+    "name": "before.group",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed each time the specified group becomes active. When the group is split across more than one form, this subsection is executed whenever any form on which it occurs becomes current.",
+    "category": "4gl_sections",
+    "context": "4GL group sections"
+  },
+  "after.group": {
+    "name": "after.group",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed each time the form on which the group occurs is ended. When the group is split across more than one form, this section is executed whenever any form on which the group occurs is ended.",
+    "category": "4gl_sections",
+    "context": "4GL group sections"
+  },
+  "read.view": {
+    "name": "read.view",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed immediately after a view action on the main table (start.set, first.view, next.view, prev.view or last.view). You can use this subsection to call disable.commands()",
+    "category": "4gl_sections",
+    "context": "4GL main table i/o sections"
+  },
+  "before.read": {
+    "name": "before.read",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed immediately before each read action on the main table.",
+    "category": "4gl_sections",
+    "context": "4GL main table i/o sections"
+  },
+  "after.read": {
+    "name": "after.read",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed after each read action on the main table.",
+    "category": "4gl_sections",
+    "context": "4GL main table i/o sections"
+  },
+  "before.delete": {
+    "name": "before.delete",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed immediately before each delete action on the main table.",
+    "category": "4gl_sections",
+    "context": "4GL main table i/o sections"
+  },
+  "after.delete": {
+    "name": "after.delete",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed immediately after each delete action on the main table. You can use this subsection, for example, for deleting references, if this is not done automatically.",
+    "category": "4gl_sections",
+    "context": "4GL main table i/o sections"
+  },
+  "after.skip.delete": {
+    "name": "after.skip.delete",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed if a delete action on the main table has been skipped as a result of actions programmed in the before.delete subsection. The actions are executed immediately after the skip action.",
+    "category": "4gl_sections",
+    "context": "4GL main table i/o sections"
+  },
+  "declaration": {
+    "name": "declaration",
+    "type": "keyword",
+    "description": "Use this section to declare tables and global variables that you want to use in other sections in the script. See Declarations and Tables for details of the declaration syntax. You also use this section to define macros and function prototypes. You can put your #idents for solution identification here as well.",
+    "category": "4gl_sections",
+    "context": "program sections"
+  },
+  "before.program": {
+    "name": "before.program",
+    "type": "keyword",
+    "description": "Use this section to program actions that must be executed when the session starts. For example, you can use this section to initialize or import variables or to read a special record.",
+    "category": "4gl_sections",
+    "context": "program sections"
+  },
+  "after.form.read": {
+    "name": "after.form.read",
+    "type": "keyword",
+    "description": "Use this section to change form data at run time after it has been read in memory. Typical functionality is the removal of fields, groups or commands",
+    "category": "4gl_sections",
+    "context": "program sections"
+  },
+  "on.error": {
+    "name": "on.error",
+    "type": "keyword",
+    "description": "Use this section to program actions that must be executed at the end of the session, before the after.program section. If the session is canceled, the actions in this section are not executed. If an error is detected, you can check the predefined variable e for the error code.",
+    "category": "4gl_sections",
+    "context": "program sections"
+  },
+  "after.program": {
+    "name": "after.program",
+    "type": "keyword",
+    "description": "Use this section to program actions that must be executed at the end of the session, after the on.error section.",
+    "category": "4gl_sections",
+    "context": "program sections"
+  },
+  "after.update.db.commit": {
+    "name": "after.update.db.commit",
+    "type": "keyword",
+    "description": "Use this section to program actions that must be executed immediately after a after.commit.transaction() call, if the database is updated.",
+    "category": "4gl_sections",
+    "context": "program sections"
+  },
+  "before.display.object": {
+    "name": "before.display.object",
+    "type": "keyword",
+    "description": "Use this section to program actions that must be executed each time the entire record is displayed.",
+    "category": "4gl_sections",
+    "context": "program sections"
+  },
+  "before.new.object": {
+    "name": "before.new.object",
+    "type": "keyword",
+    "description": "Use this section to program actions that must be executed once before the input of the first field of the new created record. It is used for setting the default values of the record fields.",
+    "category": "4gl_sections",
+    "context": "program sections"
+  },
+  "on.display.total.line": {
+    "name": "on.display.total.line",
+    "type": "keyword",
+    "description": "Use this section to calculate and display the total line fields. The function display.total.fields() must be called from this section to display the actual total fields values. This section will be called when the variable fattr.total.line is set in the before.program section. By default the 4GL-Engine will call this section after a (new) set of records is read from the database. In addition an application can trigger this section to be called by calling the function: refresh.total.line() .",
+    "category": "4gl_sections",
+    "context": "program sections"
+  },
+  "functions": {
+    "name": "functions",
+    "type": "keyword",
+    "description": "Use this section to define the functions used in the other sections. This must be the last section in the script. The function syntax is the same as for 3GL programming language features: overview .",
+    "category": "4gl_sections",
+    "context": "program sections"
+  },
+  "zoom.from.&lt;zoom name&gt;": {
+    "name": "zoom.from.&lt;zoom name&gt;",
+    "type": "keyword",
+    "description": "Each field has a name that can be used as a zoom name. You can specify the zoom name in this main section. The zoom name indicates which field the current session was zoomed from (when the subprocess is started from a form command, the zoom name is \"choice\"). The subsections associated with this main section are executed when the current process was zoomed to from the specified process.",
+    "category": "4gl_sections",
+    "context": "4GL zoom.from sections"
+  },
+  "zoom.from.all": {
+    "name": "zoom.from.all",
+    "type": "keyword",
+    "description": "The subsections associated with this main section are executed for all processes from which the current session can be zoomed to.",
+    "category": "4gl_sections",
+    "context": "4GL zoom.from sections"
+  },
+  "zoom.from.other": {
+    "name": "zoom.from.other",
+    "type": "keyword",
+    "description": "A subsection associated with this section is executed for all processes for which the particular subsection has not been programmed in a zoom.from.<zoom name> section.",
+    "category": "4gl_sections",
+    "context": "4GL zoom.from sections"
+  },
+  "on.entry": {
+    "name": "on.entry",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed each time the current process is started from the specified process(es). You can use this subsection to import variables.",
+    "category": "4gl_sections",
+    "context": "4GL zoom.from sections"
+  },
+  "on.exit": {
+    "name": "on.exit",
+    "type": "keyword",
+    "description": "The actions programmed in this subsection are executed at the end of the current process, if the current process was started from the process(es) specified in the main section. You can use this subsection to export variables.",
+    "category": "4gl_sections",
+    "context": "4GL zoom.from sections"
+  },
+  "actual.occ": {
+    "name": "actual.occ",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "Occurrence currently selected on form.",
+    "category": "predefined"
+  },
+  "attr.adju(1)": {
+    "name": "attr.adju(1)",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "\"l\"",
+    "category": "predefined"
+  }
+}

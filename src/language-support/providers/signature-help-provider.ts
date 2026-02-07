@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { FunctionDocDatabase } from "../function-doc-database";
+import { FunctionDocDatabase, FunctionDoc } from "../function-doc-database";
 
 /**
  * Provides signature help (parameter hints) for BaanC functions
@@ -27,14 +27,18 @@ export class BaanCSignatureHelpProvider
     const functionName = functionMatch.name;
     const currentParam = functionMatch.paramIndex;
 
-    // Get function documentation
-    const doc = this.docDatabase.getFunctionDoc(functionName);
+    // Get function documentation (try both function and general lookup)
+    let doc = this.docDatabase.getFunctionDoc(functionName);
     if (!doc) {
+      doc = this.docDatabase.getDoc(functionName);
+    }
+    
+    if (!doc || doc.type !== 'function') {
       return null;
     }
 
     const signatureHelp = new vscode.SignatureHelp();
-    const signature = new vscode.SignatureInformation(doc.syntax);
+    const signature = new vscode.SignatureInformation(doc.syntax || `function ${functionName}()`);
     signature.documentation = new vscode.MarkdownString(doc.description);
 
     // Add parameters
