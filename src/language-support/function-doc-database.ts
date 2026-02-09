@@ -1,26 +1,14 @@
 import * as path from "path";
 import * as fs from "fs";
-
-export interface FunctionDoc {
-  name: string;
-  type: 'function' | 'keyword' | 'variable' | 'concept';
-  syntax?: string;
-  description: string;
-  arguments?: Array<{ type: string; name: string; description: string }>;
-  returnValue?: string;
-  category: string;
-  dataType?: string;  // For variables
-  attributes?: string;  // For variables
-  context?: string;  // For keywords/concepts
-}
+import { FunctionDocDB } from "./types";
 
 /**
  * Manages the comprehensive BaanC documentation database
  * Includes functions, keywords, variables, and 3GL concepts
  */
 export class FunctionDocDatabase {
-  private functionDocs: Map<string, FunctionDoc> = new Map();
-  private keywordDocs: Map<string, FunctionDoc> = new Map();
+  private functionDocs: Map<string, FunctionDocDB> = new Map();
+  private keywordDocs: Map<string, FunctionDocDB> = new Map();
   private searchIndex: any = null;
   private isLoaded: boolean = false;
 
@@ -49,7 +37,7 @@ export class FunctionDocDatabase {
         const functionsData = JSON.parse(functionsContent);
         
         for (const [name, doc] of Object.entries(functionsData)) {
-          this.functionDocs.set(name.toLowerCase(), doc as FunctionDoc);
+          this.functionDocs.set(name.toLowerCase(), doc as FunctionDocDB);
         }
         console.log(`BaanC: Loaded ${this.functionDocs.size} functions`);
       } else {
@@ -64,7 +52,7 @@ export class FunctionDocDatabase {
         const keywordsData = JSON.parse(keywordsContent);
         
         for (const [name, doc] of Object.entries(keywordsData)) {
-          this.keywordDocs.set(name.toLowerCase(), doc as FunctionDoc);
+          this.keywordDocs.set(name.toLowerCase(), doc as FunctionDocDB);
         }
         console.log(`BaanC: Loaded ${this.keywordDocs.size} keywords/variables`);
       } else {
@@ -122,7 +110,7 @@ export class FunctionDocDatabase {
         if (data.functions) {
           for (const [funcName, funcInfo] of Object.entries(data.functions)) {
             const info = funcInfo as any;
-            const doc: FunctionDoc = {
+            const doc: FunctionDocDB = {
               name: funcName,
               type: 'function',
               syntax: info.syntax || "",
@@ -154,7 +142,7 @@ export class FunctionDocDatabase {
    * Get documentation by name (case-insensitive)
    * Searches both functions and keywords
    */
-  getDoc(name: string): FunctionDoc | undefined {
+  getDoc(name: string): FunctionDocDB | undefined {
     if (!this.isLoaded) {
       return undefined;
     }
@@ -174,7 +162,7 @@ export class FunctionDocDatabase {
   /**
    * Get function documentation by name
    */
-  getFunctionDoc(functionName: string): FunctionDoc | undefined {
+  getFunctionDoc(functionName: string): FunctionDocDB | undefined {
     if (!this.isLoaded) {
       return undefined;
     }
@@ -184,7 +172,7 @@ export class FunctionDocDatabase {
   /**
    * Get keyword/variable documentation by name
    */
-  getKeywordDoc(keywordName: string): FunctionDoc | undefined {
+  getKeywordDoc(keywordName: string): FunctionDocDB | undefined {
     if (!this.isLoaded) {
       return undefined;
     }
@@ -214,7 +202,7 @@ export class FunctionDocDatabase {
   /**
    * Get all documentation items (functions + keywords)
    */
-  getAllDocs(): FunctionDoc[] {
+  getAllDocs(): FunctionDocDB[] {
     if (!this.isLoaded) {
       return [];
     }
@@ -254,7 +242,7 @@ export class FunctionDocDatabase {
   /**
    * Add custom documentation (for DLL functions, etc.)
    */
-  addCustomDoc(doc: FunctionDoc): void {
+  addCustomDoc(doc: FunctionDocDB): void {
     if (doc.type === 'function') {
       this.functionDocs.set(doc.name.toLowerCase(), doc);
     } else {

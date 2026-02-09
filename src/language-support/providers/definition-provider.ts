@@ -1,7 +1,5 @@
 import * as vscode from "vscode";
 import { BaanCDocumentParser } from "../parsers/document-parser";
-import * as fs from "fs";
-import * as path from "path";
 
 /**
  * Provides go-to-definition for BaanC functions

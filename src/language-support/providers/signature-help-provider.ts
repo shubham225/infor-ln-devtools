@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { FunctionDocDatabase, FunctionDoc } from "../function-doc-database";
+import { FunctionDocDatabase } from "../function-doc-database";
 
 /**
  * Provides signature help (parameter hints) for BaanC functions

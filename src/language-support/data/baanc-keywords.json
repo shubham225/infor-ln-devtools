@@ -385,12 +385,1172 @@
     "description": "Occurrence currently selected on form.",
     "category": "predefined"
   },
-  "attr.adju(1)": {
-    "name": "attr.adju(1)",
+  "attr.adju": {
+    "name": "attr.adju",
     "type": "variable",
     "dataType": "string",
     "attributes": "4",
-    "description": "\"l\"",
+    "description": "\"l\" align left \"r\" align right \"c\" align center",
+    "category": "predefined"
+  },
+  "attr.bitset.mask": {
+    "name": "attr.bitset.mask",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4\u00a0D",
+    "description": "In general: bitsets are deprecated in the UI. The\n                        available values for a bitset field (see also Enumerates overview and synopsis ).",
+    "category": "predefined"
+  },
+  "attr.changed": {
+    "name": "attr.changed",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4R",
+    "description": "Indicates if the current field has changed.",
+    "category": "predefined"
+  },
+  "attr.conv": {
+    "name": "attr.conv",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "\"u\" convert to upper case \"l\" convert to lower case",
+    "category": "predefined"
+  },
+  "attr.currency$": {
+    "name": "attr.currency$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4R",
+    "description": "Current currency (see set.currencies() ).",
+    "category": "predefined"
+  },
+  "attr.currkey": {
+    "name": "attr.currkey",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4R",
+    "description": "true current field is a key field false current field is not a key field",
+    "category": "predefined"
+  },
+  "attr.dbase": {
+    "name": "attr.dbase",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4R",
+    "description": "true current field is a database field false current field is not a database field",
+    "category": "predefined"
+  },
+  "attr.dbmaxlen": {
+    "name": "attr.dbmaxlen",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "Maximum length of database field.",
+    "category": "predefined"
+  },
+  "attr.deflt$": {
+    "name": "attr.deflt$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4R",
+    "description": "Default value of current field.\n                        When the TIV level is less than 2040 ,\n                        then the length of this string is 100.",
+    "category": "predefined"
+  },
+  "attr.descr$": {
+    "name": "attr.descr$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Description of current field.",
+    "category": "predefined"
+  },
+  "attr.diga": {
+    "name": "attr.diga",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4",
+    "description": "Number of digits after decimal sign. For strings,\n                        this is the maximum input length.",
+    "category": "predefined"
+  },
+  "attr.digv": {
+    "name": "attr.digv",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4",
+    "description": "Number of digits before decimal sign.",
+    "category": "predefined"
+  },
+  "attr.divf": {
+    "name": "attr.divf",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4",
+    "description": "Division factor. (For entering numeric values\n                        without a decimal point.)",
+    "category": "predefined"
+  },
+  "attr.domain$": {
+    "name": "attr.domain$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4R",
+    "description": "Domain of the current field.",
+    "category": "predefined"
+  },
+  "attr.domm$": {
+    "name": "attr.domm$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Domain message code of current field.",
+    "category": "predefined"
+  },
+  "attr.dorp": {
+    "name": "attr.dorp",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4",
+    "description": "Fill field with default or previous value: DORP.PREVIOUS (0) use the previous value DORP.DEFAULT (1) use the default value",
+    "category": "predefined"
+  },
+  "attr.echo": {
+    "name": "attr.echo",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4\u00a0D",
+    "description": "true display value on form false do not display value on form This variable is supported for backward\n                           compatibility only. In preference, use the inputfield.visible() , inputfield.invisible() and inputfield.password() functions.",
+    "category": "predefined"
+  },
+  "attr.element": {
+    "name": "attr.element",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4",
+    "description": "Current array index (if field is an array\n                        element).",
+    "category": "predefined"
+  },
+  "attr.enum.mask$": {
+    "name": "attr.enum.mask$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4\u00a0D",
+    "description": "The values available for an enumerate field. Also\n                           the enumerate values available for the ask.enum() function. See also set.enum.values.for.field() function.",
+    "category": "predefined"
+  },
+  "attr.format.addition$": {
+    "name": "attr.format.addition$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Currency to be used for an amount format. Language\n                        to be used for a date format.",
+    "category": "predefined"
+  },
+  "attr.helpfile$": {
+    "name": "attr.helpfile$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "",
+    "description": "Help file of current field.",
+    "category": "predefined"
+  },
+  "attr.ille$": {
+    "name": "attr.ille$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Illegal characters.",
+    "category": "predefined"
+  },
+  "attr.imax": {
+    "name": "attr.imax",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "Maximum input length.",
+    "category": "predefined"
+  },
+  "attr.inpfld": {
+    "name": "attr.inpfld",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "0 display field 1 input field 2 input only field 3 display only field",
+    "category": "predefined"
+  },
+  "attr.input": {
+    "name": "attr.input",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4\u00a0D",
+    "description": "false input disabled true input enabled This variable is supported for backward\n                           compatibility only. In preference, use disable.fields() and enable.fields() functions.",
+    "category": "predefined"
+  },
+  "attr.lega$": {
+    "name": "attr.lega$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Legal characters.",
+    "category": "predefined"
+  },
+  "attr.mandatory": {
+    "name": "attr.mandatory",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4R",
+    "description": "Mandatory input (true or false).",
+    "category": "predefined"
+  },
+  "attr.maxlen": {
+    "name": "attr.maxlen",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "Maximum display length of current field.",
+    "category": "predefined"
+  },
+  "attr.message$": {
+    "name": "attr.message$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "",
+    "description": "Message to be displayed when a field is filled after\n                        a before.input event.",
+    "category": "predefined"
+  },
+  "attr.minlen": {
+    "name": "attr.minlen",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4",
+    "description": "Minimum length of current field.",
+    "category": "predefined"
+  },
+  "attr.multioccur": {
+    "name": "attr.multioccur",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4R",
+    "description": "true multioccurrence field false not multioccurrence field",
+    "category": "predefined"
+  },
+  "attr.nowait$": {
+    "name": "attr.nowait$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4RD",
+    "description": "Characters that start a field command. This variable\n                        is supported for backward compatibility only. In Infor\n                        ERP Enterprise, field command functionality is replaced by form\n                        commands.",
+    "category": "predefined"
+  },
+  "attr.oformat$": {
+    "name": "attr.oformat$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Output format of field.",
+    "category": "predefined"
+  },
+  "attr.permission": {
+    "name": "attr.permission",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "Permissions for current field: NO.PERMISSION 1 PERM.READ 2 PERM.MODIFY 4 PERM.WRITE 8 PERM.DELETE 16 NO.RESTRICTION 30 PERM.UNKNOWN 32 NO.PERM.DEFINED 64 See also db.permission() function.",
+    "category": "predefined"
+  },
+  "attr.previous$": {
+    "name": "attr.previous$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4R",
+    "description": "Previous value of field.",
+    "category": "predefined"
+  },
+  "attr.rang": {
+    "name": "attr.rang",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "Compiled expression ID for attr.rang$ .",
+    "category": "predefined"
+  },
+  "attr.rang$": {
+    "name": "attr.rang$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4R",
+    "description": "Defines a range; values are automatically checked\n                        against this range.",
+    "category": "predefined"
+  },
+  "attr.reallen": {
+    "name": "attr.reallen",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "Real database length of field.",
+    "category": "predefined"
+  },
+  "attr.refpath": {
+    "name": "attr.refpath",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Reference path.",
+    "category": "predefined"
+  },
+  "attr.rndm": {
+    "name": "attr.rndm",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4",
+    "description": "Rounding method (see also round() function).",
+    "category": "predefined"
+  },
+  "attr.rotate": {
+    "name": "attr.rotate",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4",
+    "description": "Current index in currency table (see set.currencies() function).",
+    "category": "predefined"
+  },
+  "attr.sttp": {
+    "name": "attr.sttp",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4\u00a0D",
+    "description": "Start position in current field.",
+    "category": "predefined"
+  },
+  "attr.textfield$": {
+    "name": "attr.textfield$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Name of the text field. Used by the Text\n                        Manager.",
+    "category": "predefined"
+  },
+  "attr.textkw1$ to attr.textkw4$": {
+    "name": "attr.textkw1$ to attr.textkw4$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Keywords of text. Used by the Text Manager. The output string is multibyte.",
+    "category": "predefined"
+  },
+  "attr.textlang$": {
+    "name": "attr.textlang$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Language for text editing. Used by the Text\n                        Manager.",
+    "category": "predefined"
+  },
+  "attr.textmaxlines": {
+    "name": "attr.textmaxlines",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4",
+    "description": "Maximum number of lines in the text editor. Used by\n                        the Text Manager.",
+    "category": "predefined"
+  },
+  "attr.textmode": {
+    "name": "attr.textmode",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4",
+    "description": "1 display mode 3 read/write mode Used by the Text Manager.",
+    "category": "predefined"
+  },
+  "attr.textopt$": {
+    "name": "attr.textopt$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Name of default option for editor window options.\n                        Used by the Text Manager.",
+    "category": "predefined"
+  },
+  "attr.textstart": {
+    "name": "attr.textstart",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4",
+    "description": "true When new text is created, start text manager\n                                    directly (default). false When new text is created, fill keywords\n                                    first. Used by the Text Manager.",
+    "category": "predefined"
+  },
+  "attr.textzoomsession$": {
+    "name": "attr.textzoomsession$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Session zoomed to by text editor zoom command. The\n                        default is \"Display Texts\" session. Used by the Text\n                        Manager.",
+    "category": "predefined"
+  },
+  "attr.type": {
+    "name": "attr.type",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "Database type (DB.ENUM, DB.STRING, DB.TIME, DB.DATE,\n                        and so on)",
+    "category": "predefined"
+  },
+  "attr.zoomcode": {
+    "name": "attr.zoomcode",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4",
+    "description": "Field zoomcode. Possible values are: 0 No zoom Z.MENU (1) Zoom to a menu Z.SESSION (2) Zoom to a session",
+    "category": "predefined"
+  },
+  "attr.zoomreturn$": {
+    "name": "attr.zoomreturn$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Name of return field of zoom session on current\n                        field.",
+    "category": "predefined"
+  },
+  "attr.zoomsession$": {
+    "name": "attr.zoomsession$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Session zoomed to from field.",
+    "category": "predefined"
+  },
+  "attr.zoomindex": {
+    "name": "attr.zoomindex",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4",
+    "description": "Number of table-index to start session zoomed to\n                        from a field.",
+    "category": "predefined"
+  },
+  "auto.nextform": {
+    "name": "auto.nextform",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4\u00a0D",
+    "description": "true When modifying form data, automatically\n                                    display next form when all occurrences on current\n                                    form have been filled. false When modifying form data, do not\n                                    automatically display next form when all\n                                    occurrences on current form have been filled\n                                    (default). It is not good GUI practice to use this\n                           variable.",
+    "category": "predefined"
+  },
+  "background": {
+    "name": "background",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "R",
+    "description": "true current session is modal false current session is modeless",
+    "category": "predefined"
+  },
+  "before.update.check": {
+    "name": "before.update.check",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4RD",
+    "description": "true field is checked during update false field is checked during input Valid only in subsection check.input .",
+    "category": "predefined"
+  },
+  "break.view": {
+    "name": "break.view",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4",
+    "description": "When searching for records in type 3 forms, break to\n                        next view when no records found and group fields match\n                        with old values. (true or false).",
+    "category": "predefined"
+  },
+  "chartgrp": {
+    "name": "chartgrp",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "",
+    "description": "Current chart group.",
+    "category": "predefined"
+  },
+  "chm.name": {
+    "name": "chm.name",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Name of the current chart.",
+    "category": "predefined"
+  },
+  "chm.owner": {
+    "name": "chm.owner",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Owner/creator of current chart.",
+    "category": "predefined"
+  },
+  "chm.title": {
+    "name": "chm.title",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Description of current chart.",
+    "category": "predefined"
+  },
+  "chm.user": {
+    "name": "chm.user",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Name of user of current chart.",
+    "category": "predefined"
+  },
+  "choice": {
+    "name": "choice",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4",
+    "description": "Command ID of active command.",
+    "category": "predefined"
+  },
+  "curr.key": {
+    "name": "curr.key",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "Current key number of main table. Not available in\n                        before.program.",
+    "category": "predefined"
+  },
+  "curr.pacc$": {
+    "name": "curr.pacc$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "R",
+    "description": "Current package combination.",
+    "category": "predefined"
+  },
+  "dal.error.file": {
+    "name": "dal.error.file",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "R",
+    "description": "The name of the source file where the last\n                        dal.set.error.message was called. This variable can be\n                        used in the debugger. If you trace this variable, the\n                        debugger will stop when the function dal.set.error.message(), dal.set.warning.message(), dal.set.info.message() has been called.",
+    "category": "predefined"
+  },
+  "dal.error.line": {
+    "name": "dal.error.line",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "R",
+    "description": "The line number in the code where the last\n                        dal.set.error.message was called. See dal.error.file\n                        above.",
+    "category": "predefined"
+  },
+  "date": {
+    "name": "date",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "R",
+    "description": "Number of days since 01-01-0001 (local time).",
+    "category": "predefined"
+  },
+  "date$": {
+    "name": "date$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "R",
+    "description": "Current system date (DDMMYY).",
+    "category": "predefined"
+  },
+  "dis.parent": {
+    "name": "dis.parent",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4R",
+    "description": "Identification number of the (original) parent process. If the session is\n                        \t\t\t   restarted due to dynamic index switching, it still points to the original parent process.",
+    "category": "predefined"
+  },
+  "dis.restarted": {
+    "name": "dis.restarted",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4R",
+    "description": "Indicates whether the session is restarted due to\n                        dynamic index switching (true or false).",
+    "category": "predefined"
+  },
+  "dynamic.index.switching": {
+    "name": "dynamic.index.switching",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4",
+    "description": "Can be set in before.program for non-integrated\n                           sessions. Indicates the way the session should use\n                           \t    dynamic index switching. Possible values: This functionality is deprecated.\n                           \t\tDynamic index switching should be enabled in the session properties.\n                           \t\tIf a session only enables Dynamic Index Switching in the before.program section this will not work in WebUI and LN UI. 0 No dynamic index switching. -1 Restart when view fields differ. -2 Always restart session when switching\n                                    indices.",
+    "category": "predefined"
+  },
+  "e": {
+    "name": "e",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "R",
+    "description": "Error code of last file action.",
+    "category": "predefined"
+  },
+  "error.bypass": {
+    "name": "error.bypass",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4\u00a0D",
+    "description": "Indicates which database errors can be detected in\n                        your program script, see the Database operations overview for a detailed description.",
+    "category": "predefined"
+  },
+  "exit.val$": {
+    "name": "exit.val$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "R",
+    "description": "String returned to the called program at the end of\n                        the process.",
+    "category": "predefined"
+  },
+  "fattr.currfld$": {
+    "name": "fattr.currfld$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4R",
+    "description": "Name of current field.",
+    "category": "predefined"
+  },
+  "fattr.descr$": {
+    "name": "fattr.descr$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Description of current form.",
+    "category": "predefined"
+  },
+  "fattr.ftype": {
+    "name": "fattr.ftype",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "Type of current form (1, 2, 3, or 4).",
+    "category": "predefined"
+  },
+  "fattr.helpfile$": {
+    "name": "fattr.helpfile$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Name of help file for current form.",
+    "category": "predefined"
+  },
+  "fattr.horizontal": {
+    "name": "fattr.horizontal",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4R",
+    "description": "True for horizontal occurrences.",
+    "category": "predefined"
+  },
+  "fattr.init": {
+    "name": "fattr.init",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4R",
+    "description": "Indicates if the form has been initialized.",
+    "category": "predefined"
+  },
+  "fattr.nrtabs": {
+    "name": "fattr.nrtabs",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "Number of tabs on current form (dynamic forms\n                        only).",
+    "category": "predefined"
+  },
+  "fattr.occurnr": {
+    "name": "fattr.occurnr",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "Number of occurrences on current form.",
+    "category": "predefined"
+  },
+  "fattr.seqno": {
+    "name": "fattr.seqno",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4RD",
+    "description": "Sequence number of current field in form.",
+    "category": "predefined"
+  },
+  "fattr.toplines": {
+    "name": "fattr.toplines",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4\u00a0D",
+    "description": "The number of lines above the multioccurrence fields\n                        (default: 3). Set in the before.program section.",
+    "category": "predefined"
+  },
+  "fattr.total.line": {
+    "name": "fattr.total.line",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4",
+    "description": "If set in before.program section, this\n                        indicates that a total line must be displayed in the\n                        grid (see also display.total.fields() ). Can have the values true\n                        or false.",
+    "category": "predefined"
+  },
+  "filename$": {
+    "name": "filename$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "R",
+    "description": "Name of most-recently accessed table.",
+    "category": "predefined"
+  },
+  "filled.occ": {
+    "name": "filled.occ",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "Number of filled occurrences.",
+    "category": "predefined"
+  },
+  "firstweek$": {
+    "name": "firstweek$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "R",
+    "description": "Date of the first day in the first week of the\n                        current year.",
+    "category": "predefined"
+  },
+  "form.curr": {
+    "name": "form.curr",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "Current form number.",
+    "category": "predefined"
+  },
+  "form.next": {
+    "name": "form.next",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "Next form number. -1 if no next form",
+    "category": "predefined"
+  },
+  "form.prev": {
+    "name": "form.prev",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "Previous form number. -1 if no previous form",
+    "category": "predefined"
+  },
+  "graphical.mode": {
+    "name": "graphical.mode",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4",
+    "description": "Indicates whether the 3GL program runs in graphical\n                        mode (true) or in character mode (false). Default is\n                        false.",
+    "category": "predefined"
+  },
+  "ignore.first.event": {
+    "name": "ignore.first.event",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4",
+    "description": "Indicates whether the start command of the current\n                        session must be skipped. The start command is defined\n                        in the session data.",
+    "category": "predefined"
+  },
+  "job.device": {
+    "name": "job.device",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Default device used by job process.",
+    "category": "predefined"
+  },
+  "job.device.requested": {
+    "name": "job.device.requested",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4",
+    "description": "Indicates whether an output device must be specified\n                        when in job mode.",
+    "category": "predefined"
+  },
+  "job.process": {
+    "name": "job.process",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4R",
+    "description": "Indicates if process is started by a job.",
+    "category": "predefined"
+  },
+  "job.process.error": {
+    "name": "job.process.error",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4R",
+    "description": "Indicates if an error occurred during the run of a\n                        job.",
+    "category": "predefined"
+  },
+  "job.report": {
+    "name": "job.report",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Report code of report to be used when in job\n                        mode.",
+    "category": "predefined"
+  },
+  "job.skip.date.question": {
+    "name": "job.skip.date.question",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4",
+    "description": "Indicates if the question \"Consider the difference\n                        between entered date and system date?\" must be\n                        skipped.",
+    "category": "predefined"
+  },
+  "job.change.data": {
+    "name": "job.change.data",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4R",
+    "description": "Indicates if the session has been started by the Change Job option Available from Tools Interface Version (TIV) TIV 1900",
+    "category": "predefined"
+  },
+  "language$": {
+    "name": "language$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "R",
+    "description": "Current language code.",
+    "category": "predefined"
+  },
+  "lattr.*": {
+    "name": "lattr.*",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "",
+    "description": "See Report_scripts.",
+    "category": "predefined"
+  },
+  "logname$": {
+    "name": "logname$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "R",
+    "description": "Current BAAN user name, which need not be identical to the OS user name.",
+    "category": "predefined"
+  },
+  "main.table$": {
+    "name": "main.table$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4R",
+    "description": "Name of current main table.",
+    "category": "predefined"
+  },
+  "mark.table()": {
+    "name": "mark.table()",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4R",
+    "description": "This array indicates which occurences are\n                           \t\t\tmarked. The size of this array is set to fattr.occurnr . For example, if records 3 and 8 are marked,\n                           \t\t\tthen: mark.table(3) = true mark.table(8) = true and other elements in the array are false. Note that from Tools Interface Version (TIV) TIV 1075 records outside the current window can be selected\n                              \t\tas well. These are not indicated as selected in the\n                              \t\tmark.table array. Read the Record selection Overview for more information.",
+    "category": "predefined"
+  },
+  "marked": {
+    "name": "marked",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "Indicates the marked record. If multiple records\n                           \t\t\tare marked then this indicates the first one\n                           \t\t\tmarked. Deprecated from Tools Interface Version (TIV) TIV 1075 .",
+    "category": "predefined"
+  },
+  "max.formtabs": {
+    "name": "max.formtabs",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4\u00a0D",
+    "description": "Defines the maximum number of form tabs to be\n                        displayed. Set in the before.program section.",
+    "category": "predefined"
+  },
+  "maxdouble": {
+    "name": "maxdouble",
+    "type": "variable",
+    "dataType": "double",
+    "attributes": "R",
+    "description": "Maximum value of a double.",
+    "category": "predefined"
+  },
+  "modify.prim.key": {
+    "name": "modify.prim.key",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4",
+    "description": "true Primary key can be modified during modify.\n                                    Set in programs of type 1, 2, and 3. false Primary key cannot be modified.",
+    "category": "predefined"
+  },
+  "number.forms": {
+    "name": "number.forms",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "Number of forms within current session.",
+    "category": "predefined"
+  },
+  "number.of.marks": {
+    "name": "number.of.marks",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "Number of selected records in the grid. Note that from Tools Interface Version (TIV) TIV 1075 you can also use sel.num.selected()",
+    "category": "predefined"
+  },
+  "parent": {
+    "name": "parent",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "R",
+    "description": "Identification number of parent process.",
+    "category": "predefined"
+  },
+  "pid": {
+    "name": "pid",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "R",
+    "description": "Identification number of current process.",
+    "category": "predefined"
+  },
+  "previous.choice": {
+    "name": "previous.choice",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "Possible values: 0 add.set dupl.occur modify.set mark.delete global.copy global.delete Valid only in field sections and main.table.io .",
+    "category": "predefined"
+  },
+  "procesinfo$": {
+    "name": "procesinfo$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "",
+    "description": "Information passed to program at startup.",
+    "category": "predefined"
+  },
+  "prog.name$": {
+    "name": "prog.name$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "R",
+    "description": "Name of current session.",
+    "category": "predefined"
+  },
+  "query.extension": {
+    "name": "query.extension",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4\u00a0D",
+    "description": "A condition that is added to the WHERE clause of a\n                        query to be parsed by the 4GL engine (using AND operator). Set in before.program section. In preference, use the query.extend functions.",
+    "category": "predefined"
+  },
+  "report$": {
+    "name": "report$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4",
+    "description": "Current report code.",
+    "category": "predefined"
+  },
+  "reportgrp": {
+    "name": "reportgrp",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4",
+    "description": "Current report group.",
+    "category": "predefined"
+  },
+  "reportno": {
+    "name": "reportno",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "R",
+    "description": "Reports are numbered (1..n) within a report group.\n                           This number indicates the sequence number within\n                           the report group. Note: The numbers (labeled \"No.\") in the session\n                           \"Reports by Session\" only match with reportno if these\n                           numbers are consecutive.",
+    "category": "predefined"
+  },
+  "sattr.descr$": {
+    "name": "sattr.descr$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4R",
+    "description": "Description of the session.",
+    "category": "predefined"
+  },
+  "select.only.fields.on.form": {
+    "name": "select.only.fields.on.form",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "",
+    "description": "true all reference tables are read (default) false only reference tables of fields on form are\n                                    read Use in before.program section.",
+    "category": "predefined"
+  },
+  "session.zoomindex": {
+    "name": "session.zoomindex",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4",
+    "description": "Number of table-index to start session started with\n                        start.session or start.synchronized.child.",
+    "category": "predefined"
+  },
+  "session.nr.view.fields": {
+    "name": "session.nr.view.fields",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4",
+    "description": "Dynamic index switching sessions only: number of\n                        view fields to show in started session started with\n                        start.session or start.synchronized.child. Use this in\n                        combination with session.zoomindex.",
+    "category": "predefined"
+  },
+  "shell.type": {
+    "name": "shell.type",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "R",
+    "description": "Exec_perm from user file.",
+    "category": "predefined"
+  },
+  "spool.*": {
+    "name": "spool.*",
+    "type": "variable",
+    "dataType": "",
+    "attributes": "",
+    "description": "See spool.open() .",
+    "category": "predefined"
+  },
+  "start.by.wfc": {
+    "name": "start.by.wfc",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4R",
+    "description": "Session was started by workflow.",
+    "category": "predefined"
+  },
+  "ssi.import.running": {
+    "name": "ssi.import.running",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4R",
+    "description": "Boolean indicating if an Import from Excel is currently running. Questions and dialogs during Import from Excel cause a session to hang. Use this variable to check if a question or a dialog\n                           must be skipped.",
+    "category": "predefined"
+  },
+  "ssi.export.running": {
+    "name": "ssi.export.running",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4R",
+    "description": "Boolean indicating if an Export to Excel is currently running.",
+    "category": "predefined"
+  },
+  "stp.abort.error": {
+    "name": "stp.abort.error",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4R",
+    "description": "Boolean indicating if the function abort.io() has been called.",
+    "category": "predefined"
+  },
+  "stp.check.input.error": {
+    "name": "stp.check.input.error",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4RD",
+    "description": "Boolean indicating if the function set.input.error() has been called. Valid only in check.input section.",
+    "category": "predefined"
+  },
+  "stp.skip.error": {
+    "name": "stp.skip.error",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4R",
+    "description": "Boolean indicating if the function skip.io() has been called.",
+    "category": "predefined"
+  },
+  "subdal": {
+    "name": "subdal",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4R",
+    "description": "Indicates if the invocation of this Data Access Layer was caused by another DAL. Note that subdal is true does not necessarily mean that its table is a child table of the invoking\n                        DAL's table.",
+    "category": "predefined"
+  },
+  "synchronized.reason": {
+    "name": "synchronized.reason",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "This indicates the command that started the dialog\n                        synchronization. In case of MMT the satelites react on the synchronized reason of \n                        the parent to startup in the same mode ()including dis/enabling commands)",
+    "category": "predefined"
+  },
+  "": {
+    "name": "",
+    "type": "variable",
+    "dataType": "",
+    "attributes": "",
+    "description": "0 DISPLAY.SET ADD.SET MODIFY.SET DUPL.OCCUR END.PROGRAM ABORT.PROGRAM",
+    "category": "predefined"
+  },
+  "update.status": {
+    "name": "update.status",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "0 no update ADD.SET during add MODIFY.SET during modify MARK.DELETE during delete",
+    "category": "predefined"
+  },
+  "text.updated.in.edit": {
+    "name": "text.updated.in.edit",
+    "type": "variable",
+    "dataType": "boolean",
+    "attributes": "4R",
+    "description": "Boolean indicating that the text is updated during the edit",
+    "category": "predefined"
+  },
+  "user.locale$": {
+    "name": "user.locale$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "R",
+    "description": "Locale from user file.",
+    "category": "predefined"
+  },
+  "user.timer": {
+    "name": "user.timer",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "R",
+    "description": "Timer from user file.",
+    "category": "predefined"
+  },
+  "user.type$": {
+    "name": "user.type$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4R",
+    "description": "Current type of user. Possible values are: S\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 super user N\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0\u00a0 normal user",
+    "category": "predefined"
+  },
+  "win.*": {
+    "name": "win.*",
+    "type": "variable",
+    "dataType": "long",
+    "attributes": "4R",
+    "description": "See get.window.attrs() .",
+    "category": "predefined"
+  },
+  "zoomfield$": {
+    "name": "zoomfield$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4R",
+    "description": "Variable set in the zoom session, indicating which\n                        field in the parent session was zoomed from.",
+    "category": "predefined"
+  },
+  "zoomreturn$": {
+    "name": "zoomreturn$",
+    "type": "variable",
+    "dataType": "string",
+    "attributes": "4R",
+    "description": "Variable set in the zoom session, indicating which\n                        field's value is to be returned. In the parent session,\n                        the variable attr.zoomreturn$ has the same\n                        value.",
     "category": "predefined"
   }
 }

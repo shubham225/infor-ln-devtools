@@ -1,14 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-
-export interface FunctionDoc {
-  name: string;
-  syntax: string;
-  description: string;
-  arguments: Array<{ type: string; name: string; description: string }>;
-  returnValue: string;
-  category: string;
-}
+import { FunctionDoc } from "../types";
 
 export class HtmlDocParser {
   private functionDocs: Map<string, FunctionDoc> = new Map();
@@ -22,7 +14,9 @@ export class HtmlDocParser {
 
       // Extract function name from title
       const titleMatch = content.match(/<title>(.*?)<\/title>/i);
-      if (!titleMatch) return null;
+      if (!titleMatch) {
+        return null;
+      }
 
       const functionName = titleMatch[1].replace(/\(\)/g, "").trim();
 
@@ -49,9 +43,7 @@ export class HtmlDocParser {
         /<div class="subSectionTitle">Arguments<\/div>([\s\S]*?)<\/table>/i,
       );
       if (argsMatch) {
-        const argRows = argsMatch[1].matchAll(
-          /<tr[^>]*>([\s\S]*?)<\/tr>/gi,
-        );
+        const argRows = argsMatch[1].matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
         for (const row of argRows) {
           const cells = row[1].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/gi);
           const cellArray = Array.from(cells);
@@ -156,7 +148,9 @@ export class HtmlDocParser {
       }
     }
 
-    console.log(`Parsed ${this.functionDocs.size} function documentation entries`);
+    console.log(
+      `Parsed ${this.functionDocs.size} function documentation entries`,
+    );
     return this.functionDocs;
   }
 

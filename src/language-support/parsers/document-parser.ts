@@ -1,17 +1,5 @@
 import * as vscode from "vscode";
-
-export interface ParsedFunction {
-  name: string;
-  range: vscode.Range;
-  parameters: string[];
-  returnType: string;
-}
-
-export interface ParsedVariable {
-  name: string;
-  type: string;
-  range: vscode.Range;
-}
+import { ParsedFunction, ParsedVariable } from "../types";
 
 /**
  * Parser for BaanC documents to extract symbols for IntelliSense
@@ -98,9 +86,7 @@ export class BaanCDocumentParser {
     while ((match = callRegex.exec(text)) !== null) {
       const name = match[1];
       const position = document.positionAt(match.index);
-      const endPosition = document.positionAt(
-        match.index + match[1].length,
-      );
+      const endPosition = document.positionAt(match.index + match[1].length);
       const range = new vscode.Range(position, endPosition);
 
       if (!calls.has(name)) {
@@ -121,7 +107,7 @@ export class BaanCDocumentParser {
   ): string | undefined {
     const wordRange = document.getWordRangeAtPosition(
       position,
-      /[a-z_][a-z0-9._]*/i,
+      /[a-z_][a-z0-9._$]*/i,
     );
     if (wordRange) {
       return document.getText(wordRange);

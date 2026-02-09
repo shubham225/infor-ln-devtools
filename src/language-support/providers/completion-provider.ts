@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
-import { FunctionDocDatabase, FunctionDoc } from "../function-doc-database";
+import { FunctionDocDatabase } from "../function-doc-database";
 import { BaanCDocumentParser } from "../parsers/document-parser";
+import { FunctionDocDB } from "../types";
 
 /**
  * Provides code completion for BaanC
@@ -154,7 +155,7 @@ export class BaanCCompletionProvider
   /**
    * Create completion item for functions
    */
-  private createFunctionCompletionItem(doc: FunctionDoc): vscode.CompletionItem {
+  private createFunctionCompletionItem(doc: FunctionDocDB): vscode.CompletionItem {
     const item = new vscode.CompletionItem(
       doc.name,
       vscode.CompletionItemKind.Function,
@@ -179,7 +180,7 @@ export class BaanCCompletionProvider
   /**
    * Create completion item for variables
    */
-  private createVariableCompletionItem(doc: FunctionDoc): vscode.CompletionItem {
+  private createVariableCompletionItem(doc: FunctionDocDB): vscode.CompletionItem {
     const item = new vscode.CompletionItem(
       doc.name,
       vscode.CompletionItemKind.Variable,
@@ -194,7 +195,7 @@ export class BaanCCompletionProvider
   /**
    * Create completion item for keywords
    */
-  private createKeywordCompletionItem(doc: FunctionDoc): vscode.CompletionItem {
+  private createKeywordCompletionItem(doc: FunctionDocDB): vscode.CompletionItem {
     const item = new vscode.CompletionItem(
       doc.name,
       vscode.CompletionItemKind.Keyword,

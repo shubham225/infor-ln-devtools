@@ -12,6 +12,7 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 **/.vscode-test.*
+!resources/**
 !src/language-support/data/**
 !src/language-support/syntaxes/**
 !src/language-support/language-configuration.json
