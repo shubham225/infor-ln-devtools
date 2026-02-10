@@ -3744,33 +3744,6 @@
     "returnValue": "AUD_OK Success. AUD_NO_TABLES No tables are specified. AUD_NO_AUDIT The specified tables/companies are not valid, or audit is not on for one of the tables. AUD_INCORRECT_SELECTION The selection.criteria is not valid. AUD_TOO_BIG Too many tables, too many different companies, or a very long selection.criteria string are specified. AUD_MULTI_COMPANY The companies array contains multiple different companies, but the system setup doesn't allow simultaneous selection of transaction data for those companies. AUD_FAIL The selection.criteria is not valid.",
     "category": "functions_audtr"
   },
-  "audit management examples": {
-    "name": "Audit management examples",
-    "type": "function",
-    "syntax": "function Audit management examples()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_audtr"
-  },
-  "audit management overview": {
-    "name": "Audit management overview",
-    "type": "function",
-    "syntax": "function Audit management overview()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_audtr"
-  },
-  "audit management synopsis": {
-    "name": "Audit management synopsis",
-    "type": "function",
-    "syntax": "function Audit management synopsis()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_audtr"
-  },
   "bc.decode": {
     "name": "bc.decode",
     "type": "function",
@@ -3866,24 +3839,6 @@
     "returnValue": "The size of the Base64 encoded output is returned. If this value is greater than the size of data.out, then no output at all is written to data.out. To compute the size of the Base64 encoded output, only the size of the binary input must be known, the actual input itself is not needed. For each three binary input bytes, four Base64 encoded output characters are produced. For any (one or two) remaining binary input bytes at the end, also four Base64 encoded output characters are produced. So, to compute the size of the Base64 encoded output, divide the size of the binary input by 3, and if that is not an integer, round up to the next integer. Multiply the result by 4.",
     "category": "functions_base64"
   },
-  "base64 overview": {
-    "name": "Base64 overview",
-    "type": "function",
-    "syntax": "function Base64 overview()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_base64"
-  },
-  "base64 synopsis": {
-    "name": "Base64 synopsis",
-    "type": "function",
-    "syntax": "function Base64 synopsis()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_base64"
-  },
   "bit.and, bit.exor, bit.in, bit.inv, bit.or": {
     "name": "bit.and, bit.exor, bit.in, bit.inv, bit.or",
     "type": "function",
@@ -3902,15 +3857,6 @@
       }
     ],
     "returnValue": "The function bit.and returns the bitwise AND of the supplied input values. Each bit in the two�s complement representation of the result is set if and only if each of the corresponding bits in the two�s complement representation of the supplied input values is set. Notice that the behavior of this function does not depend on the width of the used two�s complement representation.",
-    "category": "functions_bit"
-  },
-  "bit operations: overview and synopsis": {
-    "name": "Bit operations: overview and synopsis",
-    "type": "function",
-    "syntax": "function Bit operations: overview and synopsis()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
     "category": "functions_bit"
   },
   "bit.shiftl, bit.shiftr": {
@@ -4143,24 +4089,6 @@
     "returnValue": "0 Success. <>0 Error.",
     "category": "functions_blob"
   },
-  "blob handling overview": {
-    "name": "BLOB handling overview",
-    "type": "function",
-    "syntax": "function BLOB handling overview()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_blob"
-  },
-  "blob handling synopsis": {
-    "name": "BLOB handling synopsis",
-    "type": "function",
-    "syntax": "function BLOB handling synopsis()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_blob"
-  },
   "btol": {
     "name": "btol",
     "type": "function",
@@ -4188,16 +4116,7 @@
         "description": "long to cast to a boolean."
       }
     ],
-    "returnValue": "",
-    "category": "functions_boolean"
-  },
-  "boolean overview and synopsis": {
-    "name": "Boolean overview and synopsis",
-    "type": "function",
-    "syntax": "function Boolean overview and synopsis()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
+    "returnValue": "The boolean value (0 or 1)",
     "category": "functions_boolean"
   },
   "copy.cdf": {
@@ -4218,24 +4137,6 @@
       }
     ],
     "returnValue": "0 Success. <>0 Error.",
-    "category": "functions_cdf"
-  },
-  "cdf (customer defined fields) handling overview": {
-    "name": "CDF (Customer Defined Fields) handling overview",
-    "type": "function",
-    "syntax": "function CDF (Customer Defined Fields) handling overview()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_cdf"
-  },
-  "cdf (customer defined fields) handling synopsis": {
-    "name": "CDF (Customer Defined Fields) handling synopsis",
-    "type": "function",
-    "syntax": "function CDF (Customer Defined Fields) handling synopsis()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
     "category": "functions_cdf"
   },
   "bg$": {
@@ -4767,15 +4668,6 @@
         "description": ""
       }
     ],
-    "returnValue": "",
-    "category": "functions_char_b_win"
-  },
-  "character-based windows - overview and synopsis": {
-    "name": "Character-based windows - overview and synopsis",
-    "type": "function",
-    "syntax": "function Character-based windows - overview and synopsis()",
-    "description": "",
-    "arguments": [],
     "returnValue": "",
     "category": "functions_char_b_win"
   },
@@ -5969,51 +5861,6 @@
     "returnValue": "CHM_OK Success. CHM_ERROR Error.",
     "category": "functions_chm"
   },
-  "creating a chart manager client application": {
-    "name": "Creating a chart manager client application",
-    "type": "function",
-    "syntax": "function Creating a chart manager client application()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_chm"
-  },
-  "chart manager example": {
-    "name": "Chart manager example",
-    "type": "function",
-    "syntax": "function Chart manager example()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_chm"
-  },
-  "chart manager glossary": {
-    "name": "Chart manager glossary",
-    "type": "function",
-    "syntax": "function Chart manager glossary()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_chm"
-  },
-  "chart manager overview": {
-    "name": "Chart manager overview",
-    "type": "function",
-    "syntax": "function Chart manager overview()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_chm"
-  },
-  "chart manager synopsis": {
-    "name": "Chart manager synopsis",
-    "type": "function",
-    "syntax": "function Chart manager synopsis()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_chm"
-  },
   "cipher.decrypt.finalize": {
     "name": "cipher.decrypt.finalize",
     "type": "function",
@@ -6182,24 +6029,6 @@
       }
     ],
     "returnValue": "0 Success. -1 Error. The specifics of the error are logged by the Bshell. The problem can be caused by the underlying OpenSSL function, an invalid buffer length or an invalid handle.",
-    "category": "functions_cipher"
-  },
-  "cipher functions overview": {
-    "name": "Cipher Functions overview",
-    "type": "function",
-    "syntax": "function Cipher Functions overview()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_cipher"
-  },
-  "cipher function synopsis": {
-    "name": "Cipher Function synopsis",
-    "type": "function",
-    "syntax": "function Cipher Function synopsis()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
     "category": "functions_cipher"
   },
   "app_start": {
@@ -6704,15 +6533,6 @@
     "returnValue": "true Browser application started successfully. false iBrowser application failed to start.",
     "category": "functions_client_file_access"
   },
-  "client file access overview": {
-    "name": "Client file access overview",
-    "type": "function",
-    "syntax": "function Client file access overview()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_client_file_access"
-  },
   "remove.local.directory": {
     "name": "remove.local.directory",
     "type": "function",
@@ -6998,15 +6818,6 @@
     "returnValue": "true Application started successfully. false Application failed to start.",
     "category": "functions_client_file_access"
   },
-  "client file access synopsis": {
-    "name": "Client file access synopsis",
-    "type": "function",
-    "syntax": "function Client file access synopsis()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_client_file_access"
-  },
   "blue.component, green.component, red.component": {
     "name": "blue.component, green.component, red.component",
     "type": "function",
@@ -7019,15 +6830,6 @@
         "description": ""
       }
     ],
-    "returnValue": "",
-    "category": "functions_color"
-  },
-  "colors overview": {
-    "name": "Colors overview",
-    "type": "function",
-    "syntax": "function Colors overview()",
-    "description": "",
-    "arguments": [],
     "returnValue": "",
     "category": "functions_color"
   },
@@ -7054,15 +6856,6 @@
       }
     ],
     "returnValue": "A long which can be used as a color in graphical contexts such as windows, user interface controls, and so on.",
-    "category": "functions_color"
-  },
-  "colors synopsis": {
-    "name": "Colors synopsis",
-    "type": "function",
-    "syntax": "function Colors synopsis()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
     "category": "functions_color"
   },
   "compnr.check": {
@@ -7132,15 +6925,6 @@
     "type": "function",
     "syntax": "function long get.logistic.compnr ()",
     "description": "This returns the ID number of the current logistic company.",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_company_operations"
-  },
-  "company operations overview and synopsis": {
-    "name": "Company operations overview and synopsis",
-    "type": "function",
-    "syntax": "function Company operations overview and synopsis()",
-    "description": "",
     "arguments": [],
     "returnValue": "",
     "category": "functions_company_operations"
@@ -7277,15 +7061,6 @@
     "returnValue": "",
     "category": "functions_composite_sessions"
   },
-  "composite sessions code examples": {
-    "name": "Composite Sessions Code Examples",
-    "type": "function",
-    "syntax": "function Composite Sessions Code Examples()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_composite_sessions"
-  },
   "is.composite.child": {
     "name": "is.composite.child",
     "type": "function",
@@ -7317,24 +7092,6 @@
         "description": "when true, the user indicated that a copy operation is requested (CTRL key pressed during drop operation). Otherwise a move operation is required"
       }
     ],
-    "returnValue": "",
-    "category": "functions_composite_sessions"
-  },
-  "composite sessions overview": {
-    "name": "Composite Sessions overview",
-    "type": "function",
-    "syntax": "function Composite Sessions overview()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_composite_sessions"
-  },
-  "composite sessions synopsis": {
-    "name": "Composite Sessions synopsis",
-    "type": "function",
-    "syntax": "function Composite Sessions synopsis()",
-    "description": "",
-    "arguments": [],
     "returnValue": "",
     "category": "functions_composite_sessions"
   },
@@ -7552,15 +7309,6 @@
     "returnValue": "",
     "category": "functions_cURL"
   },
-  "curl ftp example": {
-    "name": "cURL FTP example",
-    "type": "function",
-    "syntax": "function cURL FTP example()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_cURL"
-  },
   "curl.get.errorbuffer$": {
     "name": "curl.get.errorbuffer$",
     "type": "function",
@@ -7591,24 +7339,6 @@
         "description": "a HTTP Status code, like 200 (HTTP_STATUS_OK), 404 (HTTP_STATUS_NOT_FOUND), or 500 (HTTP_STATUS_INTERNAL_SERVER_ERROR)"
       }
     ],
-    "returnValue": "",
-    "category": "functions_cURL"
-  },
-  "curl email example": {
-    "name": "cURL email example",
-    "type": "function",
-    "syntax": "function cURL email example()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_cURL"
-  },
-  "curl mime example": {
-    "name": "cURL MIME example",
-    "type": "function",
-    "syntax": "function cURL MIME example()",
-    "description": "",
-    "arguments": [],
     "returnValue": "",
     "category": "functions_cURL"
   },
@@ -7911,33 +7641,6 @@
     "returnValue": "",
     "category": "functions_cURL"
   },
-  "curl examples": {
-    "name": "cURL Examples",
-    "type": "function",
-    "syntax": "function cURL Examples()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_cURL"
-  },
-  "curl handling overview": {
-    "name": "cURL handling overview",
-    "type": "function",
-    "syntax": "function cURL handling overview()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_cURL"
-  },
-  "currency tables overview and synopsis": {
-    "name": "Currency tables overview and synopsis",
-    "type": "function",
-    "syntax": "function Currency tables overview and synopsis()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_currency_tables"
-  },
   "set.currencies": {
     "name": "set.currencies",
     "type": "function",
@@ -8122,24 +7825,6 @@
     "returnValue": "The hook should return True if the business method may never be executed. It should return False in any other case.",
     "category": "functions_dal"
   },
-  "dal change management hooks": {
-    "name": "DAL Change Management hooks",
-    "type": "function",
-    "syntax": "function DAL Change Management hooks()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_dal"
-  },
-  "communication with stp and cdas": {
-    "name": "Communication with STP and CDAS",
-    "type": "function",
-    "syntax": "function Communication with STP and CDAS()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_dal"
-  },
   "dal.any.parent.changed": {
     "name": "dal.any.parent.changed",
     "type": "function",
@@ -8186,114 +7871,6 @@
         "description": ""
       }
     ],
-    "returnValue": "",
-    "category": "functions_dal"
-  },
-  "dal2 and the 4gl engine": {
-    "name": "DAL2 and the 4GL Engine",
-    "type": "function",
-    "syntax": "function DAL2 and the 4GL Engine()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_dal"
-  },
-  "dal2 business method hooks": {
-    "name": "DAL2 Business method hooks",
-    "type": "function",
-    "syntax": "function DAL2 Business method hooks()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_dal"
-  },
-  "dal2 field dependencies": {
-    "name": "DAL2 Field dependencies",
-    "type": "function",
-    "syntax": "function DAL2 Field dependencies()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_dal"
-  },
-  "dal2 field hooks": {
-    "name": "DAL2 Field hooks",
-    "type": "function",
-    "syntax": "function DAL2 Field hooks()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_dal"
-  },
-  "dal2 flow of field hooks": {
-    "name": "DAL2 Flow of field hooks",
-    "type": "function",
-    "syntax": "function DAL2 Flow of field hooks()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_dal"
-  },
-  "extended dal (dal2)": {
-    "name": "Extended DAL (DAL2)",
-    "type": "function",
-    "syntax": "function Extended DAL (DAL2)()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_dal"
-  },
-  "dal2 test mode": {
-    "name": "DAL2 Test Mode",
-    "type": "function",
-    "syntax": "function DAL2 Test Mode()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_dal"
-  },
-  "dal context": {
-    "name": "DAL Context",
-    "type": "function",
-    "syntax": "function DAL Context()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_dal"
-  },
-  "dal terminology": {
-    "name": "DAL terminology",
-    "type": "function",
-    "syntax": "function DAL terminology()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_dal"
-  },
-  "dal hooks": {
-    "name": "DAL hooks",
-    "type": "function",
-    "syntax": "function DAL hooks()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_dal"
-  },
-  "ui, dal, and stp interaction": {
-    "name": "UI, DAL, and STP interaction",
-    "type": "function",
-    "syntax": "function UI, DAL, and STP interaction()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_dal"
-  },
-  "data access methods (dam)": {
-    "name": "Data Access Methods (DAM)",
-    "type": "function",
-    "syntax": "function Data Access Methods (DAM)()",
-    "description": "",
-    "arguments": [],
     "returnValue": "",
     "category": "functions_dal"
   },
@@ -8516,15 +8093,6 @@
     "returnValue": "TRUE if the method is permitted FALSE if the method is not permitted",
     "category": "functions_dal"
   },
-  "object hooks": {
-    "name": "Object hooks",
-    "type": "function",
-    "syntax": "function Object hooks()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_dal"
-  },
   "on.recall": {
     "name": "on.recall",
     "type": "function",
@@ -8579,42 +8147,6 @@
     "returnValue": "0 In case of success. DALHOOKERROR In case of a failure.",
     "category": "functions_dal"
   },
-  "data access layer": {
-    "name": "Data Access Layer",
-    "type": "function",
-    "syntax": "function Data Access Layer()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_dal"
-  },
-  "property hooks": {
-    "name": "Property hooks",
-    "type": "function",
-    "syntax": "function Property hooks()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_dal"
-  },
-  "property methods": {
-    "name": "Property methods",
-    "type": "function",
-    "syntax": "function Property methods()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_dal"
-  },
-  "query extensions": {
-    "name": "Query extensions",
-    "type": "function",
-    "syntax": "function Query extensions()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_dal"
-  },
   "set.object.defaults": {
     "name": "set.object.defaults",
     "type": "function",
@@ -8623,105 +8155,6 @@
     "arguments": [],
     "returnValue": "The hook returns 0 if the hook has been executed successfully.",
     "category": "functions_dal"
-  },
-  "transition issues (baan iv to infor erp enterprise)": {
-    "name": "Transition issues (BAAN IV to Infor ERP Enterprise)",
-    "type": "function",
-    "syntax": "function Transition issues (BAAN IV to Infor ERP Enterprise)()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_dal"
-  },
-  "and boolean operator": {
-    "name": "AND boolean operator",
-    "type": "function",
-    "syntax": "function AND boolean operator()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "infor erp enterprise sql": {
-    "name": "Infor ERP Enterprise SQL",
-    "type": "function",
-    "syntax": "function Infor ERP Enterprise SQL()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "between predicate": {
-    "name": "BETWEEN predicate",
-    "type": "function",
-    "syntax": "function BETWEEN predicate()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "cast expression": {
-    "name": "CAST expression",
-    "type": "function",
-    "syntax": "function CAST expression()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "column reference": {
-    "name": "Column reference",
-    "type": "function",
-    "syntax": "function Column reference()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "donotfindthispage!": {
-    "name": "DoNotFindThisPage!",
-    "type": "function",
-    "syntax": "function DoNotFindThisPage!()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "company numbers": {
-    "name": "Company numbers",
-    "type": "function",
-    "syntax": "function Company numbers()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "comparable data types in infor erp enterprise sql": {
-    "name": "Comparable data types in Infor ERP Enterprise SQL",
-    "type": "function",
-    "syntax": "function Comparable data types in Infor ERP Enterprise SQL()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "comparison predicate": {
-    "name": "Comparison predicate",
-    "type": "function",
-    "syntax": "function Comparison predicate()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "_compnr predicate": {
-    "name": "_compnr predicate",
-    "type": "function",
-    "syntax": "function _compnr predicate()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
   },
   "current_date": {
     "name": "CURRENT_DATE",
@@ -8736,627 +8169,6 @@
     "name": "CURRENT_TIMESTAMP",
     "type": "function",
     "syntax": "function CURRENT_TIMESTAMP()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "date constant": {
-    "name": "Date constant",
-    "type": "function",
-    "syntax": "function Date constant()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "dynamic sql": {
-    "name": "Dynamic SQL",
-    "type": "function",
-    "syntax": "function Dynamic SQL()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "embedded sql": {
-    "name": "Embedded SQL",
-    "type": "function",
-    "syntax": "function Embedded SQL()",
-    "description": "Data is selected on the basis of the condition specified in the SELECT statement. The operations between SELECTDO and ENDSELECT are performed on each record from the selected set. The loop ends either when the program has handled the entire set or the program encounters a BREAK command.",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "empty constant": {
-    "name": "EMPTY constant",
-    "type": "function",
-    "syntax": "function EMPTY constant()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "enumerate constant": {
-    "name": "Enumerate constant",
-    "type": "function",
-    "syntax": "function Enumerate constant()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "enum_description function": {
-    "name": "ENUM_DESCRIPTION function",
-    "type": "function",
-    "syntax": "function ENUM_DESCRIPTION function()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "error handling": {
-    "name": "Error handling",
-    "type": "function",
-    "syntax": "function Error handling()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "exists predicate": {
-    "name": "EXISTS predicate",
-    "type": "function",
-    "syntax": "function EXISTS predicate()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "from clause": {
-    "name": "FROM clause",
-    "type": "function",
-    "syntax": "function FROM clause()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "group by clause": {
-    "name": "GROUP BY clause",
-    "type": "function",
-    "syntax": "function GROUP BY clause()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "having clause": {
-    "name": "HAVING clause",
-    "type": "function",
-    "syntax": "function HAVING clause()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "hints for using db.retry.point": {
-    "name": "Hints for using db.retry.point",
-    "type": "function",
-    "syntax": "function Hints for using db.retry.point()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "hints for using sql": {
-    "name": "Hints for using SQL",
-    "type": "function",
-    "syntax": "function Hints for using SQL()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "identifier": {
-    "name": "Identifier",
-    "type": "function",
-    "syntax": "function Identifier()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "inrange predicate": {
-    "name": "INRANGE predicate",
-    "type": "function",
-    "syntax": "function INRANGE predicate()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "integer constant": {
-    "name": "Integer constant",
-    "type": "function",
-    "syntax": "function Integer constant()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "in predicate": {
-    "name": "IN predicate",
-    "type": "function",
-    "syntax": "function IN predicate()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "is null predicate": {
-    "name": "IS NULL predicate",
-    "type": "function",
-    "syntax": "function IS NULL predicate()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "like predicate": {
-    "name": "LIKE predicate",
-    "type": "function",
-    "syntax": "function LIKE predicate()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "locking": {
-    "name": "Locking",
-    "type": "function",
-    "syntax": "function Locking()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "ml_one_lang function": {
-    "name": "ml_one_lang function",
-    "type": "function",
-    "syntax": "function ml_one_lang function()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "multi language data": {
-    "name": "Multi Language Data",
-    "type": "function",
-    "syntax": "function Multi Language Data()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "not boolean operator": {
-    "name": "NOT boolean operator",
-    "type": "function",
-    "syntax": "function NOT boolean operator()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "order by clause": {
-    "name": "ORDER BY clause",
-    "type": "function",
-    "syntax": "function ORDER BY clause()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "or boolean operator": {
-    "name": "OR boolean operator",
-    "type": "function",
-    "syntax": "function OR boolean operator()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "database handling overview": {
-    "name": "Database handling overview",
-    "type": "function",
-    "syntax": "function Database handling overview()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "parameter": {
-    "name": "Parameter",
-    "type": "function",
-    "syntax": "function Parameter()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "query expression": {
-    "name": "Query expression",
-    "type": "function",
-    "syntax": "function Query expression()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "query specification": {
-    "name": "Query specification",
-    "type": "function",
-    "syntax": "function Query specification()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "raw constant": {
-    "name": "Raw constant",
-    "type": "function",
-    "syntax": "function Raw constant()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "real constant": {
-    "name": "Real constant",
-    "type": "function",
-    "syntax": "function Real constant()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "references": {
-    "name": "References",
-    "type": "function",
-    "syntax": "function References()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "refers to predicate": {
-    "name": "REFERS TO predicate",
-    "type": "function",
-    "syntax": "function REFERS TO predicate()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "retry points": {
-    "name": "Retry points",
-    "type": "function",
-    "syntax": "function Retry points()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "row value constructor": {
-    "name": "Row value constructor",
-    "type": "function",
-    "syntax": "function Row value constructor()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "case expression (searched)": {
-    "name": "CASE expression (searched)",
-    "type": "function",
-    "syntax": "function CASE expression (searched)()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "search condition": {
-    "name": "Search condition",
-    "type": "function",
-    "syntax": "function Search condition()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "select clause": {
-    "name": "SELECT clause",
-    "type": "function",
-    "syntax": "function SELECT clause()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "select statement": {
-    "name": "SELECT statement",
-    "type": "function",
-    "syntax": "function SELECT statement()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "set function specification": {
-    "name": "Set function specification",
-    "type": "function",
-    "syntax": "function Set function specification()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "set specification": {
-    "name": "SET specification",
-    "type": "function",
-    "syntax": "function SET specification()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "simplest comparison predicate": {
-    "name": "Simplest comparison predicate",
-    "type": "function",
-    "syntax": "function Simplest comparison predicate()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "case expression (simple)": {
-    "name": "CASE expression (simple)",
-    "type": "function",
-    "syntax": "function CASE expression (simple)()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "sql and combined fields": {
-    "name": "SQL and combined fields",
-    "type": "function",
-    "syntax": "function SQL and combined fields()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "sql and delayed locks": {
-    "name": "SQL and delayed locks",
-    "type": "function",
-    "syntax": "function SQL and delayed locks()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "sql data types": {
-    "name": "SQL data types",
-    "type": "function",
-    "syntax": "function SQL data types()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "sql glossary": {
-    "name": "SQL glossary",
-    "type": "function",
-    "syntax": "function SQL glossary()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "sql programming": {
-    "name": "SQL programming",
-    "type": "function",
-    "syntax": "function SQL programming()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "sql reserved words": {
-    "name": "SQL reserved words",
-    "type": "function",
-    "syntax": "function SQL reserved words()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "sql subqueries": {
-    "name": "SQL subqueries",
-    "type": "function",
-    "syntax": "function SQL subqueries()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "sql trace options": {
-    "name": "SQL trace options",
-    "type": "function",
-    "syntax": "function SQL trace options()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "string constant": {
-    "name": "String constant",
-    "type": "function",
-    "syntax": "function String constant()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "substring and array indexing": {
-    "name": "Substring and array indexing",
-    "type": "function",
-    "syntax": "function Substring and array indexing()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "sub query": {
-    "name": "Sub query",
-    "type": "function",
-    "syntax": "function Sub query()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "text_content function": {
-    "name": "TEXT_CONTENT function",
-    "type": "function",
-    "syntax": "function TEXT_CONTENT function()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "timestamp constant": {
-    "name": "Timestamp constant",
-    "type": "function",
-    "syntax": "function Timestamp constant()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "transaction handling": {
-    "name": "Transaction handling",
-    "type": "function",
-    "syntax": "function Transaction handling()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "trim function": {
-    "name": "TRIM function",
-    "type": "function",
-    "syntax": "function TRIM function()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "union operator": {
-    "name": "UNION operator",
-    "type": "function",
-    "syntax": "function UNION operator()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "using program variables": {
-    "name": "Using program variables",
-    "type": "function",
-    "syntax": "function Using program variables()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "value expression": {
-    "name": "Value expression",
-    "type": "function",
-    "syntax": "function Value expression()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "operator + (add)": {
-    "name": "Operator + (add)",
-    "type": "function",
-    "syntax": "function Operator + (add)()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "operator &amp; (concatenation)": {
-    "name": "Operator &amp; (concatenation)",
-    "type": "function",
-    "syntax": "function Operator &amp; (concatenation)()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "operator / (divide)": {
-    "name": "Operator / (divide)",
-    "type": "function",
-    "syntax": "function Operator / (divide)()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "operator \\ (modulo)": {
-    "name": "Operator \\ (modulo)",
-    "type": "function",
-    "syntax": "function Operator \\ (modulo)()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "operator * (multiply)": {
-    "name": "Operator * (multiply)",
-    "type": "function",
-    "syntax": "function Operator * (multiply)()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "operator - (subtract)": {
-    "name": "Operator - (subtract)",
-    "type": "function",
-    "syntax": "function Operator - (subtract)()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "where clause": {
-    "name": "WHERE clause",
-    "type": "function",
-    "syntax": "function WHERE clause()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_database_handling"
-  },
-  "with retry clause": {
-    "name": "WITH RETRY clause",
-    "type": "function",
-    "syntax": "function WITH RETRY clause()",
     "description": "",
     "arguments": [],
     "returnValue": "",
@@ -9815,15 +8627,6 @@
     "returnValue": "0 Success. -1 Error.",
     "category": "functions_date_time_zones"
   },
-  "dates, times, time zones overview": {
-    "name": "Dates, times, time zones overview",
-    "type": "function",
-    "syntax": "function Dates, times, time zones overview()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
-    "category": "functions_date_time_zones"
-  },
   "set.time.zone": {
     "name": "set.time.zone",
     "type": "function",
@@ -9837,15 +8640,6 @@
       }
     ],
     "returnValue": "0 Success. -1 Error.",
-    "category": "functions_date_time_zones"
-  },
-  "dates, times, time zones synopsis": {
-    "name": "Dates, times, time zones synopsis",
-    "type": "function",
-    "syntax": "function Dates, times, time zones synopsis()",
-    "description": "",
-    "arguments": [],
-    "returnValue": "",
     "category": "functions_date_time_zones"
   },
   "time.num": {

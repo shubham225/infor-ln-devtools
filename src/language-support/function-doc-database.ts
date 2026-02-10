@@ -35,7 +35,7 @@ export class FunctionDocDatabase {
       if (fs.existsSync(functionsPath)) {
         const functionsContent = fs.readFileSync(functionsPath, "utf-8");
         const functionsData = JSON.parse(functionsContent);
-        
+
         for (const [name, doc] of Object.entries(functionsData)) {
           this.functionDocs.set(name.toLowerCase(), doc as FunctionDocDB);
         }
@@ -50,11 +50,13 @@ export class FunctionDocDatabase {
       if (fs.existsSync(keywordsPath)) {
         const keywordsContent = fs.readFileSync(keywordsPath, "utf-8");
         const keywordsData = JSON.parse(keywordsContent);
-        
+
         for (const [name, doc] of Object.entries(keywordsData)) {
           this.keywordDocs.set(name.toLowerCase(), doc as FunctionDocDB);
         }
-        console.log(`BaanC: Loaded ${this.keywordDocs.size} keywords/variables`);
+        console.log(
+          `BaanC: Loaded ${this.keywordDocs.size} keywords/variables`,
+        );
       } else {
         console.warn(`BaanC: Keywords file not found at ${keywordsPath}`);
       }
@@ -77,11 +79,13 @@ export class FunctionDocDatabase {
       } else {
         this.isLoaded = true;
         // Log summary
-        console.log(`BaanC Language Support: ${this.functionDocs.size + this.keywordDocs.size} items loaded`);
+        console.log(
+          `BaanC Language Support: ${this.functionDocs.size + this.keywordDocs.size} items loaded`,
+        );
       }
     } catch (error) {
       console.error("Error loading BaanC documentation database:", error);
-      
+
       // Fallback: try to load from old location (resources folder)
       await this.loadFromResources();
     }
@@ -92,7 +96,7 @@ export class FunctionDocDatabase {
    */
   private async loadFromResources(): Promise<void> {
     console.log("Attempting to load from resources folder...");
-    
+
     const resourcesPath = path.join(
       this.extensionPath,
       "resources",
@@ -112,7 +116,7 @@ export class FunctionDocDatabase {
             const info = funcInfo as any;
             const doc: FunctionDocDB = {
               name: funcName,
-              type: 'function',
+              type: "function",
               syntax: info.syntax || "",
               description: info.description || "",
               arguments: (info.params || []).map((p: any) => ({
@@ -128,10 +132,14 @@ export class FunctionDocDatabase {
           }
 
           this.isLoaded = true;
-          console.log(`BaanC: Loaded ${this.functionDocs.size} functions from resources (fallback)`);
+          console.log(
+            `BaanC: Loaded ${this.functionDocs.size} functions from resources (fallback)`,
+          );
         }
       } else {
-        console.warn(`BaanC: Fallback resources file not found at ${resourcesPath}`);
+        console.warn(
+          `BaanC: Fallback resources file not found at ${resourcesPath}`,
+        );
       }
     } catch (error) {
       console.error("Error loading from resources:", error);
@@ -148,7 +156,7 @@ export class FunctionDocDatabase {
     }
 
     const lowerName = name.toLowerCase();
-    
+
     // Try functions first
     let doc = this.functionDocs.get(lowerName);
     if (doc) {
@@ -243,7 +251,7 @@ export class FunctionDocDatabase {
    * Add custom documentation (for DLL functions, etc.)
    */
   addCustomDoc(doc: FunctionDocDB): void {
-    if (doc.type === 'function') {
+    if (doc.type === "function") {
       this.functionDocs.set(doc.name.toLowerCase(), doc);
     } else {
       this.keywordDocs.set(doc.name.toLowerCase(), doc);

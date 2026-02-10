@@ -59,7 +59,10 @@ async function ensureAuthenticated(
   if (credentials) {
     // Verify credentials with health check
     try {
-      const healthCheckResult = await erpService.healthCheck(serverUrl, credentials);
+      const healthCheckResult = await erpService.healthCheck(
+        serverUrl,
+        credentials,
+      );
 
       if (healthCheckResult.status === "UP") {
         vscode.window.showInformationMessage(
@@ -84,7 +87,10 @@ async function ensureAuthenticated(
     async (username: string, password: string) => {
       try {
         // Verify credentials with health check
-        const healthCheckResult = await erpService.healthCheck(serverUrl, { username, password });
+        const healthCheckResult = await erpService.healthCheck(serverUrl, {
+          username,
+          password,
+        });
 
         if (healthCheckResult.status === "UP") {
           // Store credentials
@@ -128,7 +134,6 @@ async function ensureAuthenticated(
  * @param context - The VS Code extension context
  */
 export async function activate(context: vscode.ExtensionContext) {
-
   // Language support initializes in background to not slow down extension
   initializeLanguageSupport(context);
 
@@ -143,7 +148,7 @@ export async function activate(context: vscode.ExtensionContext) {
   // Ensure user is authenticated before proceeding (non-blocking)
   if (defaultEnvironment) {
     const serverUrl = getBackendUrlHelper(defaultEnvironment, environments);
-    
+
     try {
       const authenticated = await ensureAuthenticated(context, serverUrl);
 
@@ -627,7 +632,10 @@ export async function activate(context: vscode.ExtensionContext) {
               throw new Error("Invalid response from server");
             }
 
-            progress.report({ increment: 50, message: "Received zip data, extracting..." });
+            progress.report({
+              increment: 50,
+              message: "Received zip data, extracting...",
+            });
 
             const zip = new AdmZip(buf);
 
@@ -810,7 +818,9 @@ export async function activate(context: vscode.ExtensionContext) {
           const resp = await erpService.closeProject(serverUrl, project, creds);
 
           if (!resp || !resp.success) {
-            throw new Error(resp?.errorMessage || "Failed to close project on ERP");
+            throw new Error(
+              resp?.errorMessage || "Failed to close project on ERP",
+            );
           }
 
           progress.report({
@@ -1270,10 +1280,18 @@ export async function activate(context: vscode.ExtensionContext) {
             const creds = await getCredentials();
 
             // Upload script (sends base64 of ZIP of .bc file)
-            const uploadResult = await erpService.uploadScript(serverUrl, project, scriptName, fileContent, creds);
+            const uploadResult = await erpService.uploadScript(
+              serverUrl,
+              project,
+              scriptName,
+              fileContent,
+              creds,
+            );
 
             if (!uploadResult.success) {
-              throw new Error(uploadResult.errorMessage || "Failed to upload script");
+              throw new Error(
+                uploadResult.errorMessage || "Failed to upload script",
+              );
             }
 
             scriptIdentifier = uploadResult.script;
@@ -1299,7 +1317,12 @@ export async function activate(context: vscode.ExtensionContext) {
           const creds = await getCredentials();
 
           // Compile script (receives base64 of ZIP of output files)
-          const compileResult = await erpService.compileScript(serverUrl, project, scriptIdentifier, creds);
+          const compileResult = await erpService.compileScript(
+            serverUrl,
+            project,
+            scriptIdentifier,
+            creds,
+          );
 
           progress.report({
             increment: 100,

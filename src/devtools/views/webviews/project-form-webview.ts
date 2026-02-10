@@ -10,7 +10,13 @@ export async function showProjectForm(
   environments: string[] = [],
   existingProject?: Project,
   fetchVRCsCallback?: (pmc: string, environment: string) => Promise<string[]>,
-  validateCallback?: (project: Project) => Promise<{ valid: boolean; errorMessage?: string; warningMessage?: string }>,
+  validateCallback?: (
+    project: Project,
+  ) => Promise<{
+    valid: boolean;
+    errorMessage?: string;
+    warningMessage?: string;
+  }>,
 ): Promise<Project | null> {
   const title = (
     {
@@ -56,15 +62,18 @@ export async function showProjectForm(
           role: message.role,
           environment: message.environment,
           createdAt: existingProject?.createdAt || Date.now(),
-        }; 
+        };
 
         const isBlank = (value?: string) => !value || value.trim().length === 0;
 
         // If validateCallback is provided, validate the project
-        if (validateCallback && !(project.role === 'Developer' && isBlank(project.pmc))) {
+        if (
+          validateCallback &&
+          !(project.role === "Developer" && isBlank(project.pmc))
+        ) {
           try {
             const validation = await validateCallback(project);
-            
+
             // Handle different validation outcomes
             if (validation.errorMessage) {
               // Error case: show error and close without saving
@@ -94,7 +103,9 @@ export async function showProjectForm(
                 valid: false,
                 errorMessage: "Validation failed. Please check your input.",
               });
-              vscode.window.showErrorMessage("Project validation failed. Please check the details.");
+              vscode.window.showErrorMessage(
+                "Project validation failed. Please check the details.",
+              );
             }
           } catch (error: any) {
             // Exception during validation: send error back to webview
@@ -103,7 +114,7 @@ export async function showProjectForm(
               valid: false,
               errorMessage: error.message || "Validation failed",
             });
-              vscode.window.showErrorMessage(error.message);
+            vscode.window.showErrorMessage(error.message);
           }
         } else {
           // No validation callback, just save directly
@@ -149,7 +160,10 @@ function getProjectFormWebviewContent(
 ): string {
   const vrcOptionsJson = JSON.stringify(vrcList);
   const environmentsJson = JSON.stringify(environments);
-  const isEdit = updateMode === "UPDATE" || updateMode === "DELETE" || updateMode === "IMPORT";
+  const isEdit =
+    updateMode === "UPDATE" ||
+    updateMode === "DELETE" ||
+    updateMode === "IMPORT";
 
   return `<!DOCTYPE html>
 <html lang="en">

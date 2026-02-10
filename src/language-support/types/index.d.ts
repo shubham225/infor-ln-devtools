@@ -24,13 +24,13 @@ export interface FunctionDoc {
 
 export interface FunctionDocDB {
   name: string;
-  type: 'function' | 'keyword' | 'variable' | 'concept';
+  type: "function" | "keyword" | "variable" | "concept";
   syntax?: string;
   description: string;
   arguments?: Array<{ type: string; name: string; description: string }>;
   returnValue?: string;
   category: string;
-  dataType?: string; 
-  attributes?: string; 
-  context?: string;  
+  dataType?: string;
+  attributes?: string;
+  context?: string;
 }

@@ -7,9 +7,7 @@ import { FunctionDocDB } from "../types";
  * Provides code completion for BaanC
  * Includes functions, keywords, variables, and user-defined items
  */
-export class BaanCCompletionProvider
-  implements vscode.CompletionItemProvider
-{
+export class BaanCCompletionProvider implements vscode.CompletionItemProvider {
   private keywords: string[] = [
     "if",
     "then",
@@ -70,7 +68,7 @@ export class BaanCCompletionProvider
         vscode.CompletionItemKind.Keyword,
       );
       item.detail = "Keyword";
-      item.sortText = `0_${keyword}`;  // Sort keywords first
+      item.sortText = `0_${keyword}`; // Sort keywords first
       items.push(item);
     }
 
@@ -112,13 +110,13 @@ export class BaanCCompletionProvider
     for (const keywordName of keywordNames) {
       const doc = this.docDatabase.getKeywordDoc(keywordName);
       if (doc) {
-        if (doc.type === 'variable') {
+        if (doc.type === "variable") {
           const item = this.createVariableCompletionItem(doc);
-          item.sortText = `2_${keywordName}`;  // Variables sort with constants
+          item.sortText = `2_${keywordName}`; // Variables sort with constants
           items.push(item);
-        } else if (doc.type === 'keyword') {
+        } else if (doc.type === "keyword") {
           const item = this.createKeywordCompletionItem(doc);
-          item.sortText = `0_${keywordName}`;  // Keywords sort first
+          item.sortText = `0_${keywordName}`; // Keywords sort first
           items.push(item);
         }
       }
@@ -155,12 +153,14 @@ export class BaanCCompletionProvider
   /**
    * Create completion item for functions
    */
-  private createFunctionCompletionItem(doc: FunctionDocDB): vscode.CompletionItem {
+  private createFunctionCompletionItem(
+    doc: FunctionDocDB,
+  ): vscode.CompletionItem {
     const item = new vscode.CompletionItem(
       doc.name,
       vscode.CompletionItemKind.Function,
     );
-    
+
     item.detail = doc.syntax || `function ${doc.name}()`;
     item.documentation = new vscode.MarkdownString(doc.description);
 
@@ -180,30 +180,34 @@ export class BaanCCompletionProvider
   /**
    * Create completion item for variables
    */
-  private createVariableCompletionItem(doc: FunctionDocDB): vscode.CompletionItem {
+  private createVariableCompletionItem(
+    doc: FunctionDocDB,
+  ): vscode.CompletionItem {
     const item = new vscode.CompletionItem(
       doc.name,
       vscode.CompletionItemKind.Variable,
     );
-    
-    item.detail = `${doc.dataType} - ${doc.attributes || 'Predefined'}`;
+
+    item.detail = `${doc.dataType} - ${doc.attributes || "Predefined"}`;
     item.documentation = new vscode.MarkdownString(doc.description);
-    
+
     return item;
   }
 
   /**
    * Create completion item for keywords
    */
-  private createKeywordCompletionItem(doc: FunctionDocDB): vscode.CompletionItem {
+  private createKeywordCompletionItem(
+    doc: FunctionDocDB,
+  ): vscode.CompletionItem {
     const item = new vscode.CompletionItem(
       doc.name,
       vscode.CompletionItemKind.Keyword,
     );
-    
-    item.detail = `4GL Section - ${doc.context || 'Keyword'}`;
+
+    item.detail = `4GL Section - ${doc.context || "Keyword"}`;
     item.documentation = new vscode.MarkdownString(doc.description);
-    
+
     return item;
   }
 }

@@ -8,7 +8,7 @@ export class VRCCacheManager {
 
   /**
    * Fetches VRC list for an environment, using cache when available
-   * 
+   *
    * @param environment - The environment name
    * @param serverUrl - The backend server URL
    * @param username - The ERP username for authentication
@@ -54,7 +54,7 @@ export class VRCCacheManager {
 
   /**
    * Clears the VRC cache for a specific environment
-   * 
+   *
    * @param environment - The environment name
    */
   clearCacheForEnvironment(environment: string): void {

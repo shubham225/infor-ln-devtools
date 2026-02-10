@@ -53,17 +53,18 @@ export function showSessionViewer(
   sessionData: SessionData,
 ): void {
   const panelKey = `session:${sessionData.session}`;
-  
+
   // Check if panel already exists
   const existingPanel = openSessionPanels.get(panelKey);
   if (existingPanel) {
     // Reveal existing panel
     existingPanel.reveal(vscode.ViewColumn.One);
     // Update content in case data changed
-    const lucideUri = getLocalResource(existingPanel.webview, context.extensionUri, [
-      "resources",
-      "lucide.min.js",
-    ]);
+    const lucideUri = getLocalResource(
+      existingPanel.webview,
+      context.extensionUri,
+      ["resources", "lucide.min.js"],
+    );
     existingPanel.webview.html = getSessionViewerHtml(sessionData, lucideUri);
     return;
   }
@@ -333,7 +334,7 @@ function getSessionViewerHtml(
             <h1>
                 <i data-lucide="layout" class="icon"></i>
                 <span>${sessionData.session}</span>
-                ${sessionData.sessionDescription ? `<span class="description">[${sessionData.sessionDescription}]</span>` : ''}
+                ${sessionData.sessionDescription ? `<span class="description">[${sessionData.sessionDescription}]</span>` : ""}
             </h1>
             <div class="header-grid">
                 <div class="header-item">

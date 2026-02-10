@@ -35,17 +35,18 @@ export function showTableViewer(
   tableData: TableData,
 ): void {
   const panelKey = `table:${tableData.table}`;
-  
+
   // Check if panel already exists
   const existingPanel = openTablePanels.get(panelKey);
   if (existingPanel) {
     // Reveal existing panel
     existingPanel.reveal(vscode.ViewColumn.One);
     // Update content in case data changed
-    const lucideUri = getLocalResource(existingPanel.webview, context.extensionUri, [
-      "resources",
-      "lucide.min.js",
-    ]);
+    const lucideUri = getLocalResource(
+      existingPanel.webview,
+      context.extensionUri,
+      ["resources", "lucide.min.js"],
+    );
     existingPanel.webview.html = getTableViewerHtml(tableData, lucideUri);
     return;
   }
@@ -75,7 +76,7 @@ export function showTableViewer(
   ]);
 
   panel.webview.html = getTableViewerHtml(tableData, lucideUri);
-  
+
   // No need for message handling anymore - enum dialog is in webview
 }
 
@@ -452,7 +453,7 @@ function getTableViewerHtml(
             <h1>
                 <i data-lucide="database" class="icon"></i>
                 <span>${tableData.table}</span>
-                ${tableData.description ? `<span class="description">[${tableData.description}]</span>` : ''}
+                ${tableData.description ? `<span class="description">[${tableData.description}]</span>` : ""}
             </h1>
         </div>
 

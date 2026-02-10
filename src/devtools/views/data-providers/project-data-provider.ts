@@ -10,19 +10,22 @@ export class ProjectNode extends vscode.TreeItem {
   ) {
     // Use label object to apply bold styling for active project
     super(project.name, vscode.TreeItemCollapsibleState.Collapsed);
-    
+
     this.description = `${project.environment} | PMC: ${project.pmc}`;
     this.tooltip = `Project: ${project.name}\nEnvironment: ${project.environment}\nPMC: ${project.pmc}\nTicket: ${project.ticketId}\nVRC: ${project.vrc}\nRole: ${project.role}`;
     this.contextValue = "projectNode";
-    
+
     // Highlight active project
     if (isActive) {
-      this.iconPath = new vscode.ThemeIcon("folder-active", new vscode.ThemeColor("charts.green"));
+      this.iconPath = new vscode.ThemeIcon(
+        "folder-active",
+        new vscode.ThemeColor("charts.green"),
+      );
       this.description = `${this.description} ✓ Active`;
     } else {
       this.iconPath = new vscode.ThemeIcon("folder");
     }
-    
+
     // Set collapsible state to None initially - will expand only on double-click
     this.collapsibleState = vscode.TreeItemCollapsibleState.Collapsed;
   }
@@ -41,18 +44,25 @@ export class FileNode extends vscode.TreeItem {
         ? vscode.TreeItemCollapsibleState.Collapsed
         : vscode.TreeItemCollapsibleState.None,
     );
-    
+
     // Check if this is a .bc file in Script folder
-    const isBaanScript = parentFolderName === "Script" && fileName.endsWith(".bc");
-    
-    this.contextValue = isDirectory ? "fileFolder" : (isBaanScript ? "baanScript" : "file");
+    const isBaanScript =
+      parentFolderName === "Script" && fileName.endsWith(".bc");
+
+    this.contextValue = isDirectory
+      ? "fileFolder"
+      : isBaanScript
+        ? "baanScript"
+        : "file";
     this.resourceUri = vscode.Uri.file(filePath);
-    
+
     if (!isDirectory) {
       // Check if JSON file in Table or Session folders
-      const isTableJson = parentFolderName === "Table" && fileName.endsWith(".json");
-      const isSessionJson = parentFolderName === "Session" && fileName.endsWith(".json");
-      
+      const isTableJson =
+        parentFolderName === "Table" && fileName.endsWith(".json");
+      const isSessionJson =
+        parentFolderName === "Session" && fileName.endsWith(".json");
+
       if (isTableJson) {
         this.command = {
           command: "project-explorer.openTableViewer",
@@ -77,19 +87,26 @@ export class FileNode extends vscode.TreeItem {
   }
 }
 
-export class ProjectDataProvider implements vscode.TreeDataProvider<ProjectNode | FileNode> {
+export class ProjectDataProvider implements vscode.TreeDataProvider<
+  ProjectNode | FileNode
+> {
   private _onDidChangeTreeData: vscode.EventEmitter<
     ProjectNode | FileNode | undefined | null | void
-  > = new vscode.EventEmitter<ProjectNode | FileNode | undefined | null | void>();
-  readonly onDidChangeTreeData: vscode.Event<ProjectNode | FileNode | undefined | null | void> =
-    this._onDidChangeTreeData.event;
+  > = new vscode.EventEmitter<
+    ProjectNode | FileNode | undefined | null | void
+  >();
+  readonly onDidChangeTreeData: vscode.Event<
+    ProjectNode | FileNode | undefined | null | void
+  > = this._onDidChangeTreeData.event;
 
   private projects: Project[] = [];
   private activeProjectName: string | null = null;
   private context: vscode.ExtensionContext;
 
   // Drag and drop controller
-  public dragAndDropController: vscode.TreeDragAndDropController<ProjectNode | FileNode>;
+  public dragAndDropController: vscode.TreeDragAndDropController<
+    ProjectNode | FileNode
+  >;
 
   constructor(context: vscode.ExtensionContext) {
     this.context = context;
@@ -98,14 +115,23 @@ export class ProjectDataProvider implements vscode.TreeDataProvider<ProjectNode 
   }
 
   private loadProjects() {
-    const savedProjects = this.context.globalState.get<Project[]>("projects", []);
+    const savedProjects = this.context.globalState.get<Project[]>(
+      "projects",
+      [],
+    );
     this.projects = savedProjects;
-    this.activeProjectName = this.context.globalState.get<string | null>("activeProject", null);
+    this.activeProjectName = this.context.globalState.get<string | null>(
+      "activeProject",
+      null,
+    );
   }
 
   private async saveProjects() {
     await this.context.globalState.update("projects", this.projects);
-    await this.context.globalState.update("activeProject", this.activeProjectName);
+    await this.context.globalState.update(
+      "activeProject",
+      this.activeProjectName,
+    );
   }
 
   refresh() {
@@ -117,11 +143,14 @@ export class ProjectDataProvider implements vscode.TreeDataProvider<ProjectNode 
     return element;
   }
 
-  getChildren(element?: ProjectNode | FileNode): Thenable<(ProjectNode | FileNode)[]> {
+  getChildren(
+    element?: ProjectNode | FileNode,
+  ): Thenable<(ProjectNode | FileNode)[]> {
     if (!element) {
       // Root level - return all projects
       const nodes = this.projects.map(
-        (project) => new ProjectNode(project, project.name === this.activeProjectName)
+        (project) =>
+          new ProjectNode(project, project.name === this.activeProjectName),
       );
       return Promise.resolve(nodes);
     }
@@ -148,24 +177,34 @@ export class ProjectDataProvider implements vscode.TreeDataProvider<ProjectNode 
 
     // If element is a FileNode and it's a directory, return its contents
     if (element instanceof FileNode && element.isDirectory) {
-      return Promise.resolve(this.readDirectory(element.filePath, element.fileName));
+      return Promise.resolve(
+        this.readDirectory(element.filePath, element.fileName),
+      );
     }
 
     return Promise.resolve([]);
   }
 
-  private readDirectory(dirPath: string, parentFolderName?: string): FileNode[] {
+  private readDirectory(
+    dirPath: string,
+    parentFolderName?: string,
+  ): FileNode[] {
     try {
       const entries = fs.readdirSync(dirPath, { withFileTypes: true });
-      
+
       // Get current folder name if not provided
       const currentFolderName = parentFolderName || path.basename(dirPath);
-      
+
       return entries
-        .filter((entry) => !entry.name.startsWith('.')) // Filter hidden files
+        .filter((entry) => !entry.name.startsWith(".")) // Filter hidden files
         .map((entry) => {
           const fullPath = path.join(dirPath, entry.name);
-          return new FileNode(fullPath, entry.name, entry.isDirectory(), currentFolderName);
+          return new FileNode(
+            fullPath,
+            entry.name,
+            entry.isDirectory(),
+            currentFolderName,
+          );
         })
         .sort((a, b) => {
           // Directories first, then files
@@ -210,7 +249,7 @@ export class ProjectDataProvider implements vscode.TreeDataProvider<ProjectNode 
     }
 
     this.projects[index] = project;
-    
+
     // Update active project name if it was renamed
     if (this.activeProjectName === oldName) {
       this.activeProjectName = project.name;
@@ -222,7 +261,7 @@ export class ProjectDataProvider implements vscode.TreeDataProvider<ProjectNode 
 
   async removeProject(projectName: string): Promise<void> {
     this.projects = this.projects.filter((p) => p.name !== projectName);
-    
+
     // Clear active project if it was removed
     if (this.activeProjectName === projectName) {
       this.activeProjectName = null;
@@ -280,31 +319,45 @@ export class ProjectDataProvider implements vscode.TreeDataProvider<ProjectNode 
     try {
       const entries = fs.readdirSync(projectFolder, { withFileTypes: true });
       // Check if there are any non-hidden files or directories
-      return entries.some((entry) => !entry.name.startsWith('.'));
+      return entries.some((entry) => !entry.name.startsWith("."));
     } catch (err) {
       console.error("Error checking project folder:", err);
       return false;
     }
   }
 
-  private createDragAndDropController(): vscode.TreeDragAndDropController<ProjectNode | FileNode> {
+  private createDragAndDropController(): vscode.TreeDragAndDropController<
+    ProjectNode | FileNode
+  > {
     return {
-      dropMimeTypes: ['application/vnd.code.tree.projectexplorer'],
-      dragMimeTypes: ['application/vnd.code.tree.projectexplorer'],
+      dropMimeTypes: ["application/vnd.code.tree.projectexplorer"],
+      dragMimeTypes: ["application/vnd.code.tree.projectexplorer"],
 
-      handleDrag: (source: readonly (ProjectNode | FileNode)[], dataTransfer: vscode.DataTransfer) => {
+      handleDrag: (
+        source: readonly (ProjectNode | FileNode)[],
+        dataTransfer: vscode.DataTransfer,
+      ) => {
         // Only allow dragging ProjectNodes (not files)
-        const projectNodes = source.filter(item => item instanceof ProjectNode) as ProjectNode[];
+        const projectNodes = source.filter(
+          (item) => item instanceof ProjectNode,
+        ) as ProjectNode[];
         if (projectNodes.length > 0) {
           dataTransfer.set(
-            'application/vnd.code.tree.projectexplorer',
-            new vscode.DataTransferItem(projectNodes.map(node => node.project))
+            "application/vnd.code.tree.projectexplorer",
+            new vscode.DataTransferItem(
+              projectNodes.map((node) => node.project),
+            ),
           );
         }
       },
 
-      handleDrop: async (target: ProjectNode | FileNode | undefined, dataTransfer: vscode.DataTransfer) => {
-        const transferItem = dataTransfer.get('application/vnd.code.tree.projectexplorer');
+      handleDrop: async (
+        target: ProjectNode | FileNode | undefined,
+        dataTransfer: vscode.DataTransfer,
+      ) => {
+        const transferItem = dataTransfer.get(
+          "application/vnd.code.tree.projectexplorer",
+        );
         if (!transferItem) {
           return;
         }
@@ -317,18 +370,22 @@ export class ProjectDataProvider implements vscode.TreeDataProvider<ProjectNode 
         // Find target index
         let targetIndex = this.projects.length;
         if (target instanceof ProjectNode) {
-          targetIndex = this.projects.findIndex(p => p.name === target.project.name);
+          targetIndex = this.projects.findIndex(
+            (p) => p.name === target.project.name,
+          );
         }
 
         // Remove dragged projects from current positions
-        const projectsToMove = draggedProjects.map(dp => {
-          const index = this.projects.findIndex(p => p.name === dp.name);
-          return { project: dp, oldIndex: index };
-        }).filter(item => item.oldIndex >= 0);
+        const projectsToMove = draggedProjects
+          .map((dp) => {
+            const index = this.projects.findIndex((p) => p.name === dp.name);
+            return { project: dp, oldIndex: index };
+          })
+          .filter((item) => item.oldIndex >= 0);
 
         // Remove from old positions (in reverse order to maintain indices)
         projectsToMove.sort((a, b) => b.oldIndex - a.oldIndex);
-        projectsToMove.forEach(item => {
+        projectsToMove.forEach((item) => {
           this.projects.splice(item.oldIndex, 1);
           // Adjust target index if we removed items before it
           if (item.oldIndex < targetIndex) {
@@ -337,13 +394,13 @@ export class ProjectDataProvider implements vscode.TreeDataProvider<ProjectNode 
         });
 
         // Insert at new position
-        projectsToMove.reverse().forEach(item => {
+        projectsToMove.reverse().forEach((item) => {
           this.projects.splice(targetIndex, 0, item.project);
         });
 
         await this.saveProjects();
         this._onDidChangeTreeData.fire();
-      }
+      },
     };
   }
 }

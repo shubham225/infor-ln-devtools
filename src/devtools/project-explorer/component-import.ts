@@ -13,7 +13,7 @@ import { showProjectForm } from "../views/webviews/project-form-webview";
 
 /**
  * Handles component import workflow including project selection/creation
- * 
+ *
  * @param context - The VS Code extension context
  * @param selectedProvider - The component data provider with selected components
  * @param projectExplorerProvider - The project data provider
@@ -136,7 +136,7 @@ export async function importComponents(
 
   await vscode.window.withProgress(progressOptions, async (progress, token) => {
     const abortController = new AbortController();
-    
+
     // Handle cancellation
     token.onCancellationRequested(() => {
       abortController.abort();
@@ -176,7 +176,10 @@ export async function importComponents(
         throw new Error("Invalid response from server");
       }
 
-      progress.report({ increment: 50, message: "Received zip data, extracting..." });
+      progress.report({
+        increment: 50,
+        message: "Received zip data, extracting...",
+      });
 
       // Extract zip file from binary payload
       await extractAndMergeComponents(buf, developmentFolder);
@@ -193,7 +196,11 @@ export async function importComponents(
       projectExplorerProvider.refresh();
     } catch (error: any) {
       // Check if user cancelled
-      if (error?.name === "AbortError" || error?.name === "CanceledError" || error.message?.includes("cancelled")) {
+      if (
+        error?.name === "AbortError" ||
+        error?.name === "CanceledError" ||
+        error.message?.includes("cancelled")
+      ) {
         vscode.window.showInformationMessage("Component import cancelled.");
         return;
       }
@@ -211,7 +218,7 @@ export async function importComponents(
 
 /**
  * Creates a new project for component import workflow
- * 
+ *
  * @param context - The VS Code extension context
  * @param environments - Array of environment mappings
  * @param getBackendUrl - Function to get backend URL for an environment
@@ -275,7 +282,11 @@ async function createNewProjectForImport(
 
   try {
     const creds = await getCredentials();
-    const validationData = await erpService.validateProject(serverUrl, newProject, creds);
+    const validationData = await erpService.validateProject(
+      serverUrl,
+      newProject,
+      creds,
+    );
 
     if (
       validationData.errorMessage &&
@@ -301,9 +312,7 @@ async function createNewProjectForImport(
       return null;
     }
   } catch (err: any) {
-    vscode.window.showErrorMessage(
-      `Project validation failed: ${err.message}`,
-    );
+    vscode.window.showErrorMessage(`Project validation failed: ${err.message}`);
     return null;
   }
 

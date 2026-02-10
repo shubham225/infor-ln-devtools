@@ -16,7 +16,9 @@ export class BaanCSignatureHelpProvider
     context: vscode.SignatureHelpContext,
   ): vscode.ProviderResult<vscode.SignatureHelp> {
     // Get the line up to the cursor position
-    const line = document.lineAt(position.line).text.substring(0, position.character);
+    const line = document
+      .lineAt(position.line)
+      .text.substring(0, position.character);
 
     // Find the function call we're currently in
     const functionMatch = this.findCurrentFunctionCall(line);
@@ -32,13 +34,15 @@ export class BaanCSignatureHelpProvider
     if (!doc) {
       doc = this.docDatabase.getDoc(functionName);
     }
-    
-    if (!doc || doc.type !== 'function') {
+
+    if (!doc || doc.type !== "function") {
       return null;
     }
 
     const signatureHelp = new vscode.SignatureHelp();
-    const signature = new vscode.SignatureInformation(doc.syntax || `function ${functionName}()`);
+    const signature = new vscode.SignatureInformation(
+      doc.syntax || `function ${functionName}()`,
+    );
     signature.documentation = new vscode.MarkdownString(doc.description);
 
     // Add parameters

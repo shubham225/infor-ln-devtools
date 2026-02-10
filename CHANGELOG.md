@@ -13,4 +13,5 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - Mock server: updated to support multipart file upload and return binary ZIPs for import/compile ✅
 
 ## [0.0.1] - Initial release
+
 - Original prototype implementation

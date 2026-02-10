@@ -1,10 +1,13 @@
 import * as vscode from "vscode";
-import { ComponentDataProvider, refreshComponentView } from "../views/data-providers/component-data-provider";
+import {
+  ComponentDataProvider,
+  refreshComponentView,
+} from "../views/data-providers/component-data-provider";
 import { ProjectDataProvider } from "../views/data-providers/project-data-provider";
 
 /**
  * Updates the component explorer view based on the active project
- * 
+ *
  * @param componentExplorerView - The component explorer tree view
  * @param componentExplorerProvider - The component data provider
  * @param projectExplorerProvider - The project data provider

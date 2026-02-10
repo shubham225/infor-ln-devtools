@@ -13,6 +13,7 @@
 ## 🚀 Key Features
 
 ### 📦 Component Exploration
+
 - Hierarchical component view:
   ```
   Type → Package → Module → Component
@@ -31,6 +32,7 @@
   - `/vrcs/{vrcId}/components` → Component codes
 
 ### 🎯 Selection Panel
+
 - Dedicated **Selected Components** panel
 - Grouped by type
 - Supports:
@@ -39,6 +41,7 @@
   - Import Selected
 
 ### 🧰 Import Workflow
+
 1. Selected components sent to backend:
    - **Multipart/form-data** (preferred)
    - **Legacy JSON** (still supported)
@@ -50,7 +53,9 @@
 4. Tree selection is cleared
 
 ### ⚙ Persistent Settings
+
 Stored in VS Code global state:
+
 - Backend API URL
 - Base VRC
 - Project Folder
@@ -64,6 +69,7 @@ Stored in VS Code global state:
 ### ✨ Features
 
 #### 🎨 Syntax Highlighting
+
 - Rich syntax highlighting for **BaanC source files**
 - Covers:
   - Keywords, data types, and control structures
@@ -74,6 +80,7 @@ Stored in VS Code global state:
 ---
 
 #### ⚡ Intelligent Autocomplete
+
 - Context-aware autocomplete for:
   - Built-in **BaanC functions**
   - Language keywords and constructs
@@ -84,6 +91,7 @@ Stored in VS Code global state:
 ---
 
 #### 📘 Function IntelliSense
+
 - Inline function signature help
 - Displays:
   - Function name
@@ -98,16 +106,19 @@ Stored in VS Code global state:
 ## 🖥️ Extension UI Overview
 
 ### 🧰 Project Explorer
+
 Displays Project List:
 
 ![Project Explorer](./resources/readme/project-explorer.png)
 
 ### 📦 Component Explorer
+
 Hierarchical view of LN components:
 
 ![Component Explorer](./resources/readme/component-explorer.png)
 
 ### 📥 Import Component Flow
+
 Selection List + Import trigger:
 
 ![Import Component](./resources/readme/selected-components.png)
@@ -115,6 +126,7 @@ Selection List + Import trigger:
 ---
 
 ### 🧩 Supported File Types
+
 - `.bc`
 
 > Language features are automatically activated when opening supported BaanC files.
@@ -128,8 +140,10 @@ The extension communicates with the **Infor LN DevTools API**, which follows the
 ### 1) System & Environment
 
 #### Get System Health
+
 **Endpoint:** `GET /health`
 **Response (200 OK):**
+
 ```json
 {
   "status": "up",
@@ -139,8 +153,10 @@ The extension communicates with the **Infor LN DevTools API**, which follows the
 ```
 
 #### Get User Context
+
 **Endpoint:** `GET /user-context`
 **Response (200 OK):**
+
 ```json
 {
   "userId": "jdoe",
@@ -152,8 +168,10 @@ The extension communicates with the **Infor LN DevTools API**, which follows the
 ### 2) VRC & Structure Navigation
 
 #### List VRCs
+
 **Endpoint:** `GET /vrcs`
 **Response (200 OK):**
+
 ```json
 [
   { "id": "B61_a", "description": "Standard 6.1 a" },
@@ -162,8 +180,10 @@ The extension communicates with the **Infor LN DevTools API**, which follows the
 ```
 
 #### List Packages in VRC
+
 **Endpoint:** `GET /vrcs/{vrcId}/packages`
 **Response (200 OK):**
+
 ```json
 [
   { "id": "tc", "description": "Tools Common" },
@@ -172,8 +192,10 @@ The extension communicates with the **Infor LN DevTools API**, which follows the
 ```
 
 #### List Modules in Package
+
 **Endpoint:** `GET /vrcs/{vrcId}/packages/{packageId}/modules`
 **Response (200 OK):**
+
 ```json
 [
   { "id": "sls", "description": "Sales" },
@@ -184,10 +206,12 @@ The extension communicates with the **Infor LN DevTools API**, which follows the
 ### 3) Component Management
 
 #### List Components
+
 **Endpoint:** `GET /vrcs/{vrcId}/components`
 **Query Parameters:** `package`, `module`, `type` (optional)
 
 **Response (200 OK):**
+
 ```json
 [
   { "name": "tdsls4100m000", "type": "session", "description": "Sales Orders" },
@@ -196,8 +220,10 @@ The extension communicates with the **Infor LN DevTools API**, which follows the
 ```
 
 #### Create Component
+
 **Endpoint:** `POST /vrcs/{vrcId}/components`
 **Body:**
+
 ```json
 {
   "name": "whinh2100m000",
@@ -209,8 +235,10 @@ The extension communicates with the **Infor LN DevTools API**, which follows the
 ```
 
 #### Get Component Metadata
+
 **Endpoint:** `GET /vrcs/{vrcId}/components/{type}/{name}`
 **Response (200 OK):**
+
 ```json
 {
   "name": "tdsls4100m000",
@@ -222,22 +250,27 @@ The extension communicates with the **Infor LN DevTools API**, which follows the
 ```
 
 #### Delete Component
+
 **Endpoint:** `DELETE /vrcs/{vrcId}/components/{type}/{name}`
 
 ### 4) Source Code & Content (Import/Export)
 
 #### Download Source
+
 **Endpoint:** `GET /vrcs/{vrcId}/components/{type}/{name}/source`
 
 #### Upload / Update Source
+
 **Endpoint:** `PUT /vrcs/{vrcId}/components/{type}/{name}/source`
 **Body:** Raw text or JSON/XML depending on component type
 
 ### 5) Development Actions (Compile & SCM)
 
 #### Compile Component
+
 **Endpoint:** `POST /vrcs/{vrcId}/components/{type}/{name}/compile`
 **Response (200 OK):**
+
 ```json
 {
   "status": "success",
@@ -247,17 +280,20 @@ The extension communicates with the **Infor LN DevTools API**, which follows the
 ```
 
 #### SCM Operations
+
 - Check Out: `POST /vrcs/{vrcId}/components/{type}/{name}/scm/checkout`
 - Check In: `POST /vrcs/{vrcId}/components/{type}/{name}/scm/checkin`
 - Undo Check Out: `POST /vrcs/{vrcId}/components/{type}/{name}/scm/undocheckout`
 
 ### 6) Import Components
+
 **Endpoint:** `POST /vrcs/{vrcId}/components/import`
 
 - Preferred: `multipart/form-data` with optional file upload
 - Legacy JSON still supported
 
 **Multipart fields example:**
+
 - `importFolder`: string
 - `components`: JSON string of array `[ { type, package, module, code } ]`
 - `projectName`: string
@@ -269,44 +305,50 @@ The extension communicates with the **Infor LN DevTools API**, which follows the
 ### 7) PMC (Product Maintenance & Control)
 
 #### List Solutions
+
 **Endpoint:** `GET /pmc/solutions`
 **Query Parameters:** `status=in_progress|released|exported`
 
 #### Get Solution Details
+
 **Endpoint:** `GET /pmc/solutions/{solutionId}`
 
 #### List Components in Solution
+
 **Endpoint:** `GET /pmc/solutions/{solutionId}/components`
 
 #### Export Solution
+
 **Endpoint:** `POST /pmc/solutions/{solutionId}/export`
 **Response:** Raw ZIP bytes of exported components
 
 ### 8) Extracted Folder Structure
 
 After importing components, expected workspace layout:
+
 ```
 📁 Development/
  └─ 📁 <project-name>/
     ├─ 📁 Domain/
     ├─ 📁 Table/
     ├─ 📁 Session/
-    ├─ 📁 Script/ 
-    ├─ 📁 Function/ 
-    └─ 📁 Report/ 
+    ├─ 📁 Script/
+    ├─ 📁 Function/
+    └─ 📁 Report/
 ```
 
 ### 9) VS Code Commands
 
-| Command | Action |
-|---------|-------|
-| Refresh | Reload package tree from backend |
-| Configure Settings | Update Base VRC + Project Folder |
-| Update Server URL | Change API endpoint |
-| Select Component | Add/remove from selection |
-| Import Selected | Trigger `/import` and add files to Development folder |
+| Command            | Action                                                |
+| ------------------ | ----------------------------------------------------- |
+| Refresh            | Reload package tree from backend                      |
+| Configure Settings | Update Base VRC + Project Folder                      |
+| Update Server URL  | Change API endpoint                                   |
+| Select Component   | Add/remove from selection                             |
+| Import Selected    | Trigger `/import` and add files to Development folder |
 
 ## 🏗️ Architecture
+
 ![Architecture Flow](./resources/readme/architecture-flow.gif)
 
 - **Frontend (Extension):** Component explorer, selection panel, import/export triggers.
@@ -325,11 +367,12 @@ After importing components, expected workspace layout:
 ---
 
 ### 🚧 Planned Enhancements [Language Support]
+
 - Go-to definition for BaanC functions
 - Hover documentation for functions and keywords
 - Diagnostics and linting for common BaanC issues
 - Code formatting support
 
-
 ## 📜 License
+
 This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.

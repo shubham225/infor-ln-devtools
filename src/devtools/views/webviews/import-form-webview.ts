@@ -1,5 +1,8 @@
 import * as vscode from "vscode";
-import type { ImportFormSettings, ImportByPMCFormSettings } from "../../types/api";
+import type {
+  ImportFormSettings,
+  ImportByPMCFormSettings,
+} from "../../types/api";
 import { getLocalResource } from "../../utils/webview-helpers";
 
 export async function showImportForm(
@@ -17,9 +20,16 @@ export async function showImportForm(
     },
   );
 
-  const lucideUri = getLocalResource(panel.webview, context.extensionUri, ['resources', 'lucide.min.js']);
+  const lucideUri = getLocalResource(panel.webview, context.extensionUri, [
+    "resources",
+    "lucide.min.js",
+  ]);
 
-  panel.webview.html = getImportFormWebviewContent(vrcList, defaultVrc, lucideUri);
+  panel.webview.html = getImportFormWebviewContent(
+    vrcList,
+    defaultVrc,
+    lucideUri,
+  );
 
   return new Promise((resolve) => {
     panel.webview.onDidReceiveMessage((message) => {
@@ -56,7 +66,10 @@ export async function showImportByPMCForm(
     },
   );
 
-  const lucideUri = getLocalResource(panel.webview, context.extensionUri, ['resources', 'lucide.min.js']);
+  const lucideUri = getLocalResource(panel.webview, context.extensionUri, [
+    "resources",
+    "lucide.min.js",
+  ]);
 
   panel.webview.html = getImportByPMCFormWebviewContent(vrcList, lucideUri);
 

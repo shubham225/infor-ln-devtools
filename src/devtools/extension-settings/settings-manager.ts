@@ -4,7 +4,7 @@ import type { EnvironmentMapping } from "../types/api";
 
 /**
  * Loads extension settings from the JSON configuration file
- * 
+ *
  * @param context - The VS Code extension context
  * @returns Promise resolving to settings object containing environments and default environment
  */
@@ -17,8 +17,7 @@ export async function loadSettingsFromFile(
       "resources",
       "extension-settings.json",
     );
-    const settingsData =
-      await vscode.workspace.fs.readFile(defaultSettingsUri);
+    const settingsData = await vscode.workspace.fs.readFile(defaultSettingsUri);
     const defaultSettings = JSON.parse(settingsData.toString());
 
     const environments: EnvironmentMapping[] =
@@ -41,7 +40,7 @@ export async function loadSettingsFromFile(
 
 /**
  * Saves extension settings back to the JSON configuration file
- * 
+ *
  * @param context - The VS Code extension context
  * @param environments - Array of environment mappings
  * @param defaultEnvironment - Default environment name
@@ -80,7 +79,7 @@ export async function saveSettingsToFile(
 
 /**
  * Shows the settings configuration form and saves the result
- * 
+ *
  * @param context - The VS Code extension context
  * @param currentEnvironments - Current array of environment mappings
  * @param currentDefaultEnvironment - Current default environment name
@@ -114,7 +113,7 @@ export async function showAndSaveSettingsForm(
 
 /**
  * Gets the backend URL for a given environment
- * 
+ *
  * @param environment - The environment name
  * @param environments - Array of environment mappings
  * @returns The backend URL for the environment, or empty string if not found

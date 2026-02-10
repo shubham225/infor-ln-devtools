@@ -18,7 +18,10 @@ export interface LoginFormData {
  */
 export async function showLoginForm(
   context: vscode.ExtensionContext,
-  onLogin: (username: string, password: string) => Promise<{ success: boolean; error?: string }>,
+  onLogin: (
+    username: string,
+    password: string,
+  ) => Promise<{ success: boolean; error?: string }>,
   initialError?: string,
 ): Promise<LoginFormData> {
   return new Promise((resolve) => {
@@ -45,7 +48,7 @@ export async function showLoginForm(
           case "submit":
             // Try to login
             const result = await onLogin(message.username, message.password);
-            
+
             if (result.success) {
               // Login successful - resolve and close webview
               resolve({
@@ -281,12 +284,16 @@ function getLoginFormHtml(
             <p>Enter your ERP credentials to continue</p>
         </div>
 
-        ${errorMessage ? `
+        ${
+          errorMessage
+            ? `
         <div class="error-message">
             <i data-lucide="alert-circle"></i>
             <span>${errorMessage}</span>
         </div>
-        ` : ""}
+        `
+            : ""
+        }
 
         <form id="loginForm">
             <div class="form-group">

@@ -13,7 +13,7 @@ export function showCompilationOutput(
 ): void {
   // Use unique key for each script to avoid overwriting
   const panelKey = `compilation:${result.script}:${Date.now()}`;
-  
+
   const panel = vscode.window.createWebviewPanel(
     "compilationOutput",
     `Compilation: ${result.script}`,
@@ -38,8 +38,12 @@ function getCompilationOutputHtml(
   lucideUri: vscode.Uri,
 ): string {
   const statusIcon = result.success ? "check-circle" : "x-circle";
-  const statusColor = result.success ? "var(--vscode-testing-iconPassed)" : "var(--vscode-testing-iconFailed)";
-  const statusTitle = result.success ? "Compilation Successful" : "Compilation Error";
+  const statusColor = result.success
+    ? "var(--vscode-testing-iconPassed)"
+    : "var(--vscode-testing-iconFailed)";
+  const statusTitle = result.success
+    ? "Compilation Successful"
+    : "Compilation Error";
 
   return `<!DOCTYPE html>
 <html lang="en">

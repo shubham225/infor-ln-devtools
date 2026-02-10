@@ -7,7 +7,7 @@ import { UPDATE_MODE } from "../types";
 
 /**
  * Validates a project with ERP and creates/verifies project folder
- * 
+ *
  * @param project - The project to validate and setup
  * @param updateMode - The operation mode (CREATE, UPDATE, IMPORT, DELETE)
  * @param serverUrl - The backend server URL
@@ -30,7 +30,11 @@ export async function validateAndSetupProject(
       return false;
     }
 
-    const validationData = await erpService.validateProject(serverUrl, project, creds);
+    const validationData = await erpService.validateProject(
+      serverUrl,
+      project,
+      creds,
+    );
 
     // Handle validation response
     if (
@@ -90,7 +94,7 @@ export async function validateAndSetupProject(
 
 /**
  * Gets the Development folder path for projects
- * 
+ *
  * @returns The Development folder path, or null if no workspace folder exists
  */
 export function getDevelopmentFolderPath(): string | null {
@@ -103,7 +107,7 @@ export function getDevelopmentFolderPath(): string | null {
 
 /**
  * Gets the project folder path for a specific project
- * 
+ *
  * @param projectName - The name of the project
  * @returns The project folder path, or null if no workspace folder exists
  */

@@ -22,7 +22,10 @@ export async function showConfigurationForm(
   let userName = systemUserName;
 
   // Get the local path to lucide.js (assuming it's in a 'media' folder)
-  const lucideUri = getLocalResource(panel.webview, context.extensionUri, ['resources', 'lucide.min.js']);
+  const lucideUri = getLocalResource(panel.webview, context.extensionUri, [
+    "resources",
+    "lucide.min.js",
+  ]);
 
   panel.webview.html = getWebviewContent(currentSettings, userName, lucideUri);
 
@@ -334,7 +337,7 @@ function getWebviewContent(
             updateDefaultEnvDropdown();
             
             // Set default environment if exists
-            const defaultEnv = '${settings.defaultEnvironment || ''}';
+            const defaultEnv = '${settings.defaultEnvironment || ""}';
             if (defaultEnv) {
                 defaultEnvInput.value = defaultEnv;
             }

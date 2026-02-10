@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { FunctionDocDatabase } from "../function-doc-database";
-import { BaanCDocumentParser} from "../parsers/document-parser";
+import { BaanCDocumentParser } from "../parsers/document-parser";
 import { FunctionDocDB } from "../types";
 
 /**
@@ -30,11 +30,11 @@ export class BaanCHoverProvider implements vscode.HoverProvider {
     markdown.isTrusted = true;
     markdown.supportHtml = true;
 
-    if (doc.type === 'function') {
+    if (doc.type === "function") {
       return this.buildFunctionHover(doc, markdown);
-    } else if (doc.type === 'variable') {
+    } else if (doc.type === "variable") {
       return this.buildVariableHover(doc, markdown);
-    } else if (doc.type === 'keyword') {
+    } else if (doc.type === "keyword") {
       return this.buildKeywordHover(doc, markdown);
     } else {
       return this.buildConceptHover(doc, markdown);
@@ -44,7 +44,10 @@ export class BaanCHoverProvider implements vscode.HoverProvider {
   /**
    * Build hover for functions
    */
-  private buildFunctionHover(doc: FunctionDocDB, markdown: vscode.MarkdownString): vscode.Hover {
+  private buildFunctionHover(
+    doc: FunctionDocDB,
+    markdown: vscode.MarkdownString,
+  ): vscode.Hover {
     // Function syntax
     if (doc.syntax) {
       markdown.appendCodeblock(doc.syntax, "baanc");
@@ -81,7 +84,10 @@ export class BaanCHoverProvider implements vscode.HoverProvider {
   /**
    * Build hover for variables
    */
-  private buildVariableHover(doc: FunctionDocDB, markdown: vscode.MarkdownString): vscode.Hover {
+  private buildVariableHover(
+    doc: FunctionDocDB,
+    markdown: vscode.MarkdownString,
+  ): vscode.Hover {
     // Variable name and type
     markdown.appendCodeblock(`${doc.dataType} ${doc.name}`, "baanc");
 
@@ -104,7 +110,10 @@ export class BaanCHoverProvider implements vscode.HoverProvider {
   /**
    * Build hover for keywords (4GL sections)
    */
-  private buildKeywordHover(doc: FunctionDocDB, markdown: vscode.MarkdownString): vscode.Hover {
+  private buildKeywordHover(
+    doc: FunctionDocDB,
+    markdown: vscode.MarkdownString,
+  ): vscode.Hover {
     // Keyword name
     markdown.appendCodeblock(doc.name, "baanc");
 
@@ -127,7 +136,10 @@ export class BaanCHoverProvider implements vscode.HoverProvider {
   /**
    * Build hover for concepts (3GL features)
    */
-  private buildConceptHover(doc: FunctionDocDB, markdown: vscode.MarkdownString): vscode.Hover {
+  private buildConceptHover(
+    doc: FunctionDocDB,
+    markdown: vscode.MarkdownString,
+  ): vscode.Hover {
     // Concept name
     markdown.appendMarkdown(`### ${doc.name}\n\n`);
 

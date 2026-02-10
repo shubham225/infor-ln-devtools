@@ -19,10 +19,10 @@ export function initializeLanguageSupport(
   console.log("Starting BaanC language support initialization...");
 
   // Initialize asynchronously without blocking extension activation
-  initializeAsync(context).catch(error => {
+  initializeAsync(context).catch((error) => {
     console.error("Error initializing BaanC language support:", error);
     vscode.window.showErrorMessage(
-      "BaanC Language Support: Initialization failed. Some features may not work."
+      "BaanC Language Support: Initialization failed. Some features may not work.",
     );
   });
 }
@@ -30,26 +30,30 @@ export function initializeLanguageSupport(
 /**
  * Async initialization (runs in background)
  */
-async function initializeAsync(context: vscode.ExtensionContext): Promise<void> {
+async function initializeAsync(
+  context: vscode.ExtensionContext,
+): Promise<void> {
   // Apply initial configuration (quick, non-blocking)
-  applyInitialConfig().catch(err => 
-    console.error("Error applying BaanC config:", err)
+  applyInitialConfig().catch((err) =>
+    console.error("Error applying BaanC config:", err),
   );
 
   // Initialize function documentation database
   const docDatabase = new FunctionDocDatabase(context.extensionPath);
-  
+
   // Register language providers immediately (they work without the database)
   registerLanguageProviders(context, docDatabase);
   console.log("BaanC language providers registered");
 
   // Load function database in background
   await docDatabase.initialize();
-  
+
   // Log statistics
   const stats = docDatabase.getStats();
-  console.log(`BaanC Database Stats: ${stats.functions} functions, ${stats.keywords} keywords, ${stats.variables} variables`);
-  
+  console.log(
+    `BaanC Database Stats: ${stats.functions} functions, ${stats.keywords} keywords, ${stats.variables} variables`,
+  );
+
   console.log("BaanC language support fully initialized");
 }
 
