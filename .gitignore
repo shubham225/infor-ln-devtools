@@ -5,3 +5,4 @@ node_modules
 *.vsix
 Infor_LN_DevTools_API_Spec.md
 tmp/*
+resources/programmer-guide/*

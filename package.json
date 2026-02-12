@@ -13,7 +13,6 @@
     "vscode": "^1.95.0"
   },
   "categories": [
-    "Productivity",
     "Programming Languages",
     "Other"
   ],
@@ -51,12 +50,12 @@
       "type": "object",
       "title": "Infor LN DevTools",
       "properties": {
-        "ee-erp-devtools.autoCompileOnSave": {
+        "ln-devtools.autoCompileOnSave": {
           "type": "boolean",
           "default": false,
           "description": "Automatically compile BaanC scripts when saved"
         },
-        "ee-erp-devtools.serverUrl": {
+        "ln-devtools.serverUrl": {
           "type": "string",
           "default": "",
           "description": "ERP Server URL for API communication"
@@ -198,6 +197,11 @@
           "id": "selected-components",
           "name": "Selected Components"
         }
+        ,
+        {
+          "id": "programmer-guide",
+          "name": "Programmer Guide"
+        }
       ]
     },
     "commands": [
@@ -305,9 +309,15 @@
       },
       {
         "command": "project-explorer.compileScript",
-        "category": "EE ERP DevTools",
+        "category": "Infor LN DevTools",
         "title": "Compile Script",
         "icon": "$(play)"
+      }
+      ,
+      {
+        "command": "programmerGuide.open",
+        "category": "Infor LN DevTools",
+        "title": "Open Programmer Guide Page"
       }
     ],
     "viewsWelcome": [
