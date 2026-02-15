@@ -48,7 +48,7 @@
 2. Backend returns a **binary ZIP** (`Content-Type: application/zip`)
 3. ZIP is extracted to:
    ```
-   <Workspace>/Development/<ProjectFolder>/
+   <Workspace>/<ProjectFolder>/
    ```
 4. Tree selection is cleared
 
@@ -327,7 +327,7 @@ The extension communicates with the **Infor LN DevTools API**, which follows the
 After importing components, expected workspace layout:
 
 ```
-📁 Development/
+📁 Workspace/
  └─ 📁 <project-name>/
     ├─ 📁 Domain/
     ├─ 📁 Table/
@@ -345,7 +345,7 @@ After importing components, expected workspace layout:
 | Configure Settings | Update Base VRC + Project Folder                      |
 | Update Server URL  | Change API endpoint                                   |
 | Select Component   | Add/remove from selection                             |
-| Import Selected    | Trigger `/import` and add files to Development folder |
+| Import Selected    | Trigger `/import` and add files to Project folder |
 
 ## 🏗️ Architecture
 

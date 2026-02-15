@@ -33,7 +33,7 @@ import { importComponents } from "./devtools/project-explorer/component-import";
 import { updateComponentExplorerForActiveProject } from "./devtools/component-view/component-operations";
 import { AuthManager } from "./devtools/services/auth-manager";
 import { initializeLanguageSupport } from "./language-support/language-support";
-import { openPageInWebview } from "./views/webviews/programmer-guide-webview";
+import { openPageInWebview } from "./language-support/views/webviews/programmer-guide-webview";
 
 // Track compilation state
 const compilationInProgress = new Map<string, boolean>();
@@ -240,7 +240,7 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
   // Programmer Guide: register static tree view provider and commands
-  const programmerGuideProvider = new (require("./views/data-providers/programmer-guide-provider").ProgrammerGuideProvider)(context);
+  const programmerGuideProvider = new (require("./language-support/views/data-providers/programmer-guide-provider").ProgrammerGuideProvider)(context);
   vscode.window.registerTreeDataProvider("programmer-guide", programmerGuideProvider);
   vscode.window.createTreeView("programmer-guide", { treeDataProvider: programmerGuideProvider });
 
