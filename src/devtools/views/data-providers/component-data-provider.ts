@@ -48,13 +48,13 @@ export class TreeNode extends vscode.TreeItem {
       // Fallback to custom SVG
       this.iconPath = {
         light: vscode.Uri.joinPath(
-          vscode.extensions.getExtension("shubham-shinde.ee-erp-devtools")!
+          vscode.extensions.getExtension("shubham-shinde.infor-ln-devtools")!
             .extensionUri,
           "resources",
           "infor-ln-logo.svg",
         ),
         dark: vscode.Uri.joinPath(
-          vscode.extensions.getExtension("shubham-shinde.ee-erp-devtools")!
+          vscode.extensions.getExtension("shubham-shinde.infor-ln-devtools")!
             .extensionUri,
           "resources",
           "infor-ln-logo.svg",
