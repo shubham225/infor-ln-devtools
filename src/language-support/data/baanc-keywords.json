@@ -1,6 +1,6 @@
 {
-  "choice.&lt;standard command&gt;": {
-    "name": "choice.&lt;standard command&gt;",
+  "choice.<standard command>": {
+    "name": "choice.<standard command>",
     "type": "keyword",
     "description": "The subsections associated with this main section are executed for the specified command. You can enable standard commands and specify form commands from the session Sessions (ttadv2500m000). A list of standard commands appears at the end of this help topic. For form commands, the session, menu or function name is used.",
     "category": "4gl_sections",
@@ -27,8 +27,8 @@
     "category": "4gl_sections",
     "context": "4GL choice sections"
   },
-  "field.&lt;field name&gt;": {
-    "name": "field.&lt;field name&gt;",
+  "field.<field name>": {
+    "name": "field.<field name>",
     "type": "keyword",
     "description": "The subsections associated with this main section are executed for the specified field. The field name you specify must correspond with the name on the form.",
     "category": "4gl_sections",
