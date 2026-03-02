@@ -7,7 +7,9 @@ import { FunctionDocDB } from "../types";
  * Provides code completion for BaanC
  * Includes functions, keywords, variables, and user-defined items
  */
-export class BaanCCompletionProvider implements vscode.CompletionItemProvider {
+export class BaanCCompletionProvider
+  implements vscode.CompletionItemProvider
+{
   private keywords: string[] = [
     "if",
     "then",
@@ -61,6 +63,22 @@ export class BaanCCompletionProvider implements vscode.CompletionItemProvider {
   ): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList> {
     const items: vscode.CompletionItem[] = [];
 
+    // Determine the full word being typed (including dots, which are part
+    // of BaanC identifiers like db.update, xml.read, etc.). Without this,
+    // typing "db." causes VS Code to reset the prefix to "" and show
+    // unrelated completions.
+    const lineText = document.lineAt(position.line).text;
+    const textBeforeCursor = lineText.substring(0, position.character);
+    const prefixMatch = textBeforeCursor.match(/([a-zA-Z_][a-zA-Z0-9._$]*)$/);
+    const wordRange = prefixMatch
+      ? new vscode.Range(
+          position.line,
+          position.character - prefixMatch[1].length,
+          position.line,
+          position.character,
+        )
+      : new vscode.Range(position, position);
+
     // Add basic keywords
     for (const keyword of this.keywords) {
       const item = new vscode.CompletionItem(
@@ -68,7 +86,9 @@ export class BaanCCompletionProvider implements vscode.CompletionItemProvider {
         vscode.CompletionItemKind.Keyword,
       );
       item.detail = "Keyword";
-      item.sortText = `0_${keyword}`; // Sort keywords first
+      item.sortText = `0_${keyword}`;
+      item.range = wordRange;
+      item.filterText = keyword;
       items.push(item);
     }
 
@@ -80,6 +100,8 @@ export class BaanCCompletionProvider implements vscode.CompletionItemProvider {
       );
       item.detail = "Type";
       item.sortText = `1_${type}`;
+      item.range = wordRange;
+      item.filterText = type;
       items.push(item);
     }
 
@@ -91,6 +113,8 @@ export class BaanCCompletionProvider implements vscode.CompletionItemProvider {
       );
       item.detail = "Constant";
       item.sortText = `2_${constant}`;
+      item.range = wordRange;
+      item.filterText = constant;
       items.push(item);
     }
 
@@ -101,6 +125,8 @@ export class BaanCCompletionProvider implements vscode.CompletionItemProvider {
       if (doc) {
         const item = this.createFunctionCompletionItem(doc);
         item.sortText = `3_${funcName}`;
+        item.range = wordRange;
+        item.filterText = doc.name;
         items.push(item);
       }
     }
@@ -110,13 +136,17 @@ export class BaanCCompletionProvider implements vscode.CompletionItemProvider {
     for (const keywordName of keywordNames) {
       const doc = this.docDatabase.getKeywordDoc(keywordName);
       if (doc) {
-        if (doc.type === "variable") {
+        if (doc.type === 'variable') {
           const item = this.createVariableCompletionItem(doc);
-          item.sortText = `2_${keywordName}`; // Variables sort with constants
+          item.sortText = `2_${keywordName}`;  // Variables sort with constants
+          item.range = wordRange;
+          item.filterText = doc.name;
           items.push(item);
-        } else if (doc.type === "keyword") {
+        } else if (doc.type === 'keyword') {
           const item = this.createKeywordCompletionItem(doc);
-          item.sortText = `0_${keywordName}`; // Keywords sort first
+          item.sortText = `0_${keywordName}`;  // Keywords sort first
+          item.range = wordRange;
+          item.filterText = doc.name;
           items.push(item);
         }
       }
@@ -132,6 +162,8 @@ export class BaanCCompletionProvider implements vscode.CompletionItemProvider {
       item.detail = `User-defined: ${func.returnType} ${func.name}()`;
       item.documentation = `Parameters: ${func.parameters.join(", ")}`;
       item.sortText = `4_${func.name}`;
+      item.range = wordRange;
+      item.filterText = func.name;
       items.push(item);
     }
 
@@ -144,6 +176,8 @@ export class BaanCCompletionProvider implements vscode.CompletionItemProvider {
       );
       item.detail = `${variable.type}`;
       item.sortText = `5_${variable.name}`;
+      item.range = wordRange;
+      item.filterText = variable.name;
       items.push(item);
     }
 
@@ -153,14 +187,12 @@ export class BaanCCompletionProvider implements vscode.CompletionItemProvider {
   /**
    * Create completion item for functions
    */
-  private createFunctionCompletionItem(
-    doc: FunctionDocDB,
-  ): vscode.CompletionItem {
+  private createFunctionCompletionItem(doc: FunctionDocDB): vscode.CompletionItem {
     const item = new vscode.CompletionItem(
       doc.name,
       vscode.CompletionItemKind.Function,
     );
-
+    
     item.detail = doc.syntax || `function ${doc.name}()`;
     item.documentation = new vscode.MarkdownString(doc.description);
 
@@ -180,34 +212,30 @@ export class BaanCCompletionProvider implements vscode.CompletionItemProvider {
   /**
    * Create completion item for variables
    */
-  private createVariableCompletionItem(
-    doc: FunctionDocDB,
-  ): vscode.CompletionItem {
+  private createVariableCompletionItem(doc: FunctionDocDB): vscode.CompletionItem {
     const item = new vscode.CompletionItem(
       doc.name,
       vscode.CompletionItemKind.Variable,
     );
-
-    item.detail = `${doc.dataType} - ${doc.attributes || "Predefined"}`;
+    
+    item.detail = `${doc.dataType} - ${doc.attributes || 'Predefined'}`;
     item.documentation = new vscode.MarkdownString(doc.description);
-
+    
     return item;
   }
 
   /**
    * Create completion item for keywords
    */
-  private createKeywordCompletionItem(
-    doc: FunctionDocDB,
-  ): vscode.CompletionItem {
+  private createKeywordCompletionItem(doc: FunctionDocDB): vscode.CompletionItem {
     const item = new vscode.CompletionItem(
       doc.name,
       vscode.CompletionItemKind.Keyword,
     );
-
-    item.detail = `4GL Section - ${doc.context || "Keyword"}`;
+    
+    item.detail = `4GL Section - ${doc.context || 'Keyword'}`;
     item.documentation = new vscode.MarkdownString(doc.description);
-
+    
     return item;
   }
 }

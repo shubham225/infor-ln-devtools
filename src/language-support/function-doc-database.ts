@@ -1,6 +1,30 @@
 import * as path from "path";
 import * as fs from "fs";
+import * as zlib from "zlib";
 import { FunctionDocDB } from "./types";
+
+/**
+ * Read a gzip-compressed .bin file and return parsed JSON.
+ * Falls back to reading the plain .json file if the .bin doesn't exist.
+ */
+function readDataFile(dataDir: string, baseName: string): any | null {
+  // Try compressed .bin first
+  const binPath = path.join(dataDir, `${baseName}.bin`);
+  if (fs.existsSync(binPath)) {
+    const compressed = fs.readFileSync(binPath);
+    const json = zlib.gunzipSync(compressed).toString("utf-8");
+    return JSON.parse(json);
+  }
+
+  // Fallback to plain .json
+  const jsonPath = path.join(dataDir, `${baseName}.json`);
+  if (fs.existsSync(jsonPath)) {
+    const content = fs.readFileSync(jsonPath, "utf-8");
+    return JSON.parse(content);
+  }
+
+  return null;
+}
 
 /**
  * Manages the comprehensive BaanC documentation database
@@ -16,7 +40,7 @@ export class FunctionDocDatabase {
 
   /**
    * Initialize the documentation database
-   * Loads from resources/language-data directory
+   * Loads from compressed .bin files (gzipped JSON), falls back to .json
    */
   async initialize(): Promise<void> {
     const dataDir = path.join(
@@ -30,46 +54,34 @@ export class FunctionDocDatabase {
 
     try {
       // Load functions
-      const functionsPath = path.join(dataDir, "baanc-functions.json");
-      console.log(`BaanC: Checking functions file: ${functionsPath}`);
-      if (fs.existsSync(functionsPath)) {
-        const functionsContent = fs.readFileSync(functionsPath, "utf-8");
-        const functionsData = JSON.parse(functionsContent);
-
+      const functionsData = readDataFile(dataDir, "baanc-functions");
+      if (functionsData) {
         for (const [name, doc] of Object.entries(functionsData)) {
           this.functionDocs.set(name.toLowerCase(), doc as FunctionDocDB);
         }
         console.log(`BaanC: Loaded ${this.functionDocs.size} functions`);
       } else {
-        console.warn(`BaanC: Functions file not found at ${functionsPath}`);
+        console.warn(`BaanC: Functions data file not found`);
       }
 
       // Load keywords and variables
-      const keywordsPath = path.join(dataDir, "baanc-keywords.json");
-      console.log(`BaanC: Checking keywords file: ${keywordsPath}`);
-      if (fs.existsSync(keywordsPath)) {
-        const keywordsContent = fs.readFileSync(keywordsPath, "utf-8");
-        const keywordsData = JSON.parse(keywordsContent);
-
+      const keywordsData = readDataFile(dataDir, "baanc-keywords");
+      if (keywordsData) {
         for (const [name, doc] of Object.entries(keywordsData)) {
           this.keywordDocs.set(name.toLowerCase(), doc as FunctionDocDB);
         }
-        console.log(
-          `BaanC: Loaded ${this.keywordDocs.size} keywords/variables`,
-        );
+        console.log(`BaanC: Loaded ${this.keywordDocs.size} keywords/variables`);
       } else {
-        console.warn(`BaanC: Keywords file not found at ${keywordsPath}`);
+        console.warn(`BaanC: Keywords data file not found`);
       }
 
       // Load search index
-      const indexPath = path.join(dataDir, "baanc-search-index.json");
-      console.log(`BaanC: Checking search index file: ${indexPath}`);
-      if (fs.existsSync(indexPath)) {
-        const indexContent = fs.readFileSync(indexPath, "utf-8");
-        this.searchIndex = JSON.parse(indexContent);
+      const indexData = readDataFile(dataDir, "baanc-search-index");
+      if (indexData) {
+        this.searchIndex = indexData;
         console.log(`BaanC: Search index loaded`);
       } else {
-        console.warn(`BaanC: Search index file not found at ${indexPath}`);
+        console.warn(`BaanC: Search index file not found`);
       }
 
       // If no data was loaded, try fallback
@@ -79,13 +91,11 @@ export class FunctionDocDatabase {
       } else {
         this.isLoaded = true;
         // Log summary
-        console.log(
-          `BaanC Language Support: ${this.functionDocs.size + this.keywordDocs.size} items loaded`,
-        );
+        console.log(`BaanC Language Support: ${this.functionDocs.size + this.keywordDocs.size} items loaded`);
       }
     } catch (error) {
       console.error("Error loading BaanC documentation database:", error);
-
+      
       // Fallback: try to load from old location (resources folder)
       await this.loadFromResources();
     }
@@ -96,7 +106,7 @@ export class FunctionDocDatabase {
    */
   private async loadFromResources(): Promise<void> {
     console.log("Attempting to load from resources folder...");
-
+    
     const resourcesPath = path.join(
       this.extensionPath,
       "resources",
@@ -116,7 +126,7 @@ export class FunctionDocDatabase {
             const info = funcInfo as any;
             const doc: FunctionDocDB = {
               name: funcName,
-              type: "function",
+              type: 'function',
               syntax: info.syntax || "",
               description: info.description || "",
               arguments: (info.params || []).map((p: any) => ({
@@ -132,14 +142,10 @@ export class FunctionDocDatabase {
           }
 
           this.isLoaded = true;
-          console.log(
-            `BaanC: Loaded ${this.functionDocs.size} functions from resources (fallback)`,
-          );
+          console.log(`BaanC: Loaded ${this.functionDocs.size} functions from resources (fallback)`);
         }
       } else {
-        console.warn(
-          `BaanC: Fallback resources file not found at ${resourcesPath}`,
-        );
+        console.warn(`BaanC: Fallback resources file not found at ${resourcesPath}`);
       }
     } catch (error) {
       console.error("Error loading from resources:", error);
@@ -156,7 +162,7 @@ export class FunctionDocDatabase {
     }
 
     const lowerName = name.toLowerCase();
-
+    
     // Try functions first
     let doc = this.functionDocs.get(lowerName);
     if (doc) {
@@ -251,7 +257,7 @@ export class FunctionDocDatabase {
    * Add custom documentation (for DLL functions, etc.)
    */
   addCustomDoc(doc: FunctionDocDB): void {
-    if (doc.type === "function") {
+    if (doc.type === 'function') {
       this.functionDocs.set(doc.name.toLowerCase(), doc);
     } else {
       this.keywordDocs.set(doc.name.toLowerCase(), doc);
