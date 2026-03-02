@@ -1,49 +1,6 @@
 import * as vscode from "vscode";
 import { getLocalResource } from "../../utils/webview-helpers";
-
-interface SessionData {
-  session: string;
-  sessionDescription: string;
-  programScript: string;
-  mainTable: string;
-  sessionType: string;
-  startCommand: number;
-  windowType: string;
-  sessionForm: {
-    enabledStandardCommands: string[];
-    sessionForm: string;
-    formFields: Array<{
-      sequence: number;
-      fieldName: string;
-      fieldLabel?: string;
-      fieldType: string;
-      zoomType?: string;
-      zoomToProgram?: string;
-      zoomReturnField?: string;
-      domain?: string;
-      datatype?: string;
-      enumDescr?: string;
-      enumDomainData?: Array<{
-        constant: string;
-        description: string;
-      }>;
-    }>;
-    formCommands: Array<{
-      serialNumber: number;
-      commandType: string;
-      activateA: string;
-      "Name of Session/Function/Method": string;
-      description: string;
-      button: string;
-      sortSequence: number;
-      commandAvailability: string;
-      detail: string;
-      parentMenu: number;
-      sessionStartMode: string;
-      kindOfSession: string;
-    }>;
-  };
-}
+import { SessionData } from "../../types";
 
 // Store for open session viewer panels
 const openSessionPanels = new Map<string, vscode.WebviewPanel>();

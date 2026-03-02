@@ -1,31 +1,6 @@
 import * as vscode from "vscode";
 import { getLocalResource } from "../../utils/webview-helpers";
-
-interface TableData {
-  table: string;
-  description: string;
-  tableIndices: Array<{
-    name: string;
-    indexFields: string[];
-  }>;
-  tableFields: Array<{
-    name: string;
-    description?: string;
-    domain?: string;
-    datatype?: string;
-    enumDescr?: string;
-    enumDomainData?: Array<{
-      constant: string;
-      description: string;
-    }>;
-    mandatory?: string;
-    initialValue?: string;
-    referenceTable?: string;
-    referenceMode?: string;
-    checkByDBMS?: string;
-    deleteMode?: string;
-  }>;
-}
+import { TableData } from "../../types";
 
 // Store for open table viewer panels
 const openTablePanels = new Map<string, vscode.WebviewPanel>();

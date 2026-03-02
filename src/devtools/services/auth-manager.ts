@@ -1,12 +1,5 @@
 import * as vscode from "vscode";
-
-/**
- * Authentication credentials interface
- */
-export interface AuthCredentials {
-  username: string;
-  password: string;
-}
+import { AuthCredentials } from "../types";
 
 /**
  * Manages authentication credentials for ERP integration

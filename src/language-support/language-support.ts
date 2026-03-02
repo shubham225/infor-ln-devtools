@@ -6,7 +6,7 @@ import { BaanCDefinitionProvider } from "./providers/definition-provider";
 import { BaanCSignatureHelpProvider } from "./providers/signature-help-provider";
 
 // Document selector for BaanC language. Do not restrict by scheme so
-// editors that use alternate URI schemes (like Cursor) still match.
+// editors that use alternate URI schemes still match.
 const BAANC_LANGUAGE: vscode.DocumentSelector = { language: "baanc" };
 
 /**

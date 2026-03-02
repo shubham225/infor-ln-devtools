@@ -1,13 +1,6 @@
 import * as vscode from "vscode";
 import { getLocalResource } from "../../utils/webview-helpers";
-
-/**
- * Login form data interface
- */
-export interface LoginFormData {
-  username: string;
-  password: string;
-}
+import { LoginFormData } from "../../types";
 
 /**
  * Shows the login form webview

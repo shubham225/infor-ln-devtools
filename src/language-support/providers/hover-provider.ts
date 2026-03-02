@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { FunctionDocDatabase } from "../function-doc-database";
 import { BaanCDocumentParser } from "../parsers/document-parser";
-import { FunctionDocDB } from "../types";
+import { FunctionDoc } from "../types";
 
 /**
  * Provides hover information for BaanC functions, keywords, and variables
@@ -45,7 +45,7 @@ export class BaanCHoverProvider implements vscode.HoverProvider {
    * Build hover for functions
    */
   private buildFunctionHover(
-    doc: FunctionDocDB,
+    doc: FunctionDoc,
     markdown: vscode.MarkdownString,
   ): vscode.Hover {
     // Function syntax
@@ -85,7 +85,7 @@ export class BaanCHoverProvider implements vscode.HoverProvider {
    * Build hover for variables
    */
   private buildVariableHover(
-    doc: FunctionDocDB,
+    doc: FunctionDoc,
     markdown: vscode.MarkdownString,
   ): vscode.Hover {
     // Variable name and type
@@ -111,7 +111,7 @@ export class BaanCHoverProvider implements vscode.HoverProvider {
    * Build hover for keywords (4GL sections)
    */
   private buildKeywordHover(
-    doc: FunctionDocDB,
+    doc: FunctionDoc,
     markdown: vscode.MarkdownString,
   ): vscode.Hover {
     // Keyword name
@@ -137,7 +137,7 @@ export class BaanCHoverProvider implements vscode.HoverProvider {
    * Build hover for concepts (3GL features)
    */
   private buildConceptHover(
-    doc: FunctionDocDB,
+    doc: FunctionDoc,
     markdown: vscode.MarkdownString,
   ): vscode.Hover {
     // Concept name

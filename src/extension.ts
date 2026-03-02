@@ -7,13 +7,10 @@ import AdmZip from "adm-zip";
 import {
   ComponentDataProvider,
   refreshComponentView,
-  TreeNode,
   SelectedComponentsDataProvider,
 } from "./devtools/views/data-providers/component-data-provider";
 import {
   ProjectDataProvider,
-  ProjectNode,
-  FileNode,
 } from "./devtools/views/data-providers/project-data-provider";
 import { showProjectForm } from "./devtools/views/webviews/project-form-webview";
 import { showTableViewer } from "./devtools/views/webviews/table-viewer-webview";
@@ -33,6 +30,9 @@ import { importComponents } from "./devtools/project-explorer/component-import";
 import { updateComponentExplorerForActiveProject } from "./devtools/component-view/component-operations";
 import { AuthManager } from "./devtools/services/auth-manager";
 import { initializeLanguageSupport } from "./language-support/language-support";
+import { ProjectNode } from "./devtools/models/ProjectNode";
+import { TreeNode } from "./devtools/models/TreeNode";
+import { FileNode } from "./devtools/models/FileNode";
 
 // Track compilation state
 const compilationInProgress = new Map<string, boolean>();

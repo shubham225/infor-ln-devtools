@@ -2,11 +2,19 @@
  * API request/response type definitions
  */
 
+import { AxiosRequestConfig } from "axios";
+
 export interface Component {
   type: string;
   package: string;
   module: string;
   code: string;
+}
+
+export interface ApiClientOptions {
+  auth?: { username: string; password: string } | null;
+  signal?: AbortSignal;
+  responseType?: AxiosRequestConfig["responseType"];
 }
 
 export interface FetchModulesResponse {

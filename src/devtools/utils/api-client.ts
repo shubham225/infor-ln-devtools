@@ -1,10 +1,5 @@
-import axios, { AxiosRequestConfig } from "axios";
-
-export interface ApiClientOptions {
-  auth?: { username: string; password: string } | null;
-  signal?: AbortSignal;
-  responseType?: AxiosRequestConfig["responseType"];
-}
+import axios from "axios";
+import { ApiClientOptions } from "../types/api";
 
 function buildAuthHeader(
   auth?: { username: string; password: string } | null,

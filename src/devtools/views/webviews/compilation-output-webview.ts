@@ -1,11 +1,7 @@
 import * as vscode from "vscode";
 import { getLocalResource } from "../../utils/webview-helpers";
+import { CompilationResult } from "../../types";
 
-interface CompilationResult {
-  script: string;
-  success: boolean;
-  output: string;
-}
 
 export function showCompilationOutput(
   context: vscode.ExtensionContext,
