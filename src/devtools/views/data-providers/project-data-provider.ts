@@ -82,7 +82,6 @@ export class ProjectDataProvider implements vscode.TreeDataProvider<
 
       const projectFolder = path.join(
         workspaceFolder.uri.fsPath,
-        "Development",
         element.project.name,
       );
 
@@ -226,7 +225,6 @@ export class ProjectDataProvider implements vscode.TreeDataProvider<
 
     const projectFolder = path.join(
       workspaceFolder.uri.fsPath,
-      "Development",
       projectName,
     );
 

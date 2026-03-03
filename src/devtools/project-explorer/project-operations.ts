@@ -66,7 +66,6 @@ export async function validateAndSetupProject(
 
     const projectFolder = path.join(
       workspaceFolder.uri.fsPath,
-      "Development",
       project.name,
     );
 
@@ -102,7 +101,7 @@ export function getDevelopmentFolderPath(): string | null {
   if (!workspaceFolder) {
     return null;
   }
-  return path.join(workspaceFolder.uri.fsPath, "Development");
+  return path.join(workspaceFolder.uri.fsPath, "");
 }
 
 /**

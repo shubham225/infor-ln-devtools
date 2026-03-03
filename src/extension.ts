@@ -334,8 +334,7 @@ export async function activate(context: vscode.ExtensionContext) {
       }
 
       const developmentFolder = path.join(
-        workspaceFolder.uri.fsPath,
-        "Development",
+        workspaceFolder.uri.fsPath
       );
       if (!fs.existsSync(developmentFolder)) {
         vscode.window.showErrorMessage(
@@ -550,7 +549,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
       const developmentFolder = path.join(
         workspaceFolder.uri.fsPath,
-        "Development",
         project.name,
       );
       if (!fs.existsSync(developmentFolder)) {
@@ -833,7 +831,6 @@ export async function activate(context: vscode.ExtensionContext) {
           if (workspaceFolder) {
             const projectFolder = path.join(
               workspaceFolder.uri.fsPath,
-              "Development",
               project.name,
             );
 
@@ -1210,7 +1207,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
       const developmentFolder = path.join(
         workspaceFolder.uri.fsPath,
-        "Development",
       );
       let projectName = "";
       let project = null;

@@ -55,7 +55,7 @@ export async function showProjectForm(
     panel.webview.onDidReceiveMessage(async (message) => {
       if (message.command === "save") {
         const project: Project = {
-          name: message.name,
+          name: message.name.trim(),
           pmc: message.pmc,
           ticketId: message.ticketId,
           vrc: message.vrc,

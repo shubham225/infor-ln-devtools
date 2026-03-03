@@ -121,7 +121,6 @@ export async function importComponents(
 
   const developmentFolder = path.join(
     workspaceFolder.uri.fsPath,
-    "Development",
     formData.projectName,
   );
   if (!fs.existsSync(developmentFolder)) {
@@ -325,7 +324,6 @@ async function createNewProjectForImport(
 
   const projectFolder = path.join(
     workspaceFolder.uri.fsPath,
-    "Development",
     newProject.name,
   );
 
