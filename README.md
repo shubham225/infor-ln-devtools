@@ -133,6 +133,16 @@ Selection List + Import trigger:
 
 ---
 
+## 🏗️ Architecture
+
+![Architecture Flow](./resources/readme/architecture-flow.gif)
+
+- **Frontend (Extension):** Component explorer, selection panel, import/export triggers.
+- **Backend (Mock/Real API):** REST API endpoints, ZIP generation, source handling, SCM actions.
+- **Workspace:** Stores imported LN components in structured folders (TD/FD/Table/Session/Script).
+
+---
+
 ## 🌐 Backend API Contract
 
 The extension communicates with the **Infor LN DevTools API**, which follows the hierarchical structure: **VRC → Package → Module → Component**. All binary endpoints return raw ZIP bytes.
@@ -346,16 +356,6 @@ After importing components, expected workspace layout:
 | Update Server URL  | Change API endpoint                                   |
 | Select Component   | Add/remove from selection                             |
 | Import Selected    | Trigger `/import` and add files to Project folder |
-
-## 🏗️ Architecture
-
-![Architecture Flow](./resources/readme/architecture-flow.gif)
-
-- **Frontend (Extension):** Component explorer, selection panel, import/export triggers.
-- **Backend (Mock/Real API):** REST API endpoints, ZIP generation, source handling, SCM actions.
-- **Workspace:** Stores imported LN components in structured folders (TD/FD/Table/Session/Script).
-
----
 
 ## 📅 Roadmap [DevTools]
 
